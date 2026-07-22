@@ -57,6 +57,11 @@ export const metadata: Metadata = {
       "Premium social media assistance network. Account recovery, verification, brand protection, crypto exchange & automated advertising.",
     images: ["/images/logo.png"],
   },
+  icons: {
+    icon: "/images/toplogo1.png",
+    shortcut: "/images/toplogo1.png",
+    apple: "/images/toplogo1.png",
+  },
   robots: {
     index: true,
     follow: true,
@@ -78,7 +83,7 @@ export default function RootLayout({
       style={{ scrollBehavior: "smooth" }}
     >
       <head>
-        <link rel="icon" href="/images/logo.png" type="image/png" />
+        <link rel="icon" href="/images/toplogo1.png" type="image/png" />
         <meta name="theme-color" content="#08080C" />
         <script
           type="application/ld+json"
