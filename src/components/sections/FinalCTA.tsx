@@ -110,7 +110,7 @@ export default function FinalCTA() {
 
         {/* Buttons */}
         <div
-          className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-md sm:max-w-none mx-auto mb-12 sm:mb-16"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(16px)",
@@ -121,7 +121,7 @@ export default function FinalCTA() {
             href="https://t.me/socialassist"
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-semibold text-base text-white transition-all duration-300 hover:scale-105"
+            className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-semibold text-base text-white transition-all duration-300 hover:scale-105"
             style={{
               background: "linear-gradient(135deg, #4A16A8, #7C3AED, #9B5CFF)",
               boxShadow: "0 0 40px rgba(124,58,237,0.4), inset 0 1px 0 rgba(255,255,255,0.15)",
@@ -142,7 +142,7 @@ export default function FinalCTA() {
 
           <button
             onClick={() => scrollTo("services")}
-            className="group inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-semibold text-base transition-all duration-300 hover:scale-105"
+            className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-semibold text-base transition-all duration-300 hover:scale-105"
             style={{
               background: "rgba(255,255,255,0.05)",
               border: "1px solid rgba(255,255,255,0.12)",

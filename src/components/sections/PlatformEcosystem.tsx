@@ -178,7 +178,7 @@ export default function PlatformEcosystem() {
           }}
         >
           {/* Top row */}
-          <div className="flex gap-4 flex-wrap justify-center">
+          <div className="flex gap-2.5 sm:gap-4 flex-wrap justify-center px-2">
             {top.map((p, i) => (
               <PlatformIcon key={p.name} platform={p} index={i} visible={visible} />
             ))}
@@ -186,17 +186,15 @@ export default function PlatformEcosystem() {
 
           {/* Center SA node */}
           <div
-            className="relative flex items-center justify-center"
+            className="relative flex items-center justify-center my-2 sm:my-0"
             style={{
               opacity: visible ? 1 : 0,
               transition: "opacity 0.8s ease-out 0.3s",
             }}
           >
             <div
-              className="animate-float-slow flex items-center justify-center rounded-2xl overflow-hidden"
+              className="animate-float-slow flex items-center justify-center rounded-2xl overflow-hidden w-[90px] h-[90px] sm:w-[110px] sm:h-[110px]"
               style={{
-                width: 110,
-                height: 110,
                 background: "rgba(14,14,20,0.85)",
                 backdropFilter: "blur(20px)",
                 border: "1px solid rgba(255,255,255,0.14)",
@@ -215,8 +213,6 @@ export default function PlatformEcosystem() {
                 }}
               />
             </div>
-
-
 
             {/* Connector lines */}
             <div
@@ -242,7 +238,7 @@ export default function PlatformEcosystem() {
           </div>
 
           {/* Bottom row */}
-          <div className="flex gap-4 flex-wrap justify-center">
+          <div className="flex gap-2.5 sm:gap-4 flex-wrap justify-center px-2">
             {bottom.map((p, i) => (
               <PlatformIcon key={p.name} platform={p} index={i + 4} visible={visible} />
             ))}

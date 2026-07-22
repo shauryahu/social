@@ -236,23 +236,6 @@ export default function ChannelShowcase() {
                   )}
                 </button>
               </div>
-
-              {/* Muted hint */}
-              {muted && (
-                <button
-                  onClick={toggleMute}
-                  className="absolute top-4 left-4 px-3 py-1.5 rounded-full text-xs font-medium"
-                  style={{
-                    background: "rgba(124,58,237,0.6)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(197,167,255,0.3)",
-                    color: "#fff",
-                    fontFamily: "var(--font-inter)",
-                  }}
-                >
-                  🔇 Tap to unmute
-                </button>
-              )}
             </div>
           </div>
         </div>

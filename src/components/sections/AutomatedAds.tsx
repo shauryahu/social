@@ -165,7 +165,7 @@ export default function AutomatedAds() {
               transition: "opacity 0.8s ease-out 0.1s",
             }}
           >
-            <div className="relative" style={{ width: 280, height: 280 }}>
+            <div className="relative scale-85 xs:scale-90 sm:scale-100 origin-center transition-transform" style={{ width: 280, height: 280 }}>
               {/* Center engine node */}
               <div
                 className="absolute flex flex-col items-center justify-center rounded-2xl"

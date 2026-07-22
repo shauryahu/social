@@ -262,22 +262,6 @@ function ServicesVideo({ visible }: { visible: boolean }) {
               )}
             </button>
           </div>
-
-          {muted && (
-            <button
-              onClick={toggleMute}
-              className="absolute top-4 left-4 px-3 py-1.5 rounded-full text-xs font-medium"
-              style={{
-                background: "rgba(124,58,237,0.6)",
-                backdropFilter: "blur(10px)",
-                border: "1px solid rgba(197,167,255,0.3)",
-                color: "#fff",
-                fontFamily: "'Inter', sans-serif",
-              }}
-            >
-              🔇 Tap to unmute
-            </button>
-          )}
         </div>
       </div>
     </div>
@@ -352,9 +336,9 @@ function ServiceCard({
 
       {/* Title */}
       <h3
-        className="text-base font-semibold mb-2"
+        className="text-lg font-black mb-2 tracking-tight"
         style={{
-          color: hovered ? "#C5A7FF" : "#FFFFFF",
+          color: hovered ? "#E0C7FF" : "#FFFFFF",
           fontFamily: "'Space Grotesk', sans-serif",
           transition: "color 0.3s ease",
         }}
@@ -364,33 +348,39 @@ function ServiceCard({
 
       {/* Description */}
       <p
-        className="text-sm leading-relaxed flex-1 mb-5"
-        style={{ color: "rgba(217,214,227,0.6)", fontFamily: "'Inter', sans-serif" }}
+        className="text-sm font-medium leading-relaxed flex-1 mb-5"
+        style={{ color: "rgba(235,232,245,0.8)", fontFamily: "'Inter', sans-serif" }}
       >
         {service.description}
       </p>
 
       {/* CTA */}
       <div
-        className="flex items-center gap-1.5 text-sm font-medium"
+        className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider"
         style={{
-          color: hovered ? "#C5A7FF" : "rgba(155,92,255,0.8)",
+          color: hovered ? "#E0C7FF" : "#C5A7FF",
           fontFamily: "'Inter', sans-serif",
           transition: "color 0.3s ease",
         }}
       >
-        {service.cta}
+        <span>{service.cta}</span>
         <svg
-          width="13"
-          height="13"
+          width="14"
+          height="14"
           viewBox="0 0 14 14"
           fill="none"
           style={{
-            transform: hovered ? "translateX(3px)" : "translateX(0)",
+            transform: hovered ? "translateX(4px)" : "translateX(0)",
             transition: "transform 0.3s ease",
           }}
         >
-          <path d="M1 7h12M8 3l5 4-5 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path
+            d="M1 7h12M8 3l5 4-5 4"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </div>
     </div>
@@ -421,7 +411,7 @@ export default function ServicesSection() {
 
         {/* Section heading */}
         <div
-          className="text-center mb-10"
+          className="text-center mb-12"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(20px)",
@@ -429,31 +419,31 @@ export default function ServicesSection() {
           }}
         >
           <span
-            className="text-xs font-medium tracking-widest uppercase mb-3 block"
-            style={{ color: "#9B5CFF", fontFamily: "'Inter', sans-serif" }}
+            className="text-xs font-bold tracking-[0.25em] uppercase mb-3 block"
+            style={{ color: "#C5A7FF", fontFamily: "'Inter', sans-serif" }}
           >
             What We Provide
           </span>
           <h2
             id="services-heading"
-            className="text-3xl md:text-5xl font-bold mb-4"
+            className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4"
             style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#FFFFFF" }}
           >
             Everything Digital.{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #C5A7FF, #9B5CFF)",
+                background: "linear-gradient(135deg, #E0C7FF 0%, #9B5CFF 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
               }}
             >
-              One Network.
+              One Connected Network.
             </span>
           </h2>
           <p
-            className="text-base md:text-lg max-w-2xl mx-auto"
-            style={{ color: "rgba(217,214,227,0.58)", fontFamily: "'Inter', sans-serif" }}
+            className="text-base md:text-lg font-medium max-w-2xl mx-auto leading-relaxed"
+            style={{ color: "rgba(235,232,245,0.8)", fontFamily: "'Inter', sans-serif" }}
           >
             Specialized solutions designed around modern social platforms.
           </p>
@@ -467,27 +457,22 @@ export default function ServicesSection() {
           Row 1: 3 cards, each spans 2 of 6 cols
           Row 2: 2 cards, each spans 3 of 6 cols → naturally centered
         */}
-        <div
-          className="grid gap-4"
-          style={{ gridTemplateColumns: "repeat(6, 1fr)" }}
-        >
-          {/* Top 3 cards — each 2 cols */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 sm:gap-6">
+          {/* Top 3 cards — 1 col on mobile/tablet, 2 cols of 6 on desktop */}
           {SERVICES.slice(0, 3).map((service, i) => (
             <div
               key={service.id}
-              style={{ gridColumn: "span 2" }}
-              className="col-span-6 sm:col-span-3 lg:[grid-column:span_2]"
+              className="col-span-1 md:col-span-1 lg:col-span-2"
             >
               <ServiceCard service={service} index={i} visible={visible} />
             </div>
           ))}
 
-          {/* Bottom 2 cards — each 3 cols, naturally centered */}
+          {/* Bottom 2 cards — 1 col on mobile/tablet, 3 cols of 6 on desktop */}
           {SERVICES.slice(3).map((service, i) => (
             <div
               key={service.id}
-              style={{ gridColumn: "span 3" }}
-              className="col-span-6 sm:col-span-3 lg:[grid-column:span_3]"
+              className="col-span-1 md:col-span-1 lg:col-span-3"
             >
               <ServiceCard service={service} index={i + 3} visible={visible} />
             </div>

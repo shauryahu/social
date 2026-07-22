@@ -112,7 +112,7 @@ export default function TelegramInquiry() {
       <div className="relative max-w-4xl mx-auto">
         {/* Card Frame */}
         <div
-          className="rounded-3xl p-6 sm:p-10"
+          className="rounded-3xl p-4 sm:p-10"
           style={{
             background: "rgba(14,14,22,0.78)",
             backdropFilter: "blur(24px)",
@@ -128,11 +128,11 @@ export default function TelegramInquiry() {
           {/* Header */}
           <div className="text-center mb-8">
             <span
-              className="text-xs font-medium tracking-widest uppercase px-4 py-1.5 rounded-full inline-block mb-3"
+              className="text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full inline-block mb-3"
               style={{
                 color: "#C5A7FF",
-                background: "rgba(124,58,237,0.18)",
-                border: "1px solid rgba(124,58,237,0.3)",
+                background: "rgba(124,58,237,0.22)",
+                border: "1px solid rgba(124,58,237,0.4)",
                 fontFamily: "var(--font-inter)",
               }}
             >
@@ -141,7 +141,7 @@ export default function TelegramInquiry() {
 
             <h2
               id="inquiry-heading"
-              className="text-2xl sm:text-4xl font-bold mb-3"
+              className="text-3xl sm:text-4xl font-black tracking-tight mb-3"
               style={{
                 fontFamily: "var(--font-space-grotesk)",
                 color: "#FFFFFF",
@@ -151,9 +151,9 @@ export default function TelegramInquiry() {
             </h2>
 
             <p
-              className="text-sm sm:text-base max-w-xl mx-auto"
+              className="text-base font-medium max-w-xl mx-auto leading-relaxed"
               style={{
-                color: "rgba(217,214,227,0.65)",
+                color: "rgba(235,232,245,0.85)",
                 fontFamily: "var(--font-inter)",
               }}
             >
