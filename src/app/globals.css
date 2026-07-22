@@ -1,0 +1,227 @@
+@import "tailwindcss";
+
+
+
+@theme inline {
+  --color-near-black: #08080C;
+  --color-elevated: #101016;
+  --color-deep-violet: #4A16A8;
+  --color-electric-violet: #7C3AED;
+  --color-premium-purple: #9B5CFF;
+  --color-soft-lavender: #C5A7FF;
+  --color-pure-white: #FFFFFF;
+  --color-muted-white: #D9D6E3;
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+}
+
+:root {
+  --background: #08080C;
+  --foreground: #FFFFFF;
+  --color-near-black: #08080C;
+  --color-elevated: #101016;
+  --color-deep-violet: #4A16A8;
+  --color-electric-violet: #7C3AED;
+  --color-premium-purple: #9B5CFF;
+  --color-soft-lavender: #C5A7FF;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #08080C;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #08080C;
+}
+::-webkit-scrollbar-thumb {
+  background: #4A16A8;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7C3AED;
+}
+
+/* Glass surface utility */
+.glass {
+  background: rgba(16, 16, 22, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-violet {
+  background: rgba(74, 22, 168, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+}
+
+.glass-strong {
+  background: rgba(16, 16, 22, 0.8);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Text gradient */
+.text-gradient-violet {
+  background: linear-gradient(135deg, #C5A7FF 0%, #9B5CFF 40%, #7C3AED 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-white {
+  background: linear-gradient(135deg, #FFFFFF 0%, #D9D6E3 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Violet glow */
+.glow-violet {
+  box-shadow: 0 0 30px rgba(124, 58, 237, 0.3), 0 0 60px rgba(74, 22, 168, 0.2);
+}
+
+.glow-violet-sm {
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.25);
+}
+
+/* Grain overlay */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Focus visible styles */
+:focus-visible {
+  outline: 2px solid #7C3AED;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Nav active glow */
+.nav-item-active {
+  color: #C5A7FF;
+  text-shadow: 0 0 12px rgba(155, 92, 255, 0.6);
+}
+
+/* Service card shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-16px) rotate(2deg); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+/* Orb pulse */
+@keyframes orb-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.08); }
+}
+
+@keyframes orb-drift {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(3%, 2%) scale(1.04); }
+  66% { transform: translate(-2%, 4%) scale(0.97); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+.animate-orb {
+  animation: orb-pulse 8s ease-in-out infinite, orb-drift 20s ease-in-out infinite;
+}
+
+/* Loading bar */
+@keyframes loading-fill {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* Flow lines for automation */
+@keyframes flow {
+  0% { stroke-dashoffset: 1000; }
+  100% { stroke-dashoffset: 0; }
+}
+
+/* Platform orbit */
+@keyframes orbit-slow {
+  from { transform: rotate(0deg) translateX(140px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(140px) rotate(-360deg); }
+}
+
+/* Scroll reveal base */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* Card hover glass effect */
+.service-card {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 60px rgba(124, 58, 237, 0.25), 0 0 0 1px rgba(124, 58, 237, 0.3);
+}
+
+/* Exchange arrow animation */
+@keyframes exchange-flow {
+  0%, 100% { opacity: 0.4; transform: scaleY(1); }
+  50% { opacity: 1; transform: scaleY(1.05); }
+}
+
+/* Particle dot */
+@keyframes particle-drift {
+  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+  20% { opacity: 0.6; }
+  80% { opacity: 0.3; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0.5); opacity: 0; }
+}
