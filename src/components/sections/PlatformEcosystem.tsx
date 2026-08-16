@@ -212,7 +212,7 @@ export default function PlatformEcosystem() {
             }}
           >
             <div
-              className="animate-float-slow flex items-center justify-center rounded-2xl overflow-hidden w-[90px] h-[90px] sm:w-[110px] sm:h-[110px]"
+              className="animate-float-slow flex items-center justify-center rounded-2xl overflow-hidden w-[96px] h-[96px] sm:w-[116px] sm:h-[116px]"
               style={{
                 background: "rgba(14,14,20,0.85)",
                 backdropFilter: "blur(20px)",
@@ -220,12 +220,12 @@ export default function PlatformEcosystem() {
                 boxShadow: "0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
               }}
             >
-              {/* Logo image implanted full into rectangle without glow or crop */}
+              {/* Logo image implanted full into rounded-2xl square icon without crop */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/logo.png"
                 alt="SocialAssist Logo"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-2xl"
                 style={{
                   filter: "none",
                   display: "block",

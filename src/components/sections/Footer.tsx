@@ -37,12 +37,13 @@ export default function Footer() {
           {/* Left — brand */}
           <div className="flex flex-col items-center md:items-start gap-4">
             <div className="flex items-center gap-3">
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src="/images/logo.png"
                 alt="SocialAssist Logo"
-                width={40}
-                height={40}
-                style={{ objectFit: "contain" }}
+                width={44}
+                height={44}
+                className="w-11 h-11 rounded-xl object-cover border border-purple-500/20 shadow-md"
               />
               <div>
                 <p

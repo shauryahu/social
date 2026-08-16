@@ -279,6 +279,7 @@ function ServiceCard({
   visible: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
+  const [activePop, setActivePop] = useState(false);
 
   const scrollToTarget = () => {
     const target = document.getElementById(service.href.replace("#", ""));
@@ -286,39 +287,51 @@ function ServiceCard({
     else document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const handleCardClick = () => {
+    // Pop-up scale & glow effect when box is clicked/tapped (NO REDIRECT)
+    setActivePop(true);
+    setTimeout(() => setActivePop(false), 450);
+  };
+
+  const isHighlighted = hovered || activePop;
+
   return (
     <div
-      className="flex flex-col p-6 rounded-2xl cursor-pointer relative overflow-hidden"
+      className="flex flex-col p-6 rounded-2xl cursor-pointer relative overflow-hidden select-none"
       style={{
-        background: hovered ? "rgba(16,16,22,0.88)" : "rgba(14,14,20,0.62)",
+        background: isHighlighted ? "rgba(20,18,32,0.92)" : "rgba(14,14,20,0.62)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
-        border: hovered
-          ? "1px solid rgba(124,58,237,0.42)"
+        border: isHighlighted
+          ? "1px solid rgba(155,92,255,0.6)"
           : "1px solid rgba(255,255,255,0.08)",
-        boxShadow: hovered
-          ? `0 20px 48px ${service.glow}, inset 0 1px 0 rgba(255,255,255,0.08)`
+        boxShadow: isHighlighted
+          ? `0 24px 60px ${service.glow}, 0 0 32px rgba(155,92,255,0.35), inset 0 1px 0 rgba(255,255,255,0.12)`
           : "0 4px 20px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.04)",
         opacity: visible ? 1 : 0,
         transform: visible
-          ? hovered ? "translateY(-6px)" : "translateY(0)"
+          ? activePop
+            ? "scale(1.04) translateY(-8px)"
+            : hovered
+            ? "translateY(-6px) scale(1.015)"
+            : "translateY(0) scale(1)"
           : "translateY(24px)",
-        transition: `opacity 0.55s ease-out ${index * 0.08}s, transform 0.38s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, border-color 0.3s ease`,
+        transition: `opacity 0.55s ease-out ${index * 0.08}s, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease`,
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={scrollToTarget}
+      onClick={handleCardClick}
       role="article"
       aria-label={service.title}
     >
       {/* Corner accent glow */}
       <div
-        className="absolute top-0 right-0 w-28 h-28 rounded-full pointer-events-none"
+        className="absolute top-0 right-0 w-32 h-32 rounded-full pointer-events-none"
         style={{
           background: `radial-gradient(circle, ${service.glow} 0%, transparent 70%)`,
           transform: "translate(35%, -35%)",
           filter: "blur(18px)",
-          opacity: hovered ? 1 : 0.45,
+          opacity: isHighlighted ? 1 : 0.45,
           transition: "opacity 0.3s ease",
         }}
       />
@@ -327,7 +340,7 @@ function ServiceCard({
       <div
         className="mb-4"
         style={{
-          transform: hovered ? "translateY(-3px)" : "translateY(0)",
+          transform: isHighlighted ? "translateY(-4px) scale(1.06)" : "translateY(0) scale(1)",
           transition: "transform 0.3s ease",
         }}
       >
@@ -338,7 +351,7 @@ function ServiceCard({
       <h3
         className="text-lg font-black mb-2 tracking-tight"
         style={{
-          color: hovered ? "#E0C7FF" : "#FFFFFF",
+          color: isHighlighted ? "#E0C7FF" : "#FFFFFF",
           fontFamily: "'Space Grotesk', sans-serif",
           transition: "color 0.3s ease",
         }}
@@ -348,40 +361,45 @@ function ServiceCard({
 
       {/* Description */}
       <p
-        className="text-sm font-medium leading-relaxed flex-1 mb-5"
+        className="text-sm font-medium leading-relaxed flex-1 mb-6"
         style={{ color: "rgba(235,232,245,0.8)", fontFamily: "'Inter', sans-serif" }}
       >
         {service.description}
       </p>
 
-      {/* CTA */}
-      <div
-        className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider"
-        style={{
-          color: hovered ? "#E0C7FF" : "#C5A7FF",
-          fontFamily: "'Inter', sans-serif",
-          transition: "color 0.3s ease",
-        }}
-      >
-        <span>{service.cta}</span>
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-          fill="none"
+      {/* CTA Button — ONLY THIS BUTTON REDIRECTS */}
+      <div className="mt-auto pt-2">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            scrollToTarget();
+          }}
+          className="group inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:outline-none"
           style={{
-            transform: hovered ? "translateX(4px)" : "translateX(0)",
-            transition: "transform 0.3s ease",
+            background: "linear-gradient(135deg, rgba(124,58,237,0.35) 0%, rgba(155,92,255,0.45) 100%)",
+            border: "1px solid rgba(197,167,255,0.35)",
+            color: "#FFFFFF",
+            boxShadow: "0 0 16px rgba(124,58,237,0.4)",
+            fontFamily: "'Inter', sans-serif",
           }}
         >
-          <path
-            d="M1 7h12M8 3l5 4-5 4"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+          <span>{service.cta}</span>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            className="transition-transform duration-300 group-hover:translate-x-1"
+          >
+            <path
+              d="M1 7h12M8 3l5 4-5 4"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );
