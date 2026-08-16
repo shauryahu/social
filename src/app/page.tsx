@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <>
       {/* Loading screen */}
-      <LoadingScreen onComplete={() => setLoaded(true)} />
+      {!loaded && <LoadingScreen onComplete={() => setLoaded(true)} />}
 
       {/*
         Navigation is OUTSIDE the blurred div on purpose.

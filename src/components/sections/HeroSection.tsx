@@ -311,6 +311,7 @@ export default function HeroSection() {
                 muted={muted}
                 loop
                 playsInline
+                preload="metadata"
                 className="w-full h-full object-cover"
                 aria-label="SocialAssist introduction video"
               />

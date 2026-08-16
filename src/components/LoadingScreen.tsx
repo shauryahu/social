@@ -18,13 +18,13 @@ export default function LoadingScreen({
     startedRef.current = true;
 
     // Phase 1: glow appears
-    const t1 = setTimeout(() => setPhase("logo"), 250);
+    const t1 = setTimeout(() => setPhase("logo"), 150);
     // Phase 2: logo fades in
-    const t2 = setTimeout(() => setPhase("bar"), 650);
+    const t2 = setTimeout(() => setPhase("bar"), 450);
     // Phase 3: bar fills
-    const t3 = setTimeout(() => setPhase("done"), 1350);
+    const t3 = setTimeout(() => setPhase("done"), 1050);
     // Phase 4: complete
-    const t4 = setTimeout(() => onCompleteRef.current(), 1650);
+    const t4 = setTimeout(() => onCompleteRef.current(), 1350);
 
     return () => {
       clearTimeout(t1);
@@ -34,41 +34,42 @@ export default function LoadingScreen({
     };
   }, []);
 
+  if (phase === "done") return null;
+
   return (
     <div
       aria-label="Loading SocialAssist"
       aria-live="polite"
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center"
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center gpu-layer"
       style={{
         background: "#08080C",
-        opacity: phase === "done" ? 0 : 1,
-        transition: "opacity 0.4s ease-out",
-        pointerEvents: phase === "done" ? "none" : "all",
-        display: phase === "done" ? "none" : "flex",
+        opacity: 1,
+        transition: "opacity 0.3s ease-out",
+        pointerEvents: "all",
       }}
     >
-      {/* Background glow */}
+      {/* Background glow — GPU hardware layer */}
       <div
-        className="absolute rounded-full"
+        className="absolute rounded-full gpu-layer"
         style={{
-          width: "60vw",
-          height: "60vw",
+          width: "50vw",
+          height: "50vw",
           background:
-            "radial-gradient(circle, rgba(74,22,168,0.4) 0%, transparent 70%)",
-          filter: "blur(80px)",
+            "radial-gradient(circle, rgba(74,22,168,0.45) 0%, transparent 65%)",
+          filter: "blur(40px)",
           opacity: phase === "glow" ? 0 : 0.8,
-          transition: "opacity 0.6s ease-out",
+          transition: "opacity 0.4s ease-out",
         }}
       />
 
-      {/* Logo — toplogo1 PNG with soft purple glow */}
+      {/* Logo — toplogo1 PNG with single hardware drop-shadow */}
       <div
+        className="gpu-layer"
         style={{
           opacity: phase === "glow" ? 0 : 1,
-          transform: phase === "glow" ? "scale(0.85)" : "scale(1)",
-          transition: "opacity 0.5s ease-out, transform 0.5s ease-out",
-          filter:
-            "drop-shadow(0 0 20px rgba(124,58,237,0.8)) drop-shadow(0 0 40px rgba(155,92,255,0.5)) drop-shadow(0 0 60px rgba(74,22,168,0.35))",
+          transform: phase === "glow" ? "translate3d(0,0,0) scale(0.88)" : "translate3d(0,0,0) scale(1)",
+          transition: "opacity 0.4s ease-out, transform 0.4s ease-out",
+          filter: "drop-shadow(0 0 20px rgba(155,92,255,0.75))",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -83,11 +84,11 @@ export default function LoadingScreen({
 
       {/* Brand name & Slogan */}
       <div
-        className="mt-4 text-center"
+        className="mt-4 text-center gpu-layer"
         style={{
           opacity: phase === "glow" ? 0 : 1,
-          transform: phase === "glow" ? "translateY(8px)" : "translateY(0)",
-          transition: "opacity 0.5s ease-out 0.1s, transform 0.5s ease-out 0.1s",
+          transform: phase === "glow" ? "translate3d(0,6px,0)" : "translate3d(0,0,0)",
+          transition: "opacity 0.4s ease-out 0.08s, transform 0.4s ease-out 0.08s",
         }}
       >
         <p
@@ -112,25 +113,25 @@ export default function LoadingScreen({
 
       {/* Loading bar */}
       <div
-        className="mt-8 rounded-full overflow-hidden"
+        className="mt-8 rounded-full overflow-hidden gpu-layer"
         style={{
           width: "140px",
           height: "2px",
           background: "rgba(255,255,255,0.08)",
-          opacity: phase === "bar" || phase === "done" ? 1 : 0,
-          transition: "opacity 0.3s ease-out",
+          opacity: phase === "bar" ? 1 : 0,
+          transition: "opacity 0.25s ease-out",
         }}
       >
         <div
           className="h-full rounded-full"
           style={{
-            width: phase === "bar" || phase === "done" ? "100%" : "0%",
+            width: phase === "bar" ? "100%" : "0%",
             background:
               "linear-gradient(90deg, #4A16A8, #7C3AED, #9B5CFF, #C5A7FF)",
             boxShadow: "0 0 8px rgba(155,92,255,0.8)",
             transition:
               phase === "bar"
-                ? "width 0.8s cubic-bezier(0.4, 0, 0.2, 1)"
+                ? "width 0.6s cubic-bezier(0.16, 1, 0.3, 1)"
                 : "none",
           }}
         />

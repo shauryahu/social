@@ -204,6 +204,7 @@ function ServicesVideo({ visible }: { visible: boolean }) {
             muted={muted}
             loop
             playsInline
+            preload="none"
             className="w-full h-full object-cover"
             aria-label="SocialAssist services overview video"
           />
