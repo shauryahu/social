@@ -157,7 +157,7 @@ export default function AnimatedStatistics() {
   return (
     <div
       ref={containerRef}
-      className="mt-12 w-full max-w-5xl mx-auto"
+      className="mt-20 sm:mt-24 md:mt-28 w-full max-w-5xl mx-auto"
       aria-label="Key Performance Statistics and Immersive Peak Chart"
     >
       {/* 

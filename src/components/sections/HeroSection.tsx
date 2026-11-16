@@ -32,15 +32,15 @@ export default function HeroSection() {
     >
       {/* ── Top Hero Wave Mesh (Pure Dark Black with Violet/Purple Accents) ── */}
       <div
-        className="absolute top-0 inset-x-0 h-[690px] sm:h-[720px] md:h-[740px] overflow-hidden pointer-events-auto z-0"
+        className="absolute top-0 inset-x-0 h-[660px] sm:h-[685px] md:h-[705px] overflow-hidden pointer-events-auto z-0"
         style={{
           background: "#000000",
           maskImage: isLight
-            ? "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 50px), rgba(0,0,0,0.5) calc(100% - 20px), transparent 100%)"
-            : "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 50px), rgba(0,0,0,0.5) calc(100% - 20px), transparent 100%)",
+            ? "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 60px), rgba(0,0,0,0.5) calc(100% - 24px), transparent 100%)"
+            : "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 60px), rgba(0,0,0,0.5) calc(100% - 24px), transparent 100%)",
           WebkitMaskImage: isLight
-            ? "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 50px), rgba(0,0,0,0.5) calc(100% - 20px), transparent 100%)"
-            : "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 50px), rgba(0,0,0,0.5) calc(100% - 20px), transparent 100%)",
+            ? "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 60px), rgba(0,0,0,0.5) calc(100% - 24px), transparent 100%)"
+            : "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 60px), rgba(0,0,0,0.5) calc(100% - 24px), transparent 100%)",
         }}
       >
         <WaveMesh
@@ -49,15 +49,15 @@ export default function HeroSection() {
           className="w-full h-full"
         />
 
-        {/* Very Small Blurry Merge Area into White (only ~48px tall right between buttons and graph box) */}
+        {/* Very Small Blurry Merge Area into White (compact ~56px strip) */}
         <div
-          className="absolute inset-x-0 bottom-0 h-12 pointer-events-none"
+          className="absolute inset-x-0 bottom-0 h-14 pointer-events-none"
           style={{
             background: isLight
-              ? "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(255,255,255,0.25) 25%, rgba(255,255,255,0.75) 60%, #ffffff 100%)"
+              ? "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0.75) 60%, #ffffff 100%)"
               : "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(3,7,18,0.4) 30%, rgba(3,7,18,0.85) 70%, #030712 100%)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
+            backdropFilter: "blur(14px)",
+            WebkitBackdropFilter: "blur(14px)",
           }}
         />
       </div>
