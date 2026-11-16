@@ -158,25 +158,8 @@ export default function FinalCTA() {
         </div>
 
         {/* Embedded Telegram Inquiry Form */}
-        <div className="mt-8 mb-16 text-left">
+        <div className="mt-8 text-left">
           <TelegramInquiry />
-        </div>
-
-        {/* Slogan */}
-        <div
-          className="mt-12"
-          style={{
-            opacity: visible ? 1 : 0,
-            transition: "opacity 0.8s ease-out 0.5s",
-          }}
-        >
-          <p
-            className={`text-xs font-semibold tracking-[0.35em] uppercase font-mono ${
-              isLight ? "text-slate-500" : "text-zinc-500"
-            }`}
-          >
-            We Resolve · We Protect · We Elevate
-          </p>
         </div>
       </div>
     </section>

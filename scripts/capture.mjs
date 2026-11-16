@@ -255,6 +255,29 @@ async function main() {
     const aboutShot = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "10_about_section.png"), Buffer.from(aboutShot.data, "base64"));
 
+    // 6e2. Scroll to Telegram Inquiry Section
+    console.log("Scrolling to Telegram Inquiry Section ...");
+    await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        const el = document.getElementById("inquiry-heading") || document.getElementById("inquiry");
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          window.scrollTo(0, window.scrollY + rect.top - 140);
+        }
+      })()`,
+    });
+    await sleep(2000);
+    const inquiryShot = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "7_final_cta_inquiry.png"), Buffer.from(inquiryShot.data, "base64"));
+
+    // Scroll to see submit button and slogan
+    await sendSession("Runtime.evaluate", {
+      expression: `window.scrollBy(0, 360)`,
+    });
+    await sleep(1000);
+    const inquirySubmitShot = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "7b_inquiry_submit.png"), Buffer.from(inquirySubmitShot.data, "base64"));
+
     // 6f. Scroll to Footer Section
     console.log("Scrolling to Footer Section ...");
     await sendSession("Runtime.evaluate", {
@@ -383,6 +406,8 @@ async function main() {
       "4_platforms_services.png",
       "5_dynamic_glass_navigation.png",
       "6_account_assistance.png",
+      "7_final_cta_inquiry.png",
+      "7b_inquiry_submit.png",
       "8_crypto_exchange.png",
       "9_automated_ads.png",
       "10_about_section.png",
