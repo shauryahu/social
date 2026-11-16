@@ -132,7 +132,14 @@ async function main() {
     // 4. Scroll to Laptop Section
     console.log("Scrolling to 3D Laptop ...");
     await sendSession("Runtime.evaluate", {
-      expression: `window.scrollTo(0, 950)`,
+      expression: `(() => {
+        const vid = document.querySelector('video');
+        if (vid) {
+          vid.scrollIntoView({ behavior: 'instant', block: 'center' });
+        } else {
+          window.scrollTo(0, 1450);
+        }
+      })()`,
     });
     await sleep(2500);
     console.log("Capturing 2_laptop_3d.png ...");
