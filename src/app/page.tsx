@@ -34,7 +34,7 @@ export default function Home() {
         <BackgroundEffects />
 
         {/* Page sections in exact UX journey order */}
-        <main>
+        <main className="overflow-x-hidden">
           <HeroSection />
           <div className="section-contain"><CredibilityStrip /></div>
           <div className="section-contain"><ServicesSection /></div>

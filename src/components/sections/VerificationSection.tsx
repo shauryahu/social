@@ -180,6 +180,7 @@ export default function VerificationSection() {
                   alt="SocialAssist Official Verification"
                   width={140}
                   height={140}
+                  loading="eager"
                   className="w-full h-full object-contain drop-shadow-[0_12px_28px_rgba(37,99,235,0.5)]"
                 />
               </div>
