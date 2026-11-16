@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { LiquidNavbar, NimbusIcons, type LiquidNavItem } from "@/components/ui/liquid-glass-navbar";
 import { useTheme } from "@/components/ThemeProvider";
-import { Sun, Moon } from "lucide-react";
+import { SunMoonThemeToggle } from "@/components/ui/sun-moon-theme-toggle";
 
 const NAV_ITEMS: (LiquidNavItem & { id: string })[] = [
   { id: "home", label: "Home", href: "#home", icon: NimbusIcons.home, fx: "glow" },
@@ -21,7 +21,7 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const navContainerRef = useRef<HTMLDivElement>(null);
-  const { theme, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const isLight = theme === "light";
 
   // Scroll spy & background shadow on scroll
@@ -212,23 +212,21 @@ export default function Navigation() {
 
           {/* Right Controls: Theme Toggle + Contact CTA + Menu Button */}
           <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-            {/* ── THEME SWITCHER BUTTON (Sun / Moon) ── */}
-            <button
-              onClick={toggleTheme}
-              className={`relative flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full transition-all duration-200 border ${
+            {/* ── THEME SWITCHER BUTTON (Celestial Arc Sun/Moon) ── */}
+            <SunMoonThemeToggle
+              theme={theme}
+              onThemeChange={(newTheme) => setTheme(newTheme)}
+              size={32}
+              duration={1200}
+              sky={true}
+              className={`transition-all duration-200 border ${
                 isLight
-                  ? "bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300/80 shadow-sm"
-                  : "bg-white/5 hover:bg-white/10 text-amber-300 border-white/10"
+                  ? "border-slate-300/80 shadow-xs hover:border-slate-400"
+                  : "border-white/10 shadow-xs hover:border-white/20"
               }`}
               title={isLight ? "Switch to Dark Theme" : "Switch to Light Theme"}
               aria-label="Toggle White and Dark Theme"
-            >
-              {isLight ? (
-                <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-700 transition-transform duration-200 hover:-rotate-12" />
-              ) : (
-                <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300 transition-transform duration-200 hover:rotate-45" />
-              )}
-            </button>
+            />
 
             {/* Direct CTA (hidden on tablet/mobile to preserve zero-overflow layout) */}
             <button
