@@ -1,202 +1,29 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { LiquidNavbar, NimbusIcons, type LiquidNavItem } from "@/components/ui/liquid-glass-navbar";
 
-const NAV_ITEMS = [
-  { label: "Home", href: "#home" },
-  { label: "Services", href: "#services" },
-  { label: "Platforms", href: "#platforms" },
-  { label: "Exchange", href: "#exchange" },
-  { label: "Automation", href: "#automation" },
-  { label: "About", href: "#about" },
-  { label: "Inquiry", href: "#inquiry" },
+const NAV_ITEMS: (LiquidNavItem & { id: string })[] = [
+  { id: "home", label: "Home", href: "#home", icon: NimbusIcons.home, fx: "glow" },
+  { id: "services", label: "Services", href: "#services", icon: NimbusIcons.globe, fx: "spin" },
+  { id: "platforms", label: "Platforms", href: "#platforms", icon: NimbusIcons.plane, fx: "plane" },
+  { id: "exchange", label: "Exchange", href: "#exchange", icon: NimbusIcons.drop, fx: "drop" },
+  { id: "automation", label: "Automation", href: "#automation", icon: NimbusIcons.user, fx: "wave" },
+  { id: "about", label: "About", href: "#about", icon: NimbusIcons.home, fx: "pop" },
+  { id: "inquiry", label: "Inquiry", href: "#inquiry", icon: NimbusIcons.drop, fx: "glow" },
 ];
-
-interface Ripple {
-  id: number;
-  x: number;
-  y: number;
-}
 
 export default function Navigation() {
   const [activeSection, setActiveSection] = useState("home");
   const [scrolled, setScrolled] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [hoveredHref, setHoveredHref] = useState<string | null>(null);
-  const [ripples, setRipples] = useState<Record<string, Ripple[]>>({});
-
-  // Waterline indicator state (smooth spring-driven physics)
-  const [indicatorStyle, setIndicatorStyle] = useState({
-    left: 0,
-    width: 0,
-    opacity: 0,
-    scaleX: 1,
-    direction: 1, // +1 right, -1 left
-  });
-
-  // Waterline droplet state (for liquid break-off during rapid/long navigation shifts)
-  const [dropletStyle, setDropletStyle] = useState({
-    x: 0,
-    opacity: 0,
-    scale: 0.6,
-  });
-
   const navContainerRef = useRef<HTMLDivElement>(null);
-  const navTrackRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
-
-  // Physics animation refs for spring damping
-  const animRef = useRef<number | null>(null);
-  const runPhysicsLoopRef = useRef<(() => void) | null>(null);
-  const physicsState = useRef({
-    currentLeft: 0,
-    currentWidth: 0,
-    targetLeft: 0,
-    targetWidth: 0,
-    velocityLeft: 0,
-    velocityWidth: 0,
-    stretchFactor: 1,
-    dropletX: 0,
-    dropletVelocity: 0,
-    isAnimating: false,
-    direction: 1, // +1 right, -1 left
-  });
-
-  // Spring-based liquid deformation physics step
-  const runSpringPhysics = useCallback(() => {
-    if (typeof document !== "undefined" && document.hidden) {
-      physicsState.current.isAnimating = false;
-      return;
-    }
-
-    const p = physicsState.current;
-
-    // Fluid spring constants tuned for realistic water viscosity
-    const stiffness = 0.16;
-    const damping = 0.74;
-
-    // Positional spring
-    const forceLeft = (p.targetLeft - p.currentLeft) * stiffness;
-    p.velocityLeft = (p.velocityLeft + forceLeft) * damping;
-    p.currentLeft += p.velocityLeft;
-
-    // Dimension spring
-    const forceWidth = (p.targetWidth - p.currentWidth) * stiffness;
-    p.velocityWidth = (p.velocityWidth + forceWidth) * damping;
-    p.currentWidth += p.velocityWidth;
-
-    // Liquid stretch deformation: stretches horizontally proportional to velocity
-    const speed = Math.abs(p.velocityLeft);
-    const stretch = Math.min(Math.max(1 + speed * 0.038, 0.9), 1.35);
-
-    // Liquid Droplet physics: when speed is high, a subtle droplet separates and lags behind
-    const shouldSpawnDroplet = speed > 2.8;
-    if (shouldSpawnDroplet) {
-      const targetDroplet = p.currentLeft - p.direction * Math.min(speed * 3.5, 24);
-      p.dropletVelocity = (p.dropletVelocity + (targetDroplet - p.dropletX) * 0.12) * 0.7;
-      p.dropletX += p.dropletVelocity;
-    } else {
-      // Re-merge smoothly into the main liquid pill
-      p.dropletVelocity = (p.dropletVelocity + (p.currentLeft + p.currentWidth * 0.5 - p.dropletX) * 0.22) * 0.65;
-      p.dropletX += p.dropletVelocity;
-    }
-
-    const distToTarget = Math.abs(p.targetLeft - p.currentLeft);
-    const widthDist = Math.abs(p.targetWidth - p.currentWidth);
-
-    // Update state to trigger GPU transform
-    setIndicatorStyle({
-      left: p.currentLeft,
-      width: Math.max(p.currentWidth, 16),
-      opacity: 1,
-      scaleX: stretch,
-      direction: p.direction,
-    });
-
-    setDropletStyle({
-      x: p.dropletX,
-      opacity: shouldSpawnDroplet ? Math.min(speed * 0.18, 0.85) : Math.max(0, distToTarget * 0.02),
-      scale: shouldSpawnDroplet ? Math.min(0.6 + speed * 0.08, 1.1) : 0.5,
-    });
-
-    // Check if settled to stop the RAF loop and preserve battery/GPU
-    if (distToTarget < 0.15 && widthDist < 0.15 && speed < 0.1) {
-      p.currentLeft = p.targetLeft;
-      p.currentWidth = p.targetWidth;
-      p.velocityLeft = 0;
-      p.velocityWidth = 0;
-      p.isAnimating = false;
-      setIndicatorStyle({
-        left: p.targetLeft,
-        width: p.targetWidth,
-        opacity: 1,
-        scaleX: 1,
-        direction: p.direction,
-      });
-      setDropletStyle((prev) => ({ ...prev, opacity: 0 }));
-      if (animRef.current) cancelAnimationFrame(animRef.current);
-      return;
-    }
-
-    animRef.current = requestAnimationFrame(() => {
-      runPhysicsLoopRef.current?.();
-    });
-  }, []);
-
-  useEffect(() => {
-    runPhysicsLoopRef.current = runSpringPhysics;
-  }, [runSpringPhysics]);
-
-  // Update physical target position based on the active tab DOM element
-  const updateTargetFromDOM = useCallback(() => {
-    const activeHref = `#${activeSection}`;
-    const targetEl = itemRefs.current.get(activeHref);
-    const trackEl = navTrackRef.current;
-
-    if (!targetEl || !trackEl) {
-      setIndicatorStyle((prev) => ({ ...prev, opacity: 0 }));
-      return;
-    }
-
-    const trackRect = trackEl.getBoundingClientRect();
-    const targetRect = targetEl.getBoundingClientRect();
-
-    const targetLeft = targetRect.left - trackRect.left;
-    const targetWidth = targetRect.width;
-
-    const p = physicsState.current;
-    const diff = targetLeft - p.currentLeft;
-    p.direction = diff > 0 ? 1 : diff < 0 ? -1 : 0;
-    p.targetLeft = targetLeft;
-    p.targetWidth = targetWidth;
-
-    const isReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (isReduced) {
-      p.currentLeft = targetLeft;
-      p.currentWidth = targetWidth;
-      setIndicatorStyle({
-        left: targetLeft,
-        width: targetWidth,
-        opacity: 1,
-        scaleX: 1,
-        direction: p.direction,
-      });
-      setDropletStyle({ x: targetLeft, opacity: 0, scale: 0.6 });
-      return;
-    }
-
-    // Start spring simulation loop if not already running
-    if (!p.isAnimating) {
-      p.isAnimating = true;
-      runSpringPhysics();
-    }
-  }, [activeSection, runSpringPhysics]);
 
   // Scroll spy & background shadow on scroll
   useEffect(() => {
     let ticking = false;
-    const sections = NAV_ITEMS.map((item) => item.href.replace("#", ""));
+    const sections = NAV_ITEMS.map((item) => item.id);
 
     const updateActiveSection = () => {
       const isScrolledNow = window.scrollY > 30;
@@ -232,32 +59,8 @@ export default function Navigation() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", updateTargetFromDOM, { passive: true });
-
-    // Handle tab visibility changes to pause loop
-    const handleVisibilityChange = () => {
-      if (document.hidden && animRef.current) {
-        cancelAnimationFrame(animRef.current);
-        physicsState.current.isAnimating = false;
-      } else {
-        updateTargetFromDOM();
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", updateTargetFromDOM);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      if (animRef.current) cancelAnimationFrame(animRef.current);
-    };
-  }, [updateTargetFromDOM]);
-
-  // Recalculate target indicator position whenever activeSection changes
-  useEffect(() => {
-    const timer = setTimeout(updateTargetFromDOM, 20);
-    return () => clearTimeout(timer);
-  }, [activeSection, updateTargetFromDOM]);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Dismiss on Escape key
   useEffect(() => {
@@ -285,28 +88,7 @@ export default function Navigation() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isExpanded]);
 
-  // Trigger smooth water ripple on click
-  const triggerRipple = (href: string, e: React.MouseEvent<HTMLButtonElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const newRipple: Ripple = { id: Date.now() + Math.random(), x, y };
-
-    setRipples((prev) => ({
-      ...prev,
-      [href]: [...(prev[href] || []), newRipple],
-    }));
-
-    setTimeout(() => {
-      setRipples((prev) => ({
-        ...prev,
-        [href]: (prev[href] || []).filter((r) => r.id !== newRipple.id),
-      }));
-    }, 500);
-  };
-
-  const scrollTo = (href: string, e?: React.MouseEvent<HTMLButtonElement>) => {
-    if (e) triggerRipple(href, e);
+  const scrollTo = (href: string) => {
     const id = href.replace("#", "");
     setActiveSection(id === "contact" ? "inquiry" : id);
     const el = document.getElementById(id);
@@ -314,31 +96,13 @@ export default function Navigation() {
     setIsExpanded(false);
   };
 
+  const activeIndex = Math.max(
+    0,
+    NAV_ITEMS.findIndex((it) => it.id === activeSection)
+  );
+
   return (
     <div ref={navContainerRef} className="fixed top-0 left-0 right-0 z-[9999] pointer-events-none">
-      {/* 
-        ── SVG GOOEY FILTER DEFINITION FOR NIMBUS WATERLINE EFFECT ──
-        Applies organic liquid cohesion and droplet merging without blurring text
-      */}
-      <svg
-        className="absolute w-0 h-0 overflow-hidden pointer-events-none"
-        aria-hidden="true"
-        style={{ position: "absolute", left: -9999, top: -9999 }}
-      >
-        <defs>
-          <filter id="nimbus-waterline-gooey">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="3.8" result="blur" />
-            <feColorMatrix
-              in="blur"
-              mode="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -8"
-              result="goo"
-            />
-            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-          </filter>
-        </defs>
-      </svg>
-
       {/* 
         ── EXPANDED STATE TRANSLUCENT OVERLAY ──
         120Hz GPU compositor layer (opacity only, zero layout reflows)
@@ -361,22 +125,22 @@ export default function Navigation() {
 
       {/* ── TOP COMPACT FLOATING LIQUID GLASS BAR (NIMBUS WATERLINE) ── */}
       <header
-        className="pointer-events-auto pt-4 px-3 flex justify-center w-full"
+        className="pointer-events-auto pt-3 px-2 sm:px-3 flex justify-center w-full"
         role="banner"
       >
         <div
-          className="relative rounded-full px-3 py-1.5 flex items-center justify-between gap-1.5 sm:gap-2.5 transition-all duration-300 group"
+          className="relative rounded-full px-2.5 sm:px-3 py-1 flex items-center justify-between gap-1 sm:gap-2.5 transition-all duration-300 group max-w-full overflow-x-auto no-scrollbar"
           style={{
             background: scrolled
-              ? "rgba(10, 13, 24, 0.82)"
-              : "rgba(14, 18, 30, 0.72)",
+              ? "rgba(10, 13, 24, 0.86)"
+              : "rgba(14, 18, 30, 0.74)",
             backdropFilter: "blur(22px) saturate(180%)",
             WebkitBackdropFilter: "blur(22px) saturate(180%)",
             border: isExpanded
               ? "1px solid rgba(56, 189, 248, 0.4)"
               : "1px solid rgba(255, 255, 255, 0.15)",
             boxShadow: scrolled
-              ? "0 18px 42px -8px rgba(0, 0, 0, 0.7), 0 0 24px -2px rgba(56, 189, 248, 0.18), inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4)"
+              ? "0 18px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px -2px rgba(56, 189, 248, 0.18), inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4)"
               : "0 8px 30px -5px rgba(0, 0, 0, 0.5), 0 0 18px -2px rgba(56, 189, 248, 0.12), inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.28), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3)",
           }}
         >
@@ -386,15 +150,9 @@ export default function Navigation() {
             aria-hidden="true"
           />
 
-          {/* Bottom Waterline Light Sheen */}
-          <div
-            className="absolute inset-x-8 bottom-0 h-[1px] rounded-b-full bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent pointer-events-none opacity-60"
-            aria-hidden="true"
-          />
-
           {/* Brand Logo & Name */}
           <button
-            onClick={(e) => scrollTo("#home", e)}
+            onClick={() => scrollTo("#home")}
             className="relative flex items-center gap-2 pl-1 pr-1.5 py-0.5 rounded-full flex-shrink-0 focus-visible:outline-none group text-left transition-transform duration-200 hover:scale-[1.02]"
             aria-label="SocialAssist Home"
           >
@@ -413,7 +171,7 @@ export default function Navigation() {
               />
             </div>
             <span
-              className="text-xs font-bold tracking-[0.16em] uppercase text-white"
+              className="text-xs font-bold tracking-[0.16em] uppercase text-white hidden xs:inline"
               style={{ fontFamily: "var(--font-space-grotesk)" }}
             >
               SocialAssist
@@ -421,116 +179,26 @@ export default function Navigation() {
           </button>
 
           {/* 
-            ── DESKTOP WATERLINE LIQUID NAVIGATION TRACK ──
-            Active liquid pill stretches fluidly with gooey deformation and droplet absorption
+            ── NIMBUS UI LIQUID NAVBAR ("WATERLINE") ──
+            Full WebGL water shader, spring deformation physics, icon animations, and ripples
           */}
-          <nav
-            ref={navTrackRef}
-            aria-label="Quick links"
-            className="relative hidden md:flex items-center gap-0.5 ml-1 px-1 py-0.5 rounded-full"
-          >
-            {/* Subtle Vertical Glass Separator */}
-            <div className="w-px h-3.5 bg-white/15 mr-1 pointer-events-none" />
-
-            {/* 
-              ── LIQUID LAYER (GOOEY FILTER APPLIED) ──
-              Houses the stretching liquid pill + trailing water droplet
-            */}
-            <div
-              className="absolute inset-0 pointer-events-none overflow-visible"
-              style={{
-                filter: "url(#nimbus-waterline-gooey)",
-                WebkitFilter: "url(#nimbus-waterline-gooey)",
+          <div className="hidden md:flex items-center">
+            <LiquidNavbar
+              tone="dark"
+              items={NAV_ITEMS}
+              active={activeIndex}
+              onChange={(idx, item) => {
+                if (item.href) scrollTo(item.href);
               }}
-              aria-hidden="true"
-            >
-              {/* Active Liquid Pill Body */}
-              <div
-                className="absolute top-1 bottom-1 rounded-full waterline-liquid-surface transition-opacity duration-200"
-                style={{
-                  transform: `translate3d(${indicatorStyle.left}px, 0, 0) scaleX(${indicatorStyle.scaleX})`,
-                  transformOrigin: indicatorStyle.direction >= 0 ? "left center" : "right center",
-                  width: `${indicatorStyle.width}px`,
-                  opacity: indicatorStyle.opacity,
-                  willChange: "transform, width, opacity",
-                }}
-              >
-                {/* Surface Meniscus Specular Highlight */}
-                <div className="absolute inset-x-2 top-0 h-[1px] bg-white/70 rounded-full" />
-              </div>
-
-              {/* Trailing Liquid Water Droplet (Appears during longer jumps) */}
-              <div
-                className="absolute top-1/2 -mt-1.5 w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(56,189,248,0.8)] transition-opacity duration-150"
-                style={{
-                  transform: `translate3d(${dropletStyle.x}px, -50%, 0) scale(${dropletStyle.scale})`,
-                  opacity: dropletStyle.opacity,
-                  willChange: "transform, opacity",
-                }}
-              />
-            </div>
-
-            {/* 
-              ── TEXT LABELS LAYER (Z-10, NEVER BLURRED) ──
-              100% crisp typography on top of the liquid layer
-            */}
-            {NAV_ITEMS.map((item) => {
-              const isActive = activeSection === item.href.replace("#", "");
-              const isHovered = hoveredHref === item.href;
-              const itemRipples = ripples[item.href] || [];
-
-              return (
-                <button
-                  key={item.href}
-                  ref={(el) => {
-                    if (el) itemRefs.current.set(item.href, el);
-                    else itemRefs.current.delete(item.href);
-                  }}
-                  onClick={(e) => scrollTo(item.href, e)}
-                  onMouseEnter={() => setHoveredHref(item.href)}
-                  onMouseLeave={() => setHoveredHref(null)}
-                  className="relative z-10 px-3 py-1 rounded-full text-xs font-semibold tracking-wide transition-colors duration-200 overflow-hidden select-none focus-visible:outline-none"
-                  style={{
-                    color: isActive
-                      ? "#FFFFFF"
-                      : isHovered
-                      ? "rgba(255, 255, 255, 0.95)"
-                      : "rgba(226, 232, 240, 0.68)",
-                    fontFamily: "var(--font-inter)",
-                  }}
-                >
-                  {/* Hover Meniscus Response (Subtle water wave swell when hovering) */}
-                  {isHovered && !isActive && (
-                    <span
-                      className="absolute inset-0 rounded-full bg-cyan-400/10 pointer-events-none transition-opacity duration-200"
-                      aria-hidden="true"
-                    />
-                  )}
-
-                  {/* Waterline Click Ripple Rings */}
-                  {itemRipples.map((ripple) => (
-                    <span
-                      key={ripple.id}
-                      className="absolute w-8 h-8 rounded-full pointer-events-none animate-waterline-ripple"
-                      style={{
-                        left: ripple.x,
-                        top: ripple.y,
-                        background: "radial-gradient(circle, rgba(56, 189, 248, 0.5) 0%, rgba(37, 99, 235, 0.2) 60%, transparent 80%)",
-                      }}
-                      aria-hidden="true"
-                    />
-                  ))}
-
-                  <span className="relative z-10">{item.label}</span>
-                </button>
-              );
-            })}
-          </nav>
+              sound={false}
+              className="text-xs !bg-transparent !p-0.5 !border-0"
+            />
+          </div>
 
           {/* Right Controls: Direct CTA + Nimbus Liquid Menu Button */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             <button
-              onClick={(e) => scrollTo("#contact", e)}
+              onClick={() => scrollTo("#contact")}
               className="relative hidden sm:inline-flex px-3.5 py-1.5 rounded-full text-xs font-bold text-white transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] overflow-hidden group shadow-[0_4px_16px_rgba(37,99,235,0.35)]"
               style={{
                 background: "linear-gradient(135deg, #2563EB 0%, #1D4ED8 50%, #7C3AED 100%)",
@@ -538,7 +206,6 @@ export default function Navigation() {
                 fontFamily: "var(--font-inter)",
               }}
             >
-              {/* Gloss Sheen on Contact Button */}
               <div
                 className="absolute inset-0 bg-gradient-to-t from-transparent via-white/15 to-white/25 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                 aria-hidden="true"
@@ -623,11 +290,11 @@ export default function Navigation() {
           {/* Grid of Navigation Destination Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4">
             {NAV_ITEMS.map((item) => {
-              const isActive = activeSection === item.href.replace("#", "");
+              const isActive = activeSection === item.id;
               return (
                 <button
                   key={item.href}
-                  onClick={(e) => scrollTo(item.href, e)}
+                  onClick={() => item.href && scrollTo(item.href)}
                   className={`relative p-3 rounded-2xl text-left transition-all duration-150 flex flex-col justify-between overflow-hidden group ${
                     isActive
                       ? "bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-400/50 text-white shadow-lg shadow-cyan-950/40"
@@ -662,7 +329,7 @@ export default function Navigation() {
             </div>
 
             <button
-              onClick={(e) => scrollTo("#contact", e)}
+              onClick={() => scrollTo("#contact")}
               className="w-full sm:w-auto px-5 py-2.5 rounded-full font-bold text-xs text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-md shadow-indigo-950/40 hover:opacity-95 transition-transform duration-150 active:scale-[0.98]"
             >
               Contact Operator →
