@@ -33,20 +33,20 @@ export default function Home() {
         {/* Background orbs & cursor glow */}
         <BackgroundEffects />
 
-        {/* Page sections in exact UX journey order */}
+        {/* Page sections in exact UX journey order with clean architectural contrast dividers */}
         <main className="overflow-x-hidden">
           <HeroSection />
-          <div className="section-contain"><CredibilityStrip /></div>
-          <div className="section-contain"><ServicesSection /></div>
-          <div className="section-contain"><PlatformEcosystem /></div>
-          <div className="section-contain"><AccountAssistance /></div>
-          <div className="section-contain"><VerificationSection /></div>
-          <div className="section-contain"><BrandProtection /></div>
-          <div className="section-contain"><CryptoExchange /></div>
-          <div className="section-contain"><AutomatedAds /></div>
-          <div className="section-contain"><AboutSection /></div>
-          <div className="section-contain"><ChannelShowcase /></div>
-          <div className="section-contain"><FinalCTA /></div>
+          <div className="section-contain border-divider"><CredibilityStrip /></div>
+          <div className="section-contain border-divider"><ServicesSection /></div>
+          <div className="section-contain border-divider"><PlatformEcosystem /></div>
+          <div className="section-contain border-divider"><AccountAssistance /></div>
+          <div className="section-contain border-divider"><VerificationSection /></div>
+          <div className="section-contain border-divider"><BrandProtection /></div>
+          <div className="section-contain border-divider"><CryptoExchange /></div>
+          <div className="section-contain border-divider"><AutomatedAds /></div>
+          <div className="section-contain border-divider"><AboutSection /></div>
+          <div className="section-contain border-divider"><ChannelShowcase /></div>
+          <div className="section-contain border-divider"><FinalCTA /></div>
         </main>
 
         <Footer />

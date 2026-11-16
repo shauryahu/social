@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import CinematicLaptop from "@/components/3d/CinematicLaptop";
-import Hero3DBackground from "@/components/3d/Hero3DBackground";
+import HeroArchitecturalGrid from "@/components/HeroArchitecturalGrid";
+import AnimatedStatistics from "@/components/AnimatedStatistics";
 
 export default function HeroSection() {
   const [visible, setVisible] = useState(true);
@@ -25,8 +26,8 @@ export default function HeroSection() {
       className="relative min-h-screen flex flex-col items-center justify-start pt-32 sm:pt-36 pb-20 px-4 md:px-8 overflow-hidden"
       aria-labelledby="hero-heading"
     >
-      {/* ── Large Immersive 3D Background Elements ── */}
-      <Hero3DBackground />
+      {/* ── Minimal Architectural Grid Lines (Smooth Top-to-Bottom Fade) ── */}
+      <HeroArchitecturalGrid />
 
       {/* Background Cinematic Atmosphere: Soft Metallic Blue & Midnight Glow */}
       <div
@@ -88,16 +89,13 @@ export default function HeroSection() {
           <div className="w-px h-6 bg-white/15" />
 
           <div
-            className="text-lg sm:text-xl font-bold tracking-[0.2em] uppercase text-white flex items-center gap-2"
+            className="text-lg sm:text-xl font-bold tracking-[0.2em] uppercase text-white flex items-center"
             style={{
               fontFamily: "var(--font-space-grotesk)",
               textShadow: "0 0 20px rgba(255,255,255,0.2)",
             }}
           >
             SocialAssist
-            <span className="text-[10px] px-2 py-0.5 rounded bg-white/10 border border-white/20 text-cyan-300 font-mono tracking-normal font-medium">
-              2.0
-            </span>
           </div>
         </div>
 
@@ -188,40 +186,8 @@ export default function HeroSection() {
           </button>
         </div>
 
-        {/* Metrics Grid */}
-        <div
-          className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full max-w-4xl"
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(18px)",
-            transition: "opacity 0.85s ease-out 0.45s, transform 0.85s ease-out 0.45s",
-          }}
-        >
-          {[
-            { value: "500+", label: "Cases Resolved", sub: "Verified resolution" },
-            { value: "100%", label: "Secure Network", sub: "Strict confidentiality" },
-            { value: "24/7", label: "Direct Support", sub: "Telegram escalation" },
-            { value: "99.9%", label: "Success Rate", sub: "Tier-1 internal channels" },
-          ].map((stat, idx) => (
-            <div
-              key={idx}
-              className="p-4 rounded-2xl border border-white/10 bg-[#12121A]/70 backdrop-blur-xl hover:border-white/20 transition-all duration-300 text-left group"
-            >
-              <div
-                className="text-2xl sm:text-3xl font-black text-white group-hover:text-cyan-300 transition-colors"
-                style={{ fontFamily: "var(--font-space-grotesk)" }}
-              >
-                {stat.value}
-              </div>
-              <div className="text-xs sm:text-sm font-semibold text-zinc-200 mt-1">
-                {stat.label}
-              </div>
-              <div className="text-[11px] text-zinc-500 mt-0.5">
-                {stat.sub}
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* 4. Immersive Animated Count-Up Statistics */}
+        <AnimatedStatistics />
 
         {/* 4. SIGNATURE CINEMATIC 3D LAPTOP ANIMATION
             Renders 3D metallic laptop with hinge opening, screen glow, and actual intro video inside

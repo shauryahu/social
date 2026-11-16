@@ -9,41 +9,44 @@ interface CinematicLaptopProps {
 
 export default function CinematicLaptop({ className = "" }: CinematicLaptopProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const [muted, setMuted] = useState(true);
   const [playing, setPlaying] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [scrollProgressDisplay, setScrollProgressDisplay] = useState(0);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   const sceneState = useRef<{
     renderer: THREE.WebGLRenderer | null;
     scene: THREE.Scene | null;
     camera: THREE.PerspectiveCamera | null;
-    laptopBase: THREE.Group | null;
     lidGroup: THREE.Group | null;
+    laptopRoot: THREE.Group | null;
+    screenMaterial: THREE.MeshBasicMaterial | null;
     screenLight: THREE.PointLight | null;
-    screenMesh: THREE.Mesh | null;
     videoTexture: THREE.VideoTexture | null;
     animId: number | null;
-    openProgress: number; // 0 to 1
-    targetOpen: number; // 0 or 1
-    cameraProgress: number;
+    currentOpen: number; // 0 to 1 interpolated
+    targetOpen: number; // 0 to 1 from scroll
+    targetCameraY: number;
+    targetCameraZ: number;
     mouse: { x: number; y: number; targetX: number; targetY: number };
     isVisible: boolean;
   }>({
     renderer: null,
     scene: null,
     camera: null,
-    laptopBase: null,
     lidGroup: null,
+    laptopRoot: null,
+    screenMaterial: null,
     screenLight: null,
-    screenMesh: null,
     videoTexture: null,
     animId: null,
-    openProgress: 0,
+    currentOpen: 0,
     targetOpen: 0,
-    cameraProgress: 0,
+    targetCameraY: 0.9,
+    targetCameraZ: 3.8,
     mouse: { x: 0, y: 0, targetX: 0, targetY: 0 },
     isVisible: true,
   });
@@ -66,59 +69,119 @@ export default function CinematicLaptop({ className = "" }: CinematicLaptopProps
     }
   }, []);
 
-  const replayOpenAnimation = useCallback(() => {
-    const s = sceneState.current;
-    s.openProgress = 0;
-    s.targetOpen = 0;
-    s.cameraProgress = 0;
-    setIsOpen(false);
-    if (s.screenLight) s.screenLight.intensity = 0;
-    setTimeout(() => {
-      s.targetOpen = 1;
-      setIsOpen(true);
-    }, 350);
-  }, []);
+  // Helper to create a fallback high-res poster texture so screen is NEVER blank
+  const createPosterTexture = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1280;
+    canvas.height = 800;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+
+    // Premium dark gradient background
+    const grad = ctx.createLinearGradient(0, 0, 1280, 800);
+    grad.addColorStop(0, "#080B14");
+    grad.addColorStop(0.5, "#0D1222");
+    grad.addColorStop(1, "#07080D");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 1280, 800);
+
+    // Subtle radial aura
+    const radial = ctx.createRadialGradient(640, 400, 50, 640, 400, 500);
+    radial.addColorStop(0, "rgba(56, 189, 248, 0.25)");
+    radial.addColorStop(0.5, "rgba(139, 92, 246, 0.12)");
+    radial.addColorStop(1, "transparent");
+    ctx.fillStyle = radial;
+    ctx.fillRect(0, 0, 1280, 800);
+
+    // Grid lines
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+    ctx.lineWidth = 1;
+    for (let x = 0; x < 1280; x += 64) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, 800);
+      ctx.stroke();
+    }
+    for (let y = 0; y < 800; y += 64) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(1280, y);
+      ctx.stroke();
+    }
+
+    // Brand Title
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 52px system-ui, -apple-system, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("SOCIALASSIST", 640, 370);
+
+    // Subtitle
+    ctx.fillStyle = "#38BDF8";
+    ctx.font = "600 24px monospace";
+    ctx.fillText("DIGITAL ASSISTANCE & RESOLUTION NETWORK", 640, 430);
+
+    // Security indicator pill
+    ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+    ctx.beginPath();
+    ctx.roundRect(500, 480, 280, 44, 22);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.4)";
+    ctx.stroke();
+
+    ctx.fillStyle = "#E2E8F0";
+    ctx.font = "500 16px system-ui";
+    ctx.fillText("• High-Security Resolution Desk •", 640, 502);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return texture;
+  };
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    const section = sectionRef.current;
+    if (!container || !section) return;
 
-    // 1. Create HTML Video Element for Intro Video
+    const posterTexture = createPosterTexture();
+
+    // 1. Video Element setup
     const video = document.createElement("video");
     video.src = "/videos/intro.mp4";
     video.crossOrigin = "anonymous";
     video.loop = true;
     video.muted = true;
     video.playsInline = true;
-    video.autoplay = true;
     video.setAttribute("webkit-playsinline", "true");
+
+    let videoTexture: THREE.VideoTexture | null = null;
+
+    video.addEventListener("loadeddata", () => {
+      setVideoLoaded(true);
+      videoTexture = new THREE.VideoTexture(video);
+      videoTexture.colorSpace = THREE.SRGBColorSpace;
+      videoTexture.minFilter = THREE.LinearFilter;
+      videoTexture.magFilter = THREE.LinearFilter;
+      videoTexture.generateMipmaps = false;
+
+      if (sceneState.current.screenMaterial) {
+        sceneState.current.screenMaterial.map = videoTexture;
+        sceneState.current.screenMaterial.needsUpdate = true;
+      }
+    });
+
     video.play().catch(() => {});
     videoRef.current = video;
 
-    const videoTexture = new THREE.VideoTexture(video);
-    videoTexture.colorSpace = THREE.SRGBColorSpace;
-    videoTexture.minFilter = THREE.LinearFilter;
-    videoTexture.magFilter = THREE.LinearFilter;
-    videoTexture.generateMipmaps = false;
-
-    const onTimeUpdate = () => {
-      if (video.duration) {
-        setProgress((video.currentTime / video.duration) * 100);
-      }
-    };
-    video.addEventListener("timeupdate", onTimeUpdate);
-
     // 2. Three.js Scene Setup
-    const width = container.clientWidth || 800;
-    const height = container.clientHeight || 520;
+    const width = container.clientWidth || 900;
+    const height = container.clientHeight || 560;
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x07070a, 0.04);
 
-    const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 100);
-    // Initial camera position (close cinematic angle for closed laptop)
-    camera.position.set(0, 0.7, 3.4);
-    camera.lookAt(0, 0.1, 0);
+    const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
+    camera.position.set(0, 0.9, 3.8);
+    camera.lookAt(0, 0.15, 0);
 
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -128,247 +191,195 @@ export default function CinematicLaptop({ className = "" }: CinematicLaptopProps
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
     renderer.setSize(width, height);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.25;
+    renderer.toneMappingExposure = 1.2;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
     container.appendChild(renderer.domElement);
 
     // 3. Apple Studio Lighting
-    // Overhead Soft Key
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
-    keyLight.position.set(1.5, 5, 2.5);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.8);
+    keyLight.position.set(2, 5, 3);
     keyLight.castShadow = true;
-    keyLight.shadow.mapSize.width = 1024;
-    keyLight.shadow.mapSize.height = 1024;
-    keyLight.shadow.bias = -0.0001;
     scene.add(keyLight);
 
-    // Electric Blue Rim Kicker (Left)
-    const rimLight = new THREE.DirectionalLight(0x38bdf8, 1.8);
-    rimLight.position.set(-4, 2.5, -2);
+    const rimLight = new THREE.DirectionalLight(0x38bdf8, 1.6);
+    rimLight.position.set(-4, 3, -2);
     scene.add(rimLight);
 
-    // Soft Lavender Fill (Right)
-    const fillLight = new THREE.DirectionalLight(0x818cf8, 1.2);
+    const fillLight = new THREE.DirectionalLight(0x818cf8, 1.0);
     fillLight.position.set(4, 2, -1);
     scene.add(fillLight);
 
-    // Ambient studio base
-    const ambientLight = new THREE.AmbientLight(0x0a0c16, 1.3);
+    const ambientLight = new THREE.AmbientLight(0x0a0c16, 1.4);
     scene.add(ambientLight);
 
-    // Screen Dynamic Glow Light (illuminates keyboard deck as screen opens)
-    const screenLight = new THREE.PointLight(0xc5a7ff, 0, 4.8, 2.0);
-    screenLight.position.set(0, 1.1, -0.2);
+    // Screen radiance point light
+    const screenLight = new THREE.PointLight(0x38bdf8, 0, 4.5, 2.0);
+    screenLight.position.set(0, 0.6, 0);
     scene.add(screenLight);
 
-    // 4. Photorealistic Laptop Construction (MacBook Pro 16" Physical Realism)
+    // 4. Photorealistic Laptop Geometry (Solid Precision Unibody)
     const laptopRoot = new THREE.Group();
-    laptopRoot.position.set(0, -0.15, 0);
     scene.add(laptopRoot);
 
-    // Space Gray Anodized Aluminum Material
+    const baseW = 2.45;
+    const baseD = 1.62;
+    const baseH = 0.048;
+
+    // Materials: Refined Dark Graphite / Metallic Silver Aluminum
     const aluminumMaterial = new THREE.MeshStandardMaterial({
-      color: 0x1c1d24,
+      color: 0x181822,
       metalness: 0.88,
-      roughness: 0.22,
+      roughness: 0.26,
     });
 
     const darkTrimMaterial = new THREE.MeshStandardMaterial({
-      color: 0x0c0c10,
+      color: 0x0c0d13,
       metalness: 0.7,
-      roughness: 0.45,
+      roughness: 0.4,
     });
 
-    // ── BASE CHASSIS (Stays Physically Stable on Desk) ──
-    const baseW = 3.5;
-    const baseD = 2.35;
-    const baseH = 0.08;
-
+    // --- Base Body ---
     const baseGroup = new THREE.Group();
     laptopRoot.add(baseGroup);
 
-    // Base Aluminum Body
     const baseGeo = new THREE.BoxGeometry(baseW, baseH, baseD);
     const baseMesh = new THREE.Mesh(baseGeo, aluminumMaterial);
-    baseMesh.position.set(0, baseH / 2, 0);
-    baseMesh.receiveShadow = true;
+    baseMesh.position.set(0, baseH / 2, baseD / 2);
     baseMesh.castShadow = true;
+    baseMesh.receiveShadow = true;
     baseGroup.add(baseMesh);
 
-    // Signature Front Thumb Lip Notch
-    const notchGeo = new THREE.BoxGeometry(0.55, 0.025, 0.04);
-    const notchMesh = new THREE.Mesh(notchGeo, darkTrimMaterial);
-    notchMesh.position.set(0, baseH - 0.01, baseD / 2);
+    // Thumb notch on front edge
+    const notchGeo = new THREE.BoxGeometry(0.32, 0.015, 0.02);
+    const notchMat = new THREE.MeshStandardMaterial({ color: 0x0a0b10, roughness: 0.5 });
+    const notchMesh = new THREE.Mesh(notchGeo, notchMat);
+    notchMesh.position.set(0, baseH - 0.005, baseD - 0.005);
     baseGroup.add(notchMesh);
 
-    // Four Rubber Feet on Base Underside
-    const footGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.015, 16);
-    const footMat = new THREE.MeshBasicMaterial({ color: 0x050508 });
-    const footPositions = [
-      [-baseW / 2 + 0.3, 0.005, -baseD / 2 + 0.3],
-      [baseW / 2 - 0.3, 0.005, -baseD / 2 + 0.3],
-      [-baseW / 2 + 0.3, 0.005, baseD / 2 - 0.3],
-      [baseW / 2 - 0.3, 0.005, baseD / 2 - 0.3],
-    ];
-    footPositions.forEach(([fx, fy, fz]) => {
-      const foot = new THREE.Mesh(footGeo, footMat);
-      foot.position.set(fx, fy, fz);
-      baseGroup.add(foot);
+    // Keyboard Well & Chiclet Keys
+    const kbWellW = 1.82;
+    const kbWellD = 0.78;
+    const kbWellGeo = new THREE.PlaneGeometry(kbWellW, kbWellD);
+    const kbWellMat = new THREE.MeshStandardMaterial({
+      color: 0x09090e,
+      roughness: 0.6,
+      metalness: 0.4,
     });
+    const kbWell = new THREE.Mesh(kbWellGeo, kbWellMat);
+    kbWell.rotation.x = -Math.PI / 2;
+    kbWell.position.set(0, baseH + 0.001, 0.58);
+    baseGroup.add(kbWell);
 
-    // Keyboard Tray Well Recess
-    const kbWellGeo = new THREE.BoxGeometry(2.85, 0.008, 1.25);
-    const kbWellMesh = new THREE.Mesh(kbWellGeo, darkTrimMaterial);
-    kbWellMesh.position.set(0, baseH + 0.002, -0.28);
-    baseGroup.add(kbWellMesh);
-
-    // Chiclet Keycaps
-    const keysGroup = new THREE.Group();
-    keysGroup.position.set(0, baseH + 0.008, -0.28);
-    const keyMat = new THREE.MeshStandardMaterial({
-      color: 0x111115,
-      metalness: 0.35,
-      roughness: 0.65,
+    // Keyboard Keycaps Plate
+    const keyPlateGeo = new THREE.PlaneGeometry(kbWellW - 0.04, kbWellD - 0.04);
+    const keyPlateMat = new THREE.MeshStandardMaterial({
+      color: 0x14141c,
+      roughness: 0.35,
+      metalness: 0.3,
     });
+    const keyPlate = new THREE.Mesh(keyPlateGeo, keyPlateMat);
+    keyPlate.rotation.x = -Math.PI / 2;
+    keyPlate.position.set(0, baseH + 0.002, 0.58);
+    baseGroup.add(keyPlate);
 
-    const rows = 5;
-    const cols = 14;
-    const keyW = 0.175;
-    const keyD = 0.185;
-    const keyH = 0.014;
-    const keyGeo = new THREE.BoxGeometry(keyW, keyH, keyD);
-
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        const kx = (c - (cols - 1) / 2) * (keyW + 0.024);
-        const kz = (r - (rows - 1) / 2) * (keyD + 0.026);
-        const key = new THREE.Mesh(keyGeo, keyMat);
-        key.position.set(kx, 0, kz);
-        keysGroup.add(key);
-      }
-    }
-    // Spacebar
-    const spaceGeo = new THREE.BoxGeometry(1.15, keyH, keyD);
-    const spaceKey = new THREE.Mesh(spaceGeo, keyMat);
-    spaceKey.position.set(0, 0, ((rows - 1) / 2) * (keyD + 0.026));
-    keysGroup.add(spaceKey);
-    baseGroup.add(keysGroup);
-
-    // Force Touch Glass Trackpad
-    const trackpadGeo = new THREE.BoxGeometry(1.25, 0.004, 0.72);
+    // Trackpad
+    const trackpadW = 0.88;
+    const trackpadD = 0.56;
+    const trackpadGeo = new THREE.PlaneGeometry(trackpadW, trackpadD);
     const trackpadMat = new THREE.MeshStandardMaterial({
-      color: 0x22222a,
-      metalness: 0.65,
-      roughness: 0.28,
+      color: 0x161720,
+      roughness: 0.22,
+      metalness: 0.82,
     });
-    const trackpadMesh = new THREE.Mesh(trackpadGeo, trackpadMat);
-    trackpadMesh.position.set(0, baseH + 0.003, 0.68);
-    baseGroup.add(trackpadMesh);
+    const trackpad = new THREE.Mesh(trackpadGeo, trackpadMat);
+    trackpad.rotation.x = -Math.PI / 2;
+    trackpad.position.set(0, baseH + 0.001, 1.26);
+    baseGroup.add(trackpad);
 
-    // Speaker Grills Flanking Keyboard
-    const grillGeo = new THREE.BoxGeometry(0.18, 0.003, 1.25);
-    const grillMat = new THREE.MeshBasicMaterial({ color: 0x111116 });
+    // Speaker Grilles
+    const grillW = 0.18;
+    const grillD = 0.76;
+    const grillGeo = new THREE.PlaneGeometry(grillW, grillD);
+    const grillMat = new THREE.MeshStandardMaterial({
+      color: 0x101118,
+      roughness: 0.7,
+      metalness: 0.3,
+    });
     const leftGrill = new THREE.Mesh(grillGeo, grillMat);
-    leftGrill.position.set(-1.58, baseH + 0.002, -0.28);
+    leftGrill.rotation.x = -Math.PI / 2;
+    leftGrill.position.set(-1.05, baseH + 0.001, 0.58);
     baseGroup.add(leftGrill);
+
     const rightGrill = new THREE.Mesh(grillGeo, grillMat);
-    rightGrill.position.set(1.58, baseH + 0.002, -0.28);
+    rightGrill.rotation.x = -Math.PI / 2;
+    rightGrill.position.set(1.05, baseH + 0.001, 0.58);
     baseGroup.add(rightGrill);
 
-    // ── HINGE CYLINDER BARREL ──
-    const hingeR = 0.035;
-    const hingeL = baseW - 0.25;
-    const hingeGeo = new THREE.CylinderGeometry(hingeR, hingeR, hingeL, 24);
-    const hingeMat = new THREE.MeshStandardMaterial({
-      color: 0x0c0c12,
-      metalness: 0.9,
-      roughness: 0.2,
-    });
-    const hingeMesh = new THREE.Mesh(hingeGeo, hingeMat);
+    // --- Back Hinge Pivot ---
+    const hingeGeo = new THREE.CylinderGeometry(0.024, 0.024, 1.9, 24);
+    const hingeMesh = new THREE.Mesh(hingeGeo, darkTrimMaterial);
     hingeMesh.rotation.z = Math.PI / 2;
-    hingeMesh.position.set(0, baseH + hingeR, -baseD / 2);
-    baseGroup.add(hingeMesh);
+    hingeMesh.position.set(0, baseH, 0);
+    laptopRoot.add(hingeMesh);
 
-    // ── DISPLAY LID ASSEMBLY (Pivoting Exactly Around Back Hinge Axis) ──
+    // --- Lid Group (Pivots exactly at Hinge Z=0, Y=baseH) ---
     const lidGroup = new THREE.Group();
-    // Pivot positioned exactly at back edge
-    const hingeOriginY = baseH + hingeR;
-    const hingeOriginZ = -baseD / 2;
-    lidGroup.position.set(0, hingeOriginY, hingeOriginZ);
+    lidGroup.position.set(0, baseH, 0);
     laptopRoot.add(lidGroup);
 
     const lidW = baseW;
     const lidD = baseD;
-    const lidThickness = 0.045;
+    const lidH = 0.038;
 
-    // Outer Aluminum Back Lid
-    const lidBackGeo = new THREE.BoxGeometry(lidW, lidThickness, lidD);
+    // Aluminum Back Shell
+    const lidBackGeo = new THREE.BoxGeometry(lidW, lidH, lidD);
     const lidBackMesh = new THREE.Mesh(lidBackGeo, aluminumMaterial);
-    // In local space, lid extends forwards towards +Z (from Z=0 to Z=lidD)
-    lidBackMesh.position.set(0, lidThickness / 2, lidD / 2);
+    lidBackMesh.position.set(0, lidH / 2, lidD / 2);
     lidBackMesh.castShadow = true;
     lidGroup.add(lidBackMesh);
 
-    // Display Glass Bezel
-    const bezelGeo = new THREE.PlaneGeometry(lidW - 0.06, lidD - 0.06);
-    const bezelMat = new THREE.MeshStandardMaterial({
-      color: 0x050508,
-      metalness: 0.6,
-      roughness: 0.35,
-    });
-    const bezelMesh = new THREE.Mesh(bezelGeo, bezelMat);
-    bezelMesh.rotation.x = Math.PI / 2; // Lies flat at Y=0, normal pointing down into keyboard
-    bezelMesh.position.set(0, 0.001, lidD / 2);
-    lidGroup.add(bezelMesh);
+    // Display Glass Surface & Bezel
+    const screenW = lidW * 0.92;
+    const screenH = lidD * 0.88;
 
-    // Display Screen Mesh (16:10 Aspect Ratio with Intro Video)
-    const screenW = lidW - 0.18;
-    const screenH = lidD - 0.16;
+    // Bezel Frame
+    const bezelGeo = new THREE.PlaneGeometry(lidW * 0.97, lidD * 0.96);
+    const bezelMat = new THREE.MeshBasicMaterial({ color: 0x050508 });
+    const bezel = new THREE.Mesh(bezelGeo, bezelMat);
+    bezel.rotation.x = Math.PI / 2;
+    bezel.position.set(0, -0.001, lidD / 2);
+    lidGroup.add(bezel);
+
+    // Continuous Screen Display Mesh (Always mapped to poster or video)
     const screenGeo = new THREE.PlaneGeometry(screenW, screenH);
     const screenMaterial = new THREE.MeshBasicMaterial({
-      map: videoTexture,
+      map: posterTexture,
       toneMapped: false,
     });
     const screenMesh = new THREE.Mesh(screenGeo, screenMaterial);
-    // Rotate so when lid opens, it faces directly towards the user
     screenMesh.rotation.x = Math.PI / 2;
-    screenMesh.position.set(0, 0.003, lidD / 2);
+    screenMesh.position.set(0, -0.002, lidD / 2);
     lidGroup.add(screenMesh);
 
-    // Camera Notch Housing on Screen Top Bezel
-    const cameraNotchGeo = new THREE.BoxGeometry(0.24, 0.002, 0.035);
-    const cameraNotchMat = new THREE.MeshBasicMaterial({ color: 0x010103 });
-    const cameraNotch = new THREE.Mesh(cameraNotchGeo, cameraNotchMat);
-    cameraNotch.position.set(0, 0.004, lidD - 0.05);
-    lidGroup.add(cameraNotch);
+    // FaceTime Camera Dot
+    const camGeo = new THREE.CircleGeometry(0.012, 16);
+    const camMat = new THREE.MeshBasicMaterial({ color: 0x111624 });
+    const camMesh = new THREE.Mesh(camGeo, camMat);
+    camMesh.rotation.x = Math.PI / 2;
+    camMesh.position.set(0, -0.002, lidD - 0.038);
+    lidGroup.add(camMesh);
 
-    // Display Specular Glass Glare Overlay
-    const screenGlassGeo = new THREE.PlaneGeometry(screenW, screenH);
-    const screenGlassMat = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.06,
-      roughness: 0.04,
-      metalness: 0.1,
-      transmission: 0.95,
-      reflectivity: 0.5,
-    });
-    const screenGlass = new THREE.Mesh(screenGlassGeo, screenGlassMat);
-    screenGlass.rotation.x = Math.PI / 2;
-    screenGlass.position.set(0, 0.005, lidD / 2);
-    lidGroup.add(screenGlass);
-
-    // Reflective Studio Floor Plane (Soft Shadow Catcher & Reflection)
+    // Studio Reflection Shadow Catcher Floor
     const floorGeo = new THREE.PlaneGeometry(12, 12);
     const floorMat = new THREE.MeshStandardMaterial({
       color: 0x07070a,
-      roughness: 0.45,
-      metalness: 0.6,
+      roughness: 0.5,
+      metalness: 0.5,
     });
     const floorMesh = new THREE.Mesh(floorGeo, floorMat);
     floorMesh.rotation.x = -Math.PI / 2;
-    floorMesh.position.y = -0.005;
+    floorMesh.position.y = -0.002;
     floorMesh.receiveShadow = true;
     laptopRoot.add(floorMesh);
 
@@ -377,48 +388,64 @@ export default function CinematicLaptop({ className = "" }: CinematicLaptopProps
     s.renderer = renderer;
     s.scene = scene;
     s.camera = camera;
-    s.laptopBase = baseGroup;
     s.lidGroup = lidGroup;
+    s.laptopRoot = laptopRoot;
+    s.screenMaterial = screenMaterial;
     s.screenLight = screenLight;
-    s.screenMesh = screenMesh;
     s.videoTexture = videoTexture;
 
-    // Initial Closed Position: Lid is flat (rotation.x = 0)
-    lidGroup.rotation.x = 0;
-    s.openProgress = 0;
-    s.targetOpen = 0;
-
-    // Start Cinematic Sequence: Theatrical approach & smooth lid opening
-    const openTimer = setTimeout(() => {
+    // Check reduced motion preference
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
       s.targetOpen = 1;
-      setIsOpen(true);
-    }, 500);
+      s.currentOpen = 1;
+      lidGroup.rotation.x = -1.82;
+      camera.position.set(0, 1.25, 4.2);
+    }
+
+    // ── 5. SCROLL SYNCHRONIZATION ──
+    const updateScrollProgress = () => {
+      if (prefersReducedMotion) return;
+
+      const rect = section.getBoundingClientRect();
+      const windowH = window.innerHeight;
+
+      // When section top is at 80% viewport height, animation starts (progress 0)
+      // When section center is at viewport center, animation reaches full open (progress 1)
+      const startY = windowH * 0.85;
+      const endY = windowH * 0.25;
+
+      const progress = Math.min(Math.max((startY - rect.top) / (startY - endY), 0), 1);
+      s.targetOpen = progress;
+      setScrollProgressDisplay(Math.round(progress * 100));
+
+      // Synchronize video play state with scroll
+      if (videoRef.current) {
+        if (progress > 0.05 && videoRef.current.paused && playing) {
+          videoRef.current.play().catch(() => {});
+        }
+      }
+    };
+
+    window.addEventListener("scroll", updateScrollProgress, { passive: true });
+    updateScrollProgress();
 
     // Mouse Parallax Listeners
     const onMouseMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect();
       const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       const y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-      s.mouse.targetX = x * 0.28;
-      s.mouse.targetY = y * 0.18;
+      s.mouse.targetX = x * 0.25;
+      s.mouse.targetY = y * 0.15;
     };
     window.addEventListener("mousemove", onMouseMove, { passive: true });
 
-    // Responsive Sizing
+    // Responsive Resize Handler
     const onResize = () => {
       if (!container || !s.renderer || !s.camera) return;
       const w = container.clientWidth;
       const h = container.clientHeight;
       s.camera.aspect = w / h;
-
-      if (w < 640) {
-        s.camera.position.set(0, 1.45, 5.2);
-      } else if (w < 1024) {
-        s.camera.position.set(0, 1.35, 4.6);
-      } else {
-        s.camera.position.set(0, 1.25, 4.2);
-      }
-
       s.camera.updateProjectionMatrix();
       s.renderer.setSize(w, h);
     };
@@ -429,21 +456,12 @@ export default function CinematicLaptop({ className = "" }: CinematicLaptopProps
     const observer = new IntersectionObserver(
       ([entry]) => {
         s.isVisible = entry.isIntersecting;
-        if (entry.isIntersecting) {
-          if (videoRef.current && videoRef.current.paused && playing) {
-            videoRef.current.play().catch(() => {});
-          }
-        } else {
-          if (videoRef.current && !videoRef.current.paused) {
-            videoRef.current.pause();
-          }
-        }
       },
-      { threshold: 0.1 }
+      { threshold: 0.05 }
     );
-    observer.observe(container);
+    observer.observe(section);
 
-    // 5. Main Cinematic Animation Loop (60 FPS with Damped Acceleration Curves)
+    // ── 6. 120Hz Animation Loop with Damped Hermite Curves ──
     let lastTime = performance.now();
 
     const animate = (time: number) => {
@@ -453,36 +471,36 @@ export default function CinematicLaptop({ className = "" }: CinematicLaptopProps
       const dt = Math.min((time - lastTime) / 1000, 0.1);
       lastTime = time;
 
-      // Smooth Cubic Hermite Opening Motion
-      const openSpeed = 2.4;
-      const diff = s.targetOpen - s.openProgress;
-      s.openProgress += diff * (dt * openSpeed);
+      // Damped interpolation towards scroll progress
+      const openSpeed = 5.0;
+      s.currentOpen += (s.targetOpen - s.currentOpen) * (dt * openSpeed);
 
       // Realistic MacBook Opening Angle: from 0° (closed) to -104° (-1.82 rad) around back hinge
       const maxAngle = 1.82; // ~104 degrees
-      const currentAngle = -s.openProgress * maxAngle;
+      const currentAngle = -s.currentOpen * maxAngle;
       if (s.lidGroup) {
         s.lidGroup.rotation.x = currentAngle;
       }
 
-      // Dynamic Keyboard Deck Illumination from Screen Glow
+      // Dynamic Keyboard Radiance from Screen
       if (s.screenLight) {
-        const glowFactor = Math.min(Math.max((s.openProgress - 0.15) / 0.85, 0), 1);
-        s.screenLight.intensity = glowFactor * 4.2;
+        const glowFactor = Math.max((s.currentOpen - 0.2) / 0.8, 0);
+        s.screenLight.intensity = glowFactor * 3.8;
       }
 
-      // Smooth Camera Approach Transition
-      s.cameraProgress += (s.openProgress - s.cameraProgress) * (dt * 2.0);
+      // Smooth Camera Positioning from scroll
+      // As laptop opens, camera gracefully raises and frames the screen
+      const targetCamY = 0.85 + s.currentOpen * 0.45;
+      const targetCamZ = 3.6 + s.currentOpen * 0.55;
+      camera.position.y += (targetCamY - camera.position.y) * (dt * 3.5);
+      camera.position.z += (targetCamZ - camera.position.z) * (dt * 3.5);
 
-      // Soft Mouse Parallax Interpolation
-      s.mouse.x += (s.mouse.targetX - s.mouse.x) * (dt * 4.5);
-      s.mouse.y += (s.mouse.targetY - s.mouse.y) * (dt * 4.5);
+      // Soft Mouse Parallax
+      s.mouse.x += (s.mouse.targetX - s.mouse.x) * (dt * 4.0);
+      s.mouse.y += (s.mouse.targetY - s.mouse.y) * (dt * 4.0);
 
-      // Elegant cinematic studio float
-      const floatTime = time * 0.0008;
-      laptopRoot.rotation.y = s.mouse.x + Math.sin(floatTime * 0.7) * 0.025;
-      laptopRoot.rotation.x = -s.mouse.y * 0.4 + Math.cos(floatTime * 0.8) * 0.012;
-      laptopRoot.position.y = -0.15 + Math.sin(floatTime) * 0.03;
+      laptopRoot.rotation.y = s.mouse.x * 0.4;
+      laptopRoot.rotation.x = -s.mouse.y * 0.25;
 
       renderer.render(scene, camera);
     };
@@ -490,10 +508,9 @@ export default function CinematicLaptop({ className = "" }: CinematicLaptopProps
     s.animId = requestAnimationFrame(animate);
 
     return () => {
-      clearTimeout(openTimer);
+      window.removeEventListener("scroll", updateScrollProgress);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("resize", onResize);
-      video.removeEventListener("timeupdate", onTimeUpdate);
       observer.disconnect();
 
       if (s.animId) cancelAnimationFrame(s.animId);
@@ -502,34 +519,32 @@ export default function CinematicLaptop({ className = "" }: CinematicLaptopProps
       video.src = "";
       video.load();
 
-      videoTexture.dispose();
+      if (videoTexture) videoTexture.dispose();
+      if (posterTexture) posterTexture.dispose();
+
       baseGeo.dispose();
       notchGeo.dispose();
-      footGeo.dispose();
       kbWellGeo.dispose();
-      keyGeo.dispose();
-      spaceGeo.dispose();
+      keyPlateGeo.dispose();
       trackpadGeo.dispose();
       grillGeo.dispose();
       hingeGeo.dispose();
       lidBackGeo.dispose();
       bezelGeo.dispose();
       screenGeo.dispose();
-      cameraNotchGeo.dispose();
-      screenGlassGeo.dispose();
+      camGeo.dispose();
       floorGeo.dispose();
 
       aluminumMaterial.dispose();
       darkTrimMaterial.dispose();
-      footMat.dispose();
-      keyMat.dispose();
+      notchMat.dispose();
+      kbWellMat.dispose();
+      keyPlateMat.dispose();
       trackpadMat.dispose();
       grillMat.dispose();
-      hingeMat.dispose();
       bezelMat.dispose();
       screenMaterial.dispose();
-      cameraNotchMat.dispose();
-      screenGlassMat.dispose();
+      camMat.dispose();
       floorMat.dispose();
 
       renderer.dispose();
@@ -540,85 +555,48 @@ export default function CinematicLaptop({ className = "" }: CinematicLaptopProps
   }, [playing]);
 
   return (
-    <div className={`relative w-full max-w-5xl mx-auto ${className}`}>
-      {/* 3D Canvas Container */}
-      <div
-        ref={containerRef}
-        className="w-full h-[400px] sm:h-[480px] md:h-[560px] lg:h-[620px] cursor-grab active:cursor-grabbing"
-      />
-
-      {/* Apple-Style Glass Control Bar */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 sm:gap-3 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-[#111118]/80 border border-white/12 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.65)] text-xs text-zinc-300 z-20">
-        {/* Play/Pause Button */}
-        <button
-          onClick={togglePlay}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full hover:bg-white/10 transition-all text-white font-medium"
-          title={playing ? "Pause Intro Video" : "Play Intro Video"}
-        >
-          {playing ? (
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="6" y="4" width="4" height="16" rx="1" />
-              <rect x="14" y="4" width="4" height="16" rx="1" />
-            </svg>
-          ) : (
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          )}
-          <span className="hidden sm:inline">{playing ? "Pause" : "Play"}</span>
-        </button>
-
-        <span className="w-px h-3.5 bg-white/15" />
-
-        {/* Audio Mute/Unmute */}
-        <button
-          onClick={toggleMute}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full hover:bg-white/10 transition-all text-white font-medium"
-          title={muted ? "Unmute Audio" : "Mute Audio"}
-        >
-          {muted ? (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-              <line x1="23" y1="9" x2="17" y2="15" />
-              <line x1="17" y1="9" x2="23" y2="15" />
-            </svg>
-          ) : (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
-              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
-            </svg>
-          )}
-          <span className="hidden sm:inline">{muted ? "Unmute" : "Muted"}</span>
-        </button>
-
-        <span className="w-px h-3.5 bg-white/15" />
-
-        {/* Replay Hinge Open Sequence */}
-        <button
-          onClick={replayOpenAnimation}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full hover:bg-white/10 transition-all text-cyan-300 font-medium hover:text-white"
-          title="Re-run opening animation"
-        >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="1 4 1 10 7 10" />
-            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
-          </svg>
-          <span className="hidden md:inline">Re-Open</span>
-        </button>
-
-        {/* Quality Indicator */}
-        <div className="flex items-center gap-1.5 pl-1 text-[10px] text-zinc-400 font-mono">
-          <span className={`w-1.5 h-1.5 rounded-full ${isOpen ? "bg-cyan-400 shadow-[0_0_6px_#38bdf8]" : "bg-purple-500"}`} />
-          <span>Cinematic 3D</span>
+    <div ref={sectionRef} className={`relative w-full max-w-5xl mx-auto py-8 ${className}`}>
+      {/* Scroll Synchronization Indicator Strip */}
+      <div className="flex items-center justify-between text-xs text-zinc-400 font-mono mb-3 px-2">
+        <div className="flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+          <span className="text-[11px] uppercase tracking-wider text-zinc-300">
+            Scroll-Synchronized 3D Hardware Presentation
+          </span>
+        </div>
+        <div className="flex items-center gap-2 text-[11px]">
+          <span className="text-zinc-500">Lid Open:</span>
+          <span className="text-cyan-400 font-bold tabular-nums">{scrollProgressDisplay}%</span>
         </div>
       </div>
 
-      {/* Video Progress Line */}
-      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-48 h-0.5 bg-white/10 rounded-full overflow-hidden pointer-events-none">
-        <div
-          className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 transition-all duration-200"
-          style={{ width: `${progress}%` }}
-        />
+      {/* 3D Canvas Container */}
+      <div
+        ref={containerRef}
+        className="w-full h-[420px] sm:h-[500px] md:h-[580px] lg:h-[640px] cursor-grab active:cursor-grabbing rounded-2xl overflow-hidden"
+      />
+
+      {/* Studio Glass Controls Bar */}
+      <div className="mt-4 flex items-center justify-between gap-3 px-4 py-2.5 rounded-full bg-[#10121C]/80 backdrop-blur-xl border border-white/10 shadow-lg text-xs max-w-lg mx-auto">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={togglePlay}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium transition-colors"
+          >
+            <span>{playing ? "⏸ Pause" : "▶ Play"}</span>
+          </button>
+          <button
+            onClick={toggleMute}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-zinc-300 hover:text-white transition-colors"
+          >
+            <span>{muted ? "🔇 Unmute" : "🔊 Mute"}</span>
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2 text-zinc-400 text-[11px] font-mono">
+          <span className="w-2 h-2 rounded-full bg-emerald-400" />
+          <span>{videoLoaded ? "4K Video Active" : "Liquid Retina Screen"}</span>
+        </div>
       </div>
     </div>
   );
