@@ -289,48 +289,55 @@ export default function AnimatedStatistics() {
           The numbers ONLY appear here in the chart!
           Morphs smoothly on click with Louis Studios glow, Steffen curve, peak dot, and period selector
         */}
-        <div
-          className={`relative p-2 sm:p-4 rounded-3xl border backdrop-blur-2xl flex flex-col items-center overflow-hidden ${
-            isLight
-              ? "border-slate-200/90 bg-white/95 shadow-2xl shadow-slate-200/80"
-              : "border-white/10 bg-[#070B14]/90 shadow-2xl shadow-black/80"
-          }`}
-        >
-          {/* Subtle Dynamic Ambient Glow */}
+        <div className="flex flex-col items-center">
+          {/* Outer White Container with Mathematically Equal Spacing on all 4 Sides */}
           <div
-            className="absolute inset-0 pointer-events-none rounded-3xl transition-all duration-700"
-            style={{
-              background: `radial-gradient(circle at 50% 60%, ${activeStat.accent}18 0%, transparent 70%)`,
-            }}
-          />
-
-          {/* Interactive Chart Container */}
-          <div className="relative z-10 flex items-center justify-center py-1">
-            <PeakChart
-              width={chartWidth}
-              accent={activeStat.accent}
-              data={activeSeries.data}
-              labels={activeSeries.labels}
-              value={activeStat.target}
-              valueSuffix={activeStat.suffix}
-              decimals={activeStat.decimals ?? 0}
-              title={activeStat.chartTitle}
-              caption={activeStat.chartCaption}
-              updatedText="Live Network Verified"
-              trend="up"
-              period={period}
-              onPeriodChange={setPeriod}
-              periods={["Weekly", "Monthly", "Yearly"]}
-              formatValue={(v) =>
-                activeStat.decimals
-                  ? `${v.toFixed(activeStat.decimals)}${activeStat.suffix}`
-                  : `${Math.round(v)}${activeStat.suffix}`
-              }
+            data-stat-chart-card=""
+            className={`relative rounded-3xl border backdrop-blur-2xl flex items-center justify-center overflow-hidden p-4 sm:p-5 ${
+              isLight
+                ? "border-slate-200/90 bg-white/95 shadow-2xl shadow-slate-200/80"
+                : "border-white/10 bg-[#070B14]/90 shadow-2xl shadow-black/80"
+            }`}
+            style={{ boxSizing: "border-box" }}
+          >
+            {/* Subtle Dynamic Ambient Glow — Centered at 50% 50% for True Vertical/Horizontal Symmetry */}
+            <div
+              className="absolute inset-0 pointer-events-none rounded-3xl transition-all duration-700"
+              style={{
+                background: `radial-gradient(circle at 50% 50%, ${activeStat.accent}18 0%, transparent 70%)`,
+              }}
             />
+
+            {/* Interactive Chart Container: Pure Zero-Padding Block */}
+            <div className="relative z-10 flex items-center justify-center p-0 m-0 leading-none">
+              <PeakChart
+                className="block leading-none m-0 p-0"
+                style={{ display: "block" }}
+                width={chartWidth}
+                accent={activeStat.accent}
+                data={activeSeries.data}
+                labels={activeSeries.labels}
+                value={activeStat.target}
+                valueSuffix={activeStat.suffix}
+                decimals={activeStat.decimals ?? 0}
+                title={activeStat.chartTitle}
+                caption={activeStat.chartCaption}
+                updatedText="Live Network Verified"
+                trend="up"
+                period={period}
+                onPeriodChange={setPeriod}
+                periods={["Weekly", "Monthly", "Yearly"]}
+                formatValue={(v) =>
+                  activeStat.decimals
+                    ? `${v.toFixed(activeStat.decimals)}${activeStat.suffix}`
+                    : `${Math.round(v)}${activeStat.suffix}`
+                }
+              />
+            </div>
           </div>
 
-          {/* Explanatory Caption */}
-          <div className="relative z-10 mt-1 pb-1 text-center text-[11px] sm:text-xs text-zinc-400 font-mono flex items-center gap-2">
+          {/* Explanatory Caption — Positioned directly underneath the white container */}
+          <div className="mt-3 text-center text-[11px] sm:text-xs text-zinc-400 font-mono flex items-center justify-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
             <span>Click metric on left to inspect · Drag crosshair to read points</span>
           </div>
