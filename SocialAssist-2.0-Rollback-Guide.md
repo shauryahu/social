@@ -51,38 +51,36 @@ git reset --hard socialassist-2.0-baseline
 
 ## 🎨 Latest Delivered Upgrades
 
-### 1. Nimbus UI — Liquid Navbar ("Waterline")
-- **File**: `src/components/Navigation.tsx` & `src/app/globals.css`
+### 1. Immersive Peak Chart Statistics Console
+- **File**: `src/components/ui/peak-chart.tsx` & `src/components/AnimatedStatistics.tsx`
 - **Features**:
-  - Translucent rounded pill glass capsule with dual-layer specular edge highlights.
-  - Active indicator with viscous spring physics and directional stretching.
-  - Organic SVG gooey filter (`#nimbus-waterline-gooey`) with trailing droplet separation and absorption.
-  - Click water ripples with expanding radial gradients.
-  - Hover meniscus light swelling.
-  - Translucent expanded directory modal retaining visible webpage background.
-  - 100% crisp typography on an elevated z-layer.
-  - Zero idle CPU/GPU loops (RAF stops when settled).
+  - Louis Studios Peak Chart: painted multi-layer glow field, halo light spill, and subtle canvas breathing.
+  - Steffen monotone cubic curve interpolation: never overshoots, peak dot rides the top of the curve.
+  - Interactive KPI selector cards (`500+ Cases Resolved`, `99.9% Success Rate`, `100% Confidential`, `24/7 Support`).
+  - Period selection dropdown (`Weekly`, `Monthly`, `Yearly`) with dynamic curve morphing.
+  - Crosshair hover surface with live readout tooltip and date labels.
 
-### 2. 3D Official Verification Rosette
+### 2. Nimbus UI — Liquid Navbar ("Waterline")
+- **File**: `src/components/ui/liquid-glass-navbar.tsx` & `src/components/Navigation.tsx`
+- **Features**:
+  - Real WebGL liquid water shader with caustic light refraction and specular highlights.
+  - Spring-based liquid pill deformation with trailing droplet separation and re-merging.
+  - Micro-scene icon animations (`fx: "glow" | "spin" | "plane" | "drop" | "wave" | "pop"`).
+  - Translucent expanded directory modal retaining visible webpage background.
+
+### 3. 3D Official Verification Rosette
 - **Asset**: `public/images/official-verification-badge.png`
 - **Component**: `src/components/sections/VerificationSection.tsx`
 - **Features**:
   - Centrally anchored above "Official Verification in Build Credibility. Strengthen Presence."
   - Authentic 3D blue checkmark rosette with ambient radial depth glow.
 
-### 3. Scroll-Synchronized 3D Laptop Sequence
+### 4. Scroll-Synchronized 3D Laptop Sequence
 - **Component**: `src/components/3d/CinematicLaptop.tsx`
 - **Features**:
   - Unibody graphite aluminum chassis with authentic hinge pivot.
   - Hermite smooth damping connected directly to scroll progress ($0^\circ \to 104^\circ$).
   - Real 4K `/videos/intro.mp4` playback with zero shattered glass or z-fighting artifacts.
-
-### 4. Hero Minimal Architectural Grid & Animated Statistics
-- **Components**: `src/components/HeroArchitecturalGrid.tsx`, `src/components/AnimatedStatistics.tsx`, `src/components/sections/HeroSection.tsx`
-- **Features**:
-  - Clean hairline grid lines fading from top to bottom.
-  - Complete removal of "2.0" tag from hero logo and branding.
-  - Exponential ease-out count-up statistics with reduced-motion support.
 
 ---
 
