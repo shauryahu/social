@@ -1,13 +1,11 @@
-"use client";
-
-import { type SVGProps, type ReactNode } from "react";
+import type { SVGProps } from "react";
 
 export interface MacbookProProps extends SVGProps<SVGSVGElement> {
   width?: number;
   height?: number;
   src?: string;
   videoSrc?: string;
-  children?: ReactNode;
+  children?: React.ReactNode;
 }
 
 export function MacbookPro({
@@ -16,45 +14,33 @@ export function MacbookPro({
   src,
   videoSrc,
   children,
-  className = "",
   ...props
 }: MacbookProProps) {
-  const isVideo = Boolean(
-    videoSrc || (src && (src.endsWith(".mp4") || src.endsWith(".webm") || src.includes("video")))
-  );
-  const activeVideoSrc = videoSrc || (isVideo ? src : undefined);
-
-  return (
+  const content = (
     <svg
       width={width}
       height={height}
-      viewBox={`0 0 ${width} ${height}`}
+      viewBox="0 0 650 400"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
       {...props}
     >
-      {/* Outer aluminum lid bezel */}
       <path
         fill="#a4a5a7"
         d="M79.56,13.18h491.32c7.23,0,13.1,5.87,13.1,13.1v336.61H66.46V26.28c0-7.23,5.87-13.1,13.1-13.1Z"
       />
 
-      {/* Inner display bezel rim */}
       <path
         fill="#222"
         d="M79.96,14.24h490.45c6.83,0,12.37,5.54,12.37,12.37v336.28H67.59V26.6c0-6.83,5.54-12.37,12.37-12.37Z"
       />
 
-      {/* Display frame border */}
       <path
         fill="#000"
         d="M570.25,15.74H80.34c-6.12,0-11.08,4.96-11.08,11.08v336.07h512.08V26.82c0-6.12-4.96-11.08-11.08-11.08ZM575.74,345.17H74.52V27.31c0-3.31,2.68-5.99,5.99-5.99h489.24c3.31,0,5.99,2.68,5.99,5.99v317.86Z"
       />
-
-      {/* Display black screen backdrop */}
       <rect
-        fill="#000000"
+        fill="currentColor"
         x="74.52"
         y="21.32"
         width="501.22"
@@ -62,40 +48,7 @@ export function MacbookPro({
         ry="5"
         height="323.85"
       />
-
-      {/* Screen content: Video, Image, or Children */}
-      {children ? (
-        <foreignObject
-          x="74.52"
-          y="21.32"
-          width="501.22"
-          height="323.85"
-          clipPath="url(#roundedCorners)"
-        >
-          <div className="w-full h-full overflow-hidden rounded-[5px] bg-black">
-            {children}
-          </div>
-        </foreignObject>
-      ) : activeVideoSrc ? (
-        <foreignObject
-          x="74.52"
-          y="21.32"
-          width="501.22"
-          height="323.85"
-          clipPath="url(#roundedCorners)"
-        >
-          <div className="w-full h-full overflow-hidden rounded-[5px] bg-black relative">
-            <video
-              src={activeVideoSrc}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-full object-cover pointer-events-auto"
-            />
-          </div>
-        </foreignObject>
-      ) : src ? (
+      {src && (
         <image
           href={src}
           x="74.52"
@@ -105,30 +58,23 @@ export function MacbookPro({
           preserveAspectRatio="xMidYMid slice"
           clipPath="url(#roundedCorners)"
         />
-      ) : null}
-
-      {/* Hinge bar trim */}
+      )}
       <rect fill="#1d1d1d" x="69.09" y="350.51" width="512.11" height="12.48" />
 
-      {/* Camera notch cutout */}
       <path
         fill="#000"
         d="M298.14,21.02h54.07v6.5c0,1.56-1.27,2.82-2.82,2.82h-48.42c-1.56,0-2.82-1.27-2.82-2.82v-6.5h0Z"
       />
-
-      {/* Unibody lower base chassis */}
       <path
         fill="#acadaf"
         d="M19.04,362.77h611.92v10.39c0,5.95-4.83,10.79-10.79,10.79H29.83c-5.95,0-10.79-4.83-10.79-10.79v-10.39h0Z"
       />
 
-      {/* FaceTime camera lens */}
       <path
         fill="#080d4c"
         d="M325.11,25.14c-1.99.03-1.99-3.09,0-3.06,1.99-.03,1.99,3.09,0,3.06Z"
       />
 
-      {/* Base feet and bevel highlights */}
       <polygon
         fill="#b9b9bb"
         points="600.06 385.39 567.29 385.39 565.84 383.95 601.82 383.95 600.06 385.39"
@@ -145,8 +91,6 @@ export function MacbookPro({
         fill="#292929"
         points="81.31 386.82 51.23 386.82 49.9 385.39 82.93 385.39 81.31 386.82"
       />
-
-      {/* Display thumb opening notch */}
       <path
         fill="#8f9091"
         d="M278.11,362.6h94.05c0,3.63-2.95,6.58-6.58,6.58h-80.89c-3.63,0-6.58-2.95-6.58-6.58h0Z"
@@ -167,6 +111,48 @@ export function MacbookPro({
       </defs>
     </svg>
   );
+
+  if (!videoSrc && !children) {
+    return content;
+  }
+
+  return (
+    <div className="relative inline-block" style={{ width, height }}>
+      {content}
+      {videoSrc && (
+        <div
+          className="absolute overflow-hidden rounded-[4px]"
+          style={{
+            left: "11.46%", // 74.52 / 650
+            top: "5.33%",   // 21.32 / 400
+            width: "77.11%", // 501.22 / 650
+            height: "80.96%", // 323.85 / 400
+          }}
+        >
+          <video
+            src={videoSrc}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
+      {children && (
+        <div
+          className="absolute overflow-hidden rounded-[4px]"
+          style={{
+            left: "11.46%",
+            top: "5.33%",
+            width: "77.11%",
+            height: "80.96%",
+          }}
+        >
+          {children}
+        </div>
+      )}
+    </div>
+  );
 }
 
-export default MacbookPro;

@@ -133,15 +133,16 @@ async function main() {
     console.log("Scrolling to 3D Laptop ...");
     await sendSession("Runtime.evaluate", {
       expression: `(() => {
-        const vid = document.querySelector('video');
-        if (vid) {
-          vid.scrollIntoView({ behavior: 'instant', block: 'center' });
+        const el = document.querySelector("#home div[class*='cursor-grab']");
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          window.scrollTo(0, window.scrollY + rect.top - 100);
         } else {
-          window.scrollTo(0, 1450);
+          window.scrollTo(0, 1100);
         }
       })()`,
     });
-    await sleep(2500);
+    await sleep(3500);
     console.log("Capturing 2_laptop_3d.png ...");
     const laptopShot = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "2_laptop_3d.png"), Buffer.from(laptopShot.data, "base64"));
@@ -265,9 +266,37 @@ async function main() {
         }
       })()`,
     });
-    await sleep(1500);
+    await sleep(2500);
     const footerShot = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "11_footer_section.png"), Buffer.from(footerShot.data, "base64"));
+
+    // Test Dark Mode Footer
+    console.log("Testing Dark Mode Footer ...");
+    await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        const themeBtn = document.querySelector("button[aria-label*='mode'], button[aria-label*='theme']");
+        if (themeBtn) themeBtn.click();
+        else {
+          document.documentElement.classList.remove("light");
+          document.documentElement.classList.add("dark");
+          document.documentElement.setAttribute("data-theme", "dark");
+          window.dispatchEvent(new Event("socialassist-theme-change"));
+        }
+      })()`,
+    });
+    await sleep(2000);
+    const footerDarkShot = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "12_footer_section_dark.png"), Buffer.from(footerDarkShot.data, "base64"));
+
+    // Switch back to light
+    await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        document.documentElement.classList.remove("dark");
+        document.documentElement.classList.add("light");
+        document.documentElement.setAttribute("data-theme", "light");
+        window.dispatchEvent(new Event("socialassist-theme-change"));
+      })()`,
+    });
 
     // 7. Expand Dynamic Glass Navigation Bar
     console.log("Expanding Dynamic Navigation Bar ...");
@@ -358,6 +387,7 @@ async function main() {
       "9_automated_ads.png",
       "10_about_section.png",
       "11_footer_section.png",
+      "12_footer_section_dark.png",
       "expanded_dynamic_bar.png",
       "tablet_dynamic_bar.png",
       "mobile_dynamic_bar.png"
@@ -378,7 +408,7 @@ async function main() {
     chromeProc.kill();
     try {
       fs.rmSync(USER_DATA, { recursive: true, force: true });
-    } catch {}
+    } catch { }
   }
 }
 

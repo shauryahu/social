@@ -2,13 +2,12 @@ import { MacbookPro } from "@/components/ui/macbook-pro";
 
 export function MacbookProDemo() {
   return (
-    <div className="relative w-full max-w-4xl mx-auto flex items-center justify-center p-4">
+    <div className="relative">
       <MacbookPro
-        src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1280&auto=format&fit=crop"
-        className="w-full h-auto drop-shadow-2xl"
+        src="https://cdn.21st.dev/assets/mirror/b3/b35fa0ff86bea6f4568fa71cee2aad0c5af00d525cb267e01440fddbf8f5049b.jpg"
+        className="size-full"
       />
     </div>
   );
 }
 
-export default MacbookProDemo;
