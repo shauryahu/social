@@ -119,11 +119,10 @@ export default function CryptoExchange() {
                     <button
                       key={coin}
                       onClick={() => setSelectedCoin(coin)}
-                      className={`py-2 px-1 rounded-xl text-xs font-bold transition-all flex flex-col items-center gap-1 ${
-                        selectedCoin === coin
+                      className={`py-2 px-1 rounded-xl text-xs font-bold transition-all flex flex-col items-center gap-1 ${selectedCoin === coin
                           ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/50 shadow-md shadow-cyan-950/40"
                           : "bg-white/[0.03] text-zinc-400 border border-white/5 hover:bg-white/[0.06] hover:text-white"
-                      }`}
+                        }`}
                     >
                       <span className="text-sm font-semibold">{COIN_DATA[coin].symbol}</span>
                       <span className="text-[10px] font-mono">{coin}</span>
