@@ -301,15 +301,19 @@ function ServiceCard({
 
   return (
     <div
-      className="flex flex-col p-6 rounded-2xl cursor-pointer relative overflow-hidden select-none"
+      className="flex flex-col p-6 rounded-2xl cursor-pointer relative overflow-hidden select-none dark-console-box"
       style={{
-        background: isHighlighted ? "rgba(20,18,32,0.92)" : "rgba(14,14,20,0.62)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
+        background: isHighlighted
+          ? "linear-gradient(145deg, #161828 0%, #0D0E1A 100%)"
+          : "linear-gradient(145deg, #10121C 0%, #07080F 100%)",
         border: isHighlighted
-          ? "1px solid rgba(155,92,255,0.6)"
-          : "1px solid rgba(255,255,255,0.08)",
-        boxShadow: isHighlighted
+          ? "1px solid rgba(168, 85, 247, 0.6)"
+          : "1px solid rgba(255, 255, 255, 0.12)",
+        boxShadow: isLight
+          ? isHighlighted
+            ? `0 24px 50px -6px rgba(0, 0, 0, 0.55), 0 10px 24px -4px rgba(0, 0, 0, 0.35), 0 0 24px ${service.glow}`
+            : "0 16px 40px -8px rgba(0, 0, 0, 0.45), 0 6px 16px -4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.2)"
+          : isHighlighted
           ? `0 24px 60px ${service.glow}, 0 0 32px rgba(155,92,255,0.35), inset 0 1px 0 rgba(255,255,255,0.12)`
           : "0 4px 20px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.04)",
         opacity: visible ? 1 : 0,
@@ -353,9 +357,8 @@ function ServiceCard({
 
       {/* Title */}
       <h3
-        className="text-lg font-black mb-2 tracking-tight"
+        className="text-lg font-black mb-2 tracking-tight text-white"
         style={{
-          color: isHighlighted ? "#E0C7FF" : "#FFFFFF",
           fontFamily: "'Space Grotesk', sans-serif",
           transition: "color 0.3s ease",
         }}
@@ -365,8 +368,8 @@ function ServiceCard({
 
       {/* Description */}
       <p
-        className="text-sm font-medium leading-relaxed flex-1 mb-6"
-        style={{ color: "rgba(235,232,245,0.8)", fontFamily: "'Inter', sans-serif" }}
+        className="text-sm font-medium leading-relaxed flex-1 mb-6 text-slate-200"
+        style={{ fontFamily: "'Inter', sans-serif" }}
       >
         {service.description}
       </p>

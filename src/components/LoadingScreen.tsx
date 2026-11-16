@@ -67,15 +67,14 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           opacity: phase === "glow" ? 0 : 1,
           transform: phase === "glow" ? "translate3d(0,0,0) scale(0.88)" : "translate3d(0,0,0) scale(1)",
           transition: "opacity 0.4s ease-out, transform 0.4s ease-out",
-          filter: "drop-shadow(0 0 20px rgba(155,92,255,0.75))",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/images/toplogo1.png"
+          src={isLight ? "/images/logo-apple-black.png" : "/images/logo-apple-white.png"}
           alt="SocialAssist"
-          width={100}
-          height={100}
+          width={80}
+          height={80}
           style={{ objectFit: "contain", display: "block" }}
         />
       </div>

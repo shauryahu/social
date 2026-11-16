@@ -129,11 +129,11 @@ export default function Navigation() {
 
       {/* ── TOP COMPACT FLOATING LIQUID GLASS BAR (NIMBUS WATERLINE) ── */}
       <header
-        className="pointer-events-auto pt-3 px-2 sm:px-3 flex justify-center w-full"
+        className="pointer-events-auto pt-2.5 sm:pt-3 px-1.5 sm:px-3 flex justify-center w-full overflow-visible"
         role="banner"
       >
         <div
-          className="relative rounded-full px-2.5 sm:px-3 py-1 flex items-center justify-between gap-1.5 sm:gap-2.5 transition-all duration-300 group max-w-full overflow-x-auto no-scrollbar"
+          className="relative rounded-full px-2 sm:px-3 py-0.5 sm:py-1 flex items-center justify-between gap-1 sm:gap-2.5 transition-all duration-300 group max-w-[calc(100vw-16px)] sm:max-w-none overflow-visible no-scrollbar scale-[0.95] sm:scale-100 origin-top"
           style={{
             background: isLight
               ? scrolled
@@ -166,24 +166,20 @@ export default function Navigation() {
             aria-hidden="true"
           />
 
-          {/* Brand Logo & Name */}
+          {/* Brand Logo & Name — Clean Apple-Style Emblem Without Any Glow */}
           <button
             onClick={() => scrollTo("#home")}
-            className="relative flex items-center gap-2 pl-1 pr-1.5 py-0.5 rounded-full flex-shrink-0 focus-visible:outline-none group text-left transition-transform duration-200 hover:scale-[1.02]"
+            className="relative flex items-center gap-1.5 sm:gap-2 pl-1 pr-1.5 py-0.5 rounded-full flex-shrink-0 focus-visible:outline-none group text-left transition-transform duration-200 hover:scale-[1.02]"
             aria-label="SocialAssist Home"
           >
-            <div className="relative">
-              <div
-                className="absolute inset-0 rounded-full blur-[6px] bg-cyan-400/30 group-hover:bg-cyan-400/50 transition-all duration-300"
-                aria-hidden="true"
-              />
+            <div className="relative flex items-center justify-center flex-shrink-0">
               <Image
-                src="/images/toplogo1.png"
+                src={isLight ? "/images/logo-apple-black.png" : "/images/logo-apple-white.png"}
                 alt="SocialAssist Logo"
-                width={26}
-                height={26}
+                width={24}
+                height={24}
                 priority
-                className="relative w-6 h-6 object-contain drop-shadow-[0_0_8px_rgba(56,189,248,0.6)]"
+                className="w-5 h-5 sm:w-6 sm:h-6 object-contain transition-opacity duration-200"
               />
             </div>
             <span
@@ -199,9 +195,9 @@ export default function Navigation() {
           {/* 
             ── NIMBUS UI LIQUID NAVBAR ("WATERLINE") ──
             Full WebGL water shader, spring deformation physics, icon animations, and ripples
-            Automatically switches between tone="light" and tone="dark"!
+            Scaled dynamically for tablets so it fits with zero scrollbar
           */}
-          <div className="hidden md:flex items-center">
+          <div className="hidden md:flex items-center md:scale-[0.88] lg:scale-100 origin-center transition-transform">
             <LiquidNavbar
               tone={isLight ? "light" : "dark"}
               items={NAV_ITEMS}
@@ -215,11 +211,11 @@ export default function Navigation() {
           </div>
 
           {/* Right Controls: Theme Toggle + Contact CTA + Menu Button */}
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
             {/* ── THEME SWITCHER BUTTON (Sun / Moon) ── */}
             <button
               onClick={toggleTheme}
-              className={`relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 border ${
+              className={`relative flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full transition-all duration-200 border ${
                 isLight
                   ? "bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300/80 shadow-sm"
                   : "bg-white/5 hover:bg-white/10 text-amber-300 border-white/10"
@@ -228,16 +224,16 @@ export default function Navigation() {
               aria-label="Toggle White and Dark Theme"
             >
               {isLight ? (
-                <Moon className="w-4 h-4 text-slate-700 transition-transform duration-200 hover:-rotate-12" />
+                <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-700 transition-transform duration-200 hover:-rotate-12" />
               ) : (
-                <Sun className="w-4 h-4 text-amber-300 transition-transform duration-200 hover:rotate-45" />
+                <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300 transition-transform duration-200 hover:rotate-45" />
               )}
             </button>
 
-            {/* Direct CTA */}
+            {/* Direct CTA (hidden on tablet/mobile to preserve zero-overflow layout) */}
             <button
               onClick={() => scrollTo("#contact")}
-              className={`relative hidden sm:inline-flex px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] overflow-hidden group ${
+              className={`relative hidden lg:inline-flex px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] overflow-hidden group ${
                 isLight
                   ? "btn-light-purple"
                   : "text-white shadow-[0_4px_16px_rgba(37,99,235,0.35)]"

@@ -260,14 +260,14 @@ html.light body {
   color: #090D16 !important;
 }
 
-/* ── 1. The 5 Core Service Boxes (Black Consoles with White/Gray Text & Glow Logos) ── */
+/* ── 1. The Core Service Boxes (Solid Black Consoles with White/Gray Text & Glow Logos) ── */
 .dark-console-box,
 html[data-theme="light"] .dark-console-box,
 html.light .dark-console-box {
   background-color: #0A0C14 !important;
-  background-image: linear-gradient(135deg, rgba(16, 18, 28, 0.96) 0%, rgba(9, 11, 18, 0.98) 100%) !important;
+  background-image: linear-gradient(145deg, #10121C 0%, #07080F 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.35), 0 0 35px rgba(56, 189, 248, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 20px 48px -8px rgba(0, 0, 0, 0.45), 0 8px 24px -4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.2) !important;
   color: #FFFFFF !important;
 }
 
@@ -426,17 +426,31 @@ html[data-theme="light"] a.btn-light-emerald:hover {
   color: #090D16 !important;
 }
 
-/* ── 4. Realistic Light Shadows on Boxes, Buttons, and Surfaces ── */
+/* ── 4. Real Physical Black Shadows on All Boxes, Cards, Buttons, and Shapes ── */
 html[data-theme="light"] .glass,
 html[data-theme="light"] .glass-strong,
 html[data-theme="light"] .card-contrast,
 html[data-theme="light"] div[class*="rounded-2xl"]:not(.dark-console-box):not([data-peak-chart]),
-html[data-theme="light"] div[class*="rounded-3xl"]:not(.dark-console-box):not([data-peak-chart]) {
-  box-shadow: 0 6px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+html[data-theme="light"] div[class*="rounded-3xl"]:not(.dark-console-box):not([data-peak-chart]),
+html[data-theme="light"] article:not(.dark-console-box) {
+  box-shadow: 0 14px 36px -4px rgba(0, 0, 0, 0.22), 0 6px 14px -2px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
 }
 
 html[data-theme="light"] button:not(.tab-btn) {
-  box-shadow: 0 2px 8px -1px rgba(15, 23, 42, 0.07), 0 1px 3px 0 rgba(15, 23, 42, 0.03) !important;
+  box-shadow: 0 6px 18px -2px rgba(0, 0, 0, 0.16), 0 2px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+html[data-theme="light"] header > div {
+  box-shadow: 0 14px 36px -6px rgba(0, 0, 0, 0.22), 0 4px 14px -2px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Ensure no scrollbars on the dynamic header across tablet/mobile */
+header, [role="banner"], .nimbus-nav {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+header::-webkit-scrollbar, [role="banner"]::-webkit-scrollbar, .nimbus-nav::-webkit-scrollbar {
+  display: none !important;
 }
 
 /* White theme surfaces for non-console cards */
@@ -502,11 +516,9 @@ html[data-theme="light"] footer button:hover {
   color: #7C3AED !important;
 }
 
-/* Credibility & Service items with inline dark rgba styles */
+/* Credibility items with inline dark rgba styles */
 html[data-theme="light"] div[style*="rgba(16,16,22"]:not(.dark-console-box),
 html[data-theme="light"] div[style*="rgba(16, 16, 22"]:not(.dark-console-box),
-html[data-theme="light"] div[style*="rgba(14,14,20"]:not(.dark-console-box),
-html[data-theme="light"] div[style*="rgba(20,18,32"]:not(.dark-console-box),
 html[data-theme="light"] div[style*="rgba(20, 20, 28"]:not(.dark-console-box),
 html[data-theme="light"] div[style*="rgba(30, 30, 42"]:not(.dark-console-box),
 html[data-theme="light"] div[style*="rgba(20, 20, 30"]:not(.dark-console-box) {
@@ -515,13 +527,6 @@ html[data-theme="light"] div[style*="rgba(20, 20, 30"]:not(.dark-console-box) {
   color: #090D16 !important;
 }
 
-html[data-theme="light"] div[style*="rgba(14,14,20"]:not(.dark-console-box) h3,
-html[data-theme="light"] div[style*="rgba(20,18,32"]:not(.dark-console-box) h3 {
-  color: #090D16 !important;
-}
-
-html[data-theme="light"] div[style*="rgba(14,14,20"]:not(.dark-console-box) p,
-html[data-theme="light"] div[style*="rgba(20,18,32"]:not(.dark-console-box) p,
 html[data-theme="light"] p[style*="rgba(235,232,245"]:not(.dark-console-box *) {
   color: #475569 !important;
 }

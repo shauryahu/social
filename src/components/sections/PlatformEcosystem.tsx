@@ -260,9 +260,9 @@ export default function PlatformEcosystem() {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logo.png"
+                src={isLight ? "/images/logo-apple-black.png" : "/images/logo-apple-white.png"}
                 alt="SocialAssist Center Node"
-                className="w-full h-full object-contain rounded-2xl drop-shadow-[0_0_20px_rgba(139,92,246,0.6)]"
+                className="w-16 h-16 object-contain m-auto"
               />
             </div>
 

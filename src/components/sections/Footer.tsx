@@ -47,11 +47,11 @@ export default function Footer() {
             <div className="flex items-center gap-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logo.png"
+                src={isLight ? "/images/logo-apple-black.png" : "/images/logo-apple-white.png"}
                 alt="SocialAssist Logo"
-                width={44}
-                height={44}
-                className="w-11 h-11 rounded-xl object-cover border border-purple-500/20 shadow-md"
+                width={36}
+                height={36}
+                className="w-9 h-9 object-contain"
               />
               <div>
                 <p

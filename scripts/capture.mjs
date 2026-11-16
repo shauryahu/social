@@ -139,6 +139,22 @@ async function main() {
     const laptopShot = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "2_laptop_3d.png"), Buffer.from(laptopShot.data, "base64"));
 
+    // 4b. Scroll to Services Section (All 5 Solid Black Service Block Boxes)
+    console.log("Scrolling to Services Section (5 Service Boxes) ...");
+    await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        const el = document.getElementById("services");
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          window.scrollTo(0, window.scrollY + rect.top + 720);
+        }
+      })()`,
+    });
+    await sleep(1500);
+    console.log("Capturing 3_services_boxes.png ...");
+    const servShot = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "3_services_boxes.png"), Buffer.from(servShot.data, "base64"));
+
     // 5. Scroll to Official Verification Section
     console.log("Scrolling to Official Verification Section ...");
     await sendSession("Runtime.evaluate", {
@@ -261,10 +277,72 @@ async function main() {
     const expShot = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "expanded_dynamic_bar.png"), Buffer.from(expShot.data, "base64"));
 
+    // Close menu
+    await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        const btn = document.querySelector("button[aria-expanded='true']") || document.querySelector("button[title*='Close']");
+        if (btn) btn.click();
+      })()`,
+    });
+    await sleep(500);
+
+    // 8. Test Tablet Viewport (768px width)
+    console.log("Testing Tablet Viewport (768x1024) ...");
+    await sendSession("Emulation.setDeviceMetricsOverride", {
+      width: 768,
+      height: 1024,
+      deviceScaleFactor: 2,
+      mobile: true,
+    });
+    await sendSession("Runtime.evaluate", { expression: `window.scrollTo(0, 0)` });
+    await sleep(1000);
+
+    const tabletScrollCheck = await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        const header = document.querySelector("header > div");
+        return {
+          scrollWidth: header ? header.scrollWidth : 0,
+          clientWidth: header ? header.clientWidth : 0,
+          hasScrollbar: header ? header.scrollWidth > header.clientWidth : false
+        };
+      })()`,
+      returnByValue: true,
+    });
+    console.log("Tablet Dynamic Bar Scroll Check:", tabletScrollCheck.result.value);
+    const tabletShot = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "tablet_dynamic_bar.png"), Buffer.from(tabletShot.data, "base64"));
+
+    // 9. Test Mobile Viewport (390px width - iPhone)
+    console.log("Testing Mobile Viewport (390x844) ...");
+    await sendSession("Emulation.setDeviceMetricsOverride", {
+      width: 390,
+      height: 844,
+      deviceScaleFactor: 2,
+      mobile: true,
+    });
+    await sendSession("Runtime.evaluate", { expression: `window.scrollTo(0, 0)` });
+    await sleep(1000);
+
+    const mobileScrollCheck = await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        const header = document.querySelector("header > div");
+        return {
+          scrollWidth: header ? header.scrollWidth : 0,
+          clientWidth: header ? header.clientWidth : 0,
+          hasScrollbar: header ? header.scrollWidth > header.clientWidth : false
+        };
+      })()`,
+      returnByValue: true,
+    });
+    console.log("Mobile Dynamic Bar Scroll Check:", mobileScrollCheck.result.value);
+    const mobileShot = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "mobile_dynamic_bar.png"), Buffer.from(mobileShot.data, "base64"));
+
     // Copy captured files to Brain artifact directory
     const filesToCopy = [
       "1_hero.png",
       "2_laptop_3d.png",
+      "3_services_boxes.png",
       "3_official_verification.png",
       "4_platforms_services.png",
       "5_dynamic_glass_navigation.png",
@@ -273,7 +351,9 @@ async function main() {
       "9_automated_ads.png",
       "10_about_section.png",
       "11_footer_section.png",
-      "expanded_dynamic_bar.png"
+      "expanded_dynamic_bar.png",
+      "tablet_dynamic_bar.png",
+      "mobile_dynamic_bar.png"
     ];
 
     for (const f of filesToCopy) {

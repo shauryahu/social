@@ -109,8 +109,22 @@ const NIMBUS_CSS = `
 @keyframes nvWave{0%{transform:none}20%{transform:rotate(-15deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(4deg)}100%{transform:translateY(-1px) scale(1.08)}}
 .nimbus-nav[data-compact="true"] .nimbus-item{padding:0 13px}
 .nimbus-nav[data-compact="true"] .nimbus-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-@media (max-width:520px){.nimbus-nav:not([data-compact="false"]) .nimbus-item{padding:0 13px}.nimbus-nav:not([data-compact="false"]) .nimbus-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+@media (max-width:1024px){
+  .nimbus-nav{padding:4px;gap:1px}
+  .nimbus-item{padding:0 10px;height:36px;font-size:12px;gap:5px}
+}
+@media (max-width:860px){
+  .nimbus-nav{padding:3px;gap:1px}
+  .nimbus-item{padding:0 8px;height:32px;font-size:11px;gap:4px}
+}
+@media (max-width:768px){
+  .nimbus-nav .nimbus-item{padding:0 8px;height:32px}
+  .nimbus-nav .nimbus-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+}
+@media (max-width:520px){.nimbus-nav:not([data-compact="false"]) .nimbus-item{padding:0 9px}.nimbus-nav:not([data-compact="false"]) .nimbus-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
 @media (prefers-reduced-motion:reduce){.nv-ico svg,.nv-ico::before,.nv-ico::after,.nv-door{animation:none!important;transition:none}}
+.nimbus-nav,[role="banner"],header{overflow:visible!important;scrollbar-width:none!important;-ms-overflow-style:none!important}
+.nimbus-nav::-webkit-scrollbar,[role="banner"]::-webkit-scrollbar,header::-webkit-scrollbar{display:none!important}
 `
 
 /* ---------- the water shader ---------- */

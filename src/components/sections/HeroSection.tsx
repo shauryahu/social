@@ -84,14 +84,14 @@ export default function HeroSection() {
             transition: "opacity 0.75s ease-out 0.1s, transform 0.75s ease-out 0.1s",
           }}
         >
-          {/* SA Logo PNG */}
+          {/* SA Clean Apple-Style Logo (Zero Glow) */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/toplogo1.png"
+            src={isLight ? "/images/logo-apple-black.png" : "/images/logo-apple-white.png"}
             alt="SocialAssist Logo"
-            width={72}
-            height={72}
-            className="w-10 h-10 sm:w-12 sm:h-12 object-contain block drop-shadow-[0_0_16px_rgba(139,92,246,0.6)]"
+            width={48}
+            height={48}
+            className="w-8 h-8 sm:w-10 sm:h-10 object-contain block transition-opacity duration-200"
           />
 
           <div className={`w-px h-6 ${isLight ? "bg-slate-300" : "bg-white/15"}`} />
