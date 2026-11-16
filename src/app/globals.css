@@ -321,13 +321,13 @@ html[data-theme="light"] .dark-console-box .bg-white\/\[0\.04\] {
   background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
-/* ── 2. Light Theme Typography (Outside the Dark Consoles) ── */
-html[data-theme="light"] h1:not(.dark-console-box *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
-html[data-theme="light"] h2:not(.dark-console-box *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
-html[data-theme="light"] h3:not(.dark-console-box *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
-html[data-theme="light"] h4:not(.dark-console-box *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
-html[data-theme="light"] h5:not(.dark-console-box *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
-html[data-theme="light"] h6:not(.dark-console-box *):not([class*="text-transparent"]):not([class*="bg-clip-text"]) {
+/* ── 2. Light Theme Typography (Outside Dark Consoles & Hero Black Intro) ── */
+html[data-theme="light"] h1:not(.dark-console-box *):not(.hero-black-intro *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
+html[data-theme="light"] h2:not(.dark-console-box *):not(.hero-black-intro *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
+html[data-theme="light"] h3:not(.dark-console-box *):not(.hero-black-intro *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
+html[data-theme="light"] h4:not(.dark-console-box *):not(.hero-black-intro *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
+html[data-theme="light"] h5:not(.dark-console-box *):not(.hero-black-intro *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
+html[data-theme="light"] h6:not(.dark-console-box *):not(.hero-black-intro *):not([class*="text-transparent"]):not([class*="bg-clip-text"]) {
   color: #090D16 !important;
 }
 
@@ -342,22 +342,23 @@ html[data-theme="light"] span[style*="WebkitBackgroundClip"] {
   display: inline-block;
 }
 
-html[data-theme="light"] .text-white:not(.dark-console-box *):not(button[class*="dark"] *):not(.keep-white):not([data-part="value"] *):not([class*="text-transparent"]):not([class*="bg-clip-text"]) {
+html[data-theme="light"] .text-white:not(.dark-console-box *):not(.hero-black-intro *):not(button[class*="dark"] *):not(.keep-white):not([data-part="value"] *):not([class*="text-transparent"]):not([class*="bg-clip-text"]) {
   color: #090D16 !important;
 }
 
-html[data-theme="light"] .text-zinc-100:not(.dark-console-box *),
-html[data-theme="light"] .text-zinc-200:not(.dark-console-box *),
-html[data-theme="light"] .text-zinc-300:not(.dark-console-box *) {
+html[data-theme="light"] .text-zinc-100:not(.dark-console-box *):not(.hero-black-intro *),
+html[data-theme="light"] .text-zinc-200:not(.dark-console-box *):not(.hero-black-intro *),
+html[data-theme="light"] .text-zinc-300:not(.dark-console-box *):not(.hero-black-intro *) {
   color: #1E293B !important;
 }
 
-html[data-theme="light"] .text-zinc-400:not(.dark-console-box *),
-html[data-theme="light"] .text-zinc-500:not(.dark-console-box *) {
+html[data-theme="light"] .text-zinc-400:not(.dark-console-box *):not(.hero-black-intro *),
+html[data-theme="light"] .text-zinc-500:not(.dark-console-box *):not(.hero-black-intro *) {
   color: #64748B !important;
 }
 
-html[data-theme="light"] .text-zinc-300\/90:not(.dark-console-box *) {
+html[data-theme="light"] .text-zinc-300\/90:not(.dark-console-box *):not(.hero-black-intro *),
+html[data-theme="light"] .text-zinc-300\/95:not(.dark-console-box *):not(.hero-black-intro *) {
   color: #334155 !important;
 }
 

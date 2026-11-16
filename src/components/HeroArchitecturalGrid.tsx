@@ -11,10 +11,12 @@ export default function HeroArchitecturalGrid() {
       aria-hidden="true"
       className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
       style={{
-        maskImage:
-          "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.65) 50%, rgba(0,0,0,0.15) 80%, transparent 100%)",
-        WebkitMaskImage:
-          "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.65) 50%, rgba(0,0,0,0.15) 80%, transparent 100%)",
+        maskImage: isLight
+          ? "linear-gradient(to bottom, transparent 0%, transparent 610px, rgba(0,0,0,0.5) 650px, rgba(0,0,0,1) 700px, rgba(0,0,0,0.5) 85%, transparent 100%)"
+          : "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.65) 50%, rgba(0,0,0,0.15) 80%, transparent 100%)",
+        WebkitMaskImage: isLight
+          ? "linear-gradient(to bottom, transparent 0%, transparent 610px, rgba(0,0,0,0.5) 650px, rgba(0,0,0,1) 700px, rgba(0,0,0,0.5) 85%, transparent 100%)"
+          : "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.65) 50%, rgba(0,0,0,0.15) 80%, transparent 100%)",
       }}
     >
       {/* 1. Fine High-Tech Architectural Grid Matrix */}
@@ -59,24 +61,24 @@ export default function HeroArchitecturalGrid() {
         <div
           className={`w-px h-full ${
             isLight
-              ? "bg-gradient-to-b from-slate-300 via-sky-400/25 to-transparent"
-              : "bg-gradient-to-b from-white/10 via-cyan-400/10 to-transparent"
+              ? "bg-gradient-to-b from-transparent via-slate-300/30 to-transparent"
+              : "bg-gradient-to-b from-transparent via-cyan-400/10 to-transparent"
           }`}
         />
         {/* Left Bounding Guide */}
         <div
           className={`hidden lg:block absolute left-1/2 -translate-x-[480px] w-px h-full ${
             isLight
-              ? "bg-gradient-to-b from-slate-200 to-transparent"
-              : "bg-gradient-to-b from-white/5 to-transparent"
+              ? "bg-gradient-to-b from-transparent via-slate-200/50 to-transparent"
+              : "bg-gradient-to-b from-transparent via-white/5 to-transparent"
           }`}
         />
         {/* Right Bounding Guide */}
         <div
           className={`hidden lg:block absolute left-1/2 translate-x-[480px] w-px h-full ${
             isLight
-              ? "bg-gradient-to-b from-slate-200 to-transparent"
-              : "bg-gradient-to-b from-white/5 to-transparent"
+              ? "bg-gradient-to-b from-transparent via-slate-200/50 to-transparent"
+              : "bg-gradient-to-b from-transparent via-white/5 to-transparent"
           }`}
         />
       </div>
