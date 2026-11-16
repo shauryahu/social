@@ -30,68 +30,75 @@ export default function HeroSection() {
       className="relative min-h-screen flex flex-col items-center justify-start pt-32 sm:pt-36 pb-20 px-4 md:px-8 overflow-hidden"
       aria-labelledby="hero-heading"
     >
-      {/* ── Top Hero Wave Mesh (Pure Dark Black with Violet/Purple Accents) ── */}
+      {/* ── 1. Seamless Multi-Layered Atmospheric Background Transition ── */}
       <div
-        className="absolute top-0 inset-x-0 h-[740px] sm:h-[765px] md:h-[790px] overflow-hidden pointer-events-auto z-0"
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 pointer-events-none z-0"
         style={{
-          background: "#000000",
-          maskImage: isLight
-            ? "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 110px), rgba(0,0,0,0.65) calc(100% - 55px), rgba(0,0,0,0.2) calc(100% - 15px), transparent 100%)"
-            : "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 90px), rgba(0,0,0,0.5) calc(100% - 30px), transparent 100%)",
-          WebkitMaskImage: isLight
-            ? "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 110px), rgba(0,0,0,0.65) calc(100% - 55px), rgba(0,0,0,0.2) calc(100% - 15px), transparent 100%)"
-            : "linear-gradient(to bottom, #000000 0%, #000000 calc(100% - 90px), rgba(0,0,0,0.5) calc(100% - 30px), transparent 100%)",
+          height: "clamp(1020px, 120vh, 1280px)",
+          background: isLight
+            ? `linear-gradient(
+                180deg,
+                #030309 0%,
+                #030309 38%,
+                #171821 50%,
+                #222938 60%,
+                #384357 69%,
+                #586780 77%,
+                #8898b0 84%,
+                #cbd5e1 91%,
+                #f1f5f9 96%,
+                #ffffff 100%
+              )`
+            : "linear-gradient(180deg, #030309 0%, #030309 55%, #060913 80%, #030712 100%)",
+        }}
+      />
+
+      {/* ── 2. Starfield Wave Mesh with Atmospheric Dissolve ── */}
+      <div
+        className="absolute inset-x-0 top-0 pointer-events-auto z-0 overflow-hidden"
+        style={{
+          height: "clamp(900px, 105vh, 1100px)",
+          maskImage:
+            "linear-gradient(to bottom, #000 0%, #000 42%, rgba(0,0,0,0.85) 54%, rgba(0,0,0,0.5) 66%, rgba(0,0,0,0.18) 78%, rgba(0,0,0,0.03) 88%, transparent 95%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, #000 0%, #000 42%, rgba(0,0,0,0.85) 54%, rgba(0,0,0,0.5) 66%, rgba(0,0,0,0.18) 78%, rgba(0,0,0,0.03) 88%, transparent 95%)",
         }}
       >
         <WaveMesh
-          colors={["#000000", "#e2e8f0", "#a855f7"]}
+          colors={["transparent", "#e2e8f0", "#a855f7"]}
           crests={true}
           className="w-full h-full"
         />
+      </div>
 
-        {/* Graduated Chromatic Merge: Solid Black -> Dark Grey -> Neutral Grey -> Light Grey -> White with Layered Diffusion Blurs */}
+      {/* ── 3. Atmospheric Horizon Ambient Glow (Depth without Harsh Bloom) ── */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-[520px] sm:top-[560px] md:top-[600px] pointer-events-none z-0 flex justify-center"
+      >
         <div
-          className="absolute inset-x-0 bottom-0 h-28 pointer-events-none"
+          className="w-full max-w-[1240px] h-[360px] sm:h-[420px] rounded-full"
           style={{
             background: isLight
-              ? `linear-gradient(
-                  to bottom,
-                  rgba(0, 0, 0, 0) 0%,
-                  rgba(8, 10, 16, 0.78) 20%,
-                  rgba(22, 28, 40, 0.6) 40%,
-                  rgba(55, 68, 90, 0.42) 60%,
-                  rgba(148, 163, 184, 0.35) 78%,
-                  rgba(226, 232, 240, 0.65) 90%,
-                  rgba(255, 255, 255, 0.95) 97%,
-                  #ffffff 100%
-                )`
-              : "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(3,7,18,0.4) 30%, rgba(3,7,18,0.85) 70%, #030712 100%)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-          }}
-        />
-
-        {/* Ethereal Optical Smoothing Layer: Ultra-Soft Secondary Blur */}
-        <div
-          className="absolute inset-x-0 bottom-0 h-16 pointer-events-none"
-          style={{
-            background: isLight
-              ? "linear-gradient(to bottom, transparent 0%, rgba(226, 232, 240, 0.2) 45%, rgba(255, 255, 255, 0.92) 100%)"
-              : "transparent",
-            backdropFilter: "blur(28px)",
-            WebkitBackdropFilter: "blur(28px)",
+              ? "radial-gradient(ellipse 65% 50% at 50% 50%, rgba(147, 197, 253, 0.15) 0%, rgba(168, 85, 247, 0.08) 40%, transparent 75%)"
+              : "radial-gradient(ellipse 65% 50% at 50% 50%, rgba(147, 197, 253, 0.12) 0%, rgba(168, 85, 247, 0.06) 40%, transparent 75%)",
+            filter: "blur(48px)",
           }}
         />
       </div>
 
-      {/* ── Minimal Architectural Grid Lines (Smooth Top-to-Bottom Fade) ── */}
+      {/* ── 4. Minimal Architectural Grid Lines (Smoothly Emerging in Transition) ── */}
       <HeroArchitecturalGrid />
 
-      {/* Background Cinematic Atmosphere: Soft Violet / Purple Glow */}
+      {/* ── 5. Upper Cinematic Specular Violet Atmosphere ── */}
       <div
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85vw] max-w-[1200px] h-[500px] pointer-events-none rounded-full"
+        aria-hidden="true"
+        className="absolute top-[260px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85vw] max-w-[1100px] h-[440px] pointer-events-none z-0 rounded-full"
         style={{
-          background: "radial-gradient(ellipse at center, rgba(168, 85, 247, 0.16) 0%, rgba(124, 58, 237, 0.08) 40%, transparent 70%)",
+          background: isLight
+            ? "radial-gradient(ellipse at center, rgba(168, 85, 247, 0.14) 0%, rgba(124, 58, 237, 0.04) 45%, transparent 70%)"
+            : "radial-gradient(ellipse at center, rgba(168, 85, 247, 0.16) 0%, rgba(124, 58, 237, 0.08) 40%, transparent 70%)",
           filter: "blur(90px)",
         }}
       />
