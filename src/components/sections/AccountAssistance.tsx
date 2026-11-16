@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 import { InstagramIcon, FacebookIcon, TikTokIcon, WhatsAppIcon, XIcon } from "@/components/icons/PlatformIcons";
 
 export default function AccountAssistance() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
   const [activeStage, setActiveStage] = useState<0 | 1 | 2>(1);
@@ -69,7 +72,7 @@ export default function AccountAssistance() {
             transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
           }}
         >
-          <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-[#101018]/85 backdrop-blur-2xl shadow-2xl">
+          <div className="relative rounded-3xl overflow-hidden border border-white/10 dark-console-box backdrop-blur-2xl shadow-2xl">
             {/* Window Chrome Header */}
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/10 bg-white/[0.02]">
               <div className="flex items-center gap-2">
@@ -230,7 +233,11 @@ export default function AccountAssistance() {
 
           <button
             onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-            className="px-8 py-3.5 rounded-full text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.03] flex items-center gap-2 border border-cyan-500/30 bg-cyan-950/30 hover:bg-cyan-900/40 shadow-lg shadow-cyan-950/40"
+            className={`px-8 py-3.5 rounded-full text-sm font-bold transition-all duration-300 hover:scale-[1.03] flex items-center gap-2 ${
+              isLight
+                ? "btn-light-cyan text-slate-950 font-bold shadow-md hover:shadow-lg"
+                : "text-white border border-cyan-500/30 bg-cyan-950/30 hover:bg-cyan-900/40 shadow-lg shadow-cyan-950/40"
+            }`}
           >
             <span>Request Account Assistance</span>
             <span>→</span>

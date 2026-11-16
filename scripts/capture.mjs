@@ -171,10 +171,86 @@ async function main() {
     const platShot = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "4_platforms_services.png"), Buffer.from(platShot.data, "base64"));
 
+    // 6b. Scroll to Account Assistance
+    console.log("Scrolling to Account Assistance ...");
+    await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        const el = document.querySelector(".dark-console-box");
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          window.scrollTo(0, window.scrollY + rect.top - 80);
+        }
+      })()`,
+    });
+    await sleep(1500);
+    const accShot = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "6_account_assistance.png"), Buffer.from(accShot.data, "base64"));
+
+    // 6c. Scroll to Crypto Exchange
+    console.log("Scrolling to Crypto Exchange ...");
+    await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        const el = document.getElementById("exchange");
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          window.scrollTo(0, window.scrollY + rect.top - 60);
+        }
+      })()`,
+    });
+    await sleep(1500);
+    const cryptoShot = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "8_crypto_exchange.png"), Buffer.from(cryptoShot.data, "base64"));
+
+    // 6d. Scroll to Automated Ads
+    console.log("Scrolling to Automated Ads ...");
+    await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        const el = document.getElementById("automation");
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          window.scrollTo(0, window.scrollY + rect.top - 60);
+        }
+      })()`,
+    });
+    await sleep(1500);
+    const adsShot = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "9_automated_ads.png"), Buffer.from(adsShot.data, "base64"));
+
+    // 6e. Scroll to About Section
+    console.log("Scrolling to About Section ...");
+    await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        const el = document.getElementById("about");
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          window.scrollTo(0, window.scrollY + rect.top - 60);
+        }
+      })()`,
+    });
+    await sleep(1500);
+    const aboutShot = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "10_about_section.png"), Buffer.from(aboutShot.data, "base64"));
+
+    // 6f. Scroll to Footer Section
+    console.log("Scrolling to Footer Section ...");
+    await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        const el = document.querySelector("footer");
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          window.scrollTo(0, window.scrollY + rect.top - 60);
+        }
+      })()`,
+    });
+    await sleep(1500);
+    const footerShot = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "11_footer_section.png"), Buffer.from(footerShot.data, "base64"));
+
     // 7. Expand Dynamic Glass Navigation Bar
     console.log("Expanding Dynamic Navigation Bar ...");
     await sendSession("Runtime.evaluate", {
       expression: `(() => {
+        window.scrollTo(0, 0);
         const btn = document.querySelector("button[aria-expanded]") || document.querySelector("button[title*='Menu']");
         if (btn) btn.click();
       })()`,
@@ -192,6 +268,11 @@ async function main() {
       "3_official_verification.png",
       "4_platforms_services.png",
       "5_dynamic_glass_navigation.png",
+      "6_account_assistance.png",
+      "8_crypto_exchange.png",
+      "9_automated_ads.png",
+      "10_about_section.png",
+      "11_footer_section.png",
       "expanded_dynamic_bar.png"
     ];
 

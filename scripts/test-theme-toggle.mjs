@@ -95,24 +95,48 @@ async function main() {
 
     console.log("Navigating to http://localhost:3000 ...");
     await sendSession("Page.navigate", { url: "http://localhost:3000" });
-    await sleep(3500);
+    
+    // Wait for document ready
+    for (let i = 0; i < 30; i++) {
+      const res = await sendSession("Runtime.evaluate", {
+        expression: `({ href: window.location.href, readyState: document.readyState, buttons: document.querySelectorAll("button").length })`,
+        returnByValue: true,
+      });
+      console.log("Page status:", res.result.value);
+      if (res.result.value && res.result.value.readyState === "complete" && res.result.value.buttons > 20) {
+        // Wait another 2.5s for React hydration to attach event listeners
+        await sleep(2500);
+        break;
+      }
+      await sleep(500);
+    }
 
     // Click theme toggle button to switch to Dark Mode
     console.log("Toggling theme to Dark Mode ...");
     const toggleResult = await sendSession("Runtime.evaluate", {
       expression: `(() => {
-        const btn = document.querySelector("button[aria-label*='Toggle White and Dark Theme']");
-        if (btn) {
-          btn.click();
-          return { clicked: true, newTheme: document.documentElement.getAttribute("data-theme") };
-        }
-        return { clicked: false };
+        const btns = Array.from(document.querySelectorAll("button"));
+        const themeBtn = btns.find(b => (b.getAttribute("aria-label") || "").includes("Theme") || (b.title || "").includes("Theme"));
+        if (!themeBtn) return { error: "button not found", availableButtons: btns.map(b => b.outerHTML) };
+        
+        themeBtn.click();
+        return {
+          foundBtnHtml: themeBtn.outerHTML,
+          localStorageVal: localStorage.getItem("socialassist-theme"),
+          dataTheme: document.documentElement.getAttribute("data-theme"),
+        };
       })()`,
       returnByValue: true,
     });
     console.log("Toggle result:", toggleResult.result.value);
 
     await sleep(1500);
+
+    const themeCheck = await sendSession("Runtime.evaluate", {
+      expression: `document.documentElement.getAttribute("data-theme")`,
+      returnByValue: true,
+    });
+    console.log("Current theme on <html>:", themeCheck.result.value);
 
     // Capture hero in dark mode
     console.log("Capturing hero_dark_mode.png ...");

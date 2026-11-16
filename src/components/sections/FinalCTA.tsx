@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 import TelegramInquiry from "./TelegramInquiry";
 
 export default function FinalCTA() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -38,8 +41,9 @@ export default function FinalCTA() {
           left: "50%",
           top: "40%",
           transform: "translate(-50%, -50%)",
-          background:
-            "radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, rgba(139, 92, 246, 0.05) 40%, transparent 70%)",
+          background: isLight
+            ? "radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, rgba(124, 58, 237, 0.04) 40%, transparent 70%)"
+            : "radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, rgba(139, 92, 246, 0.05) 40%, transparent 70%)",
           filter: "blur(90px)",
         }}
       />
@@ -55,7 +59,11 @@ export default function FinalCTA() {
           }}
         >
           <span
-            className="text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full text-cyan-400 border border-cyan-400/30 bg-cyan-950/30 font-mono"
+            className={`text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full font-mono ${
+              isLight
+                ? "text-sky-700 border border-sky-300 bg-sky-100/70 shadow-sm"
+                : "text-cyan-400 border border-cyan-400/30 bg-cyan-950/30"
+            }`}
             style={{ fontFamily: "var(--font-inter)" }}
           >
             ✦ Direct Escalation & Resolution ✦
@@ -65,7 +73,7 @@ export default function FinalCTA() {
         {/* Headline */}
         <h2
           id="cta-heading"
-          className="mb-5 text-white tracking-tight"
+          className={`mb-5 tracking-tight ${isLight ? "text-slate-950" : "text-white"}`}
           style={{
             fontSize: "clamp(2.2rem, 5.5vw, 4.2rem)",
             fontFamily: "var(--font-space-grotesk)",
@@ -79,11 +87,11 @@ export default function FinalCTA() {
           Your Digital Problem Deserves
           <br />
           <span
-            style={{
-              background: "linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
+            className={
+              isLight
+                ? "inline-block bg-clip-text text-transparent bg-gradient-to-r from-sky-600 via-indigo-600 to-purple-600 font-extrabold"
+                : "inline-block bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-indigo-400 to-purple-400 font-extrabold"
+            }
           >
             a Smarter Solution.
           </span>
@@ -91,7 +99,9 @@ export default function FinalCTA() {
 
         {/* Supporting line */}
         <p
-          className="mb-10 text-base sm:text-lg text-zinc-300 max-w-xl mx-auto"
+          className={`mb-10 text-base sm:text-lg max-w-xl mx-auto font-normal ${
+            isLight ? "text-slate-600" : "text-zinc-300"
+          }`}
           style={{
             fontFamily: "var(--font-inter)",
             opacity: visible ? 1 : 0,
@@ -115,7 +125,11 @@ export default function FinalCTA() {
             href="https://t.me/socialassist"
             target="_blank"
             rel="noopener noreferrer"
-            className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-sm sm:text-base text-white transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-lg shadow-indigo-950/50"
+            className={`group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-sm sm:text-base transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] ${
+              isLight
+                ? "btn-light-purple text-slate-950 font-bold shadow-md hover:shadow-lg"
+                : "text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-lg shadow-indigo-950/50"
+            }`}
             style={{ fontFamily: "var(--font-inter)" }}
           >
             <span>Open Telegram Channel</span>
@@ -132,7 +146,11 @@ export default function FinalCTA() {
 
           <button
             onClick={() => scrollTo("services")}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-semibold text-sm sm:text-base text-zinc-200 transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] border border-white/15 bg-white/5 hover:bg-white/10 hover:border-white/30 backdrop-blur-xl"
+            className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-semibold text-sm sm:text-base transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] ${
+              isLight
+                ? "bg-white/90 text-slate-900 border border-slate-300/80 shadow-sm hover:bg-white"
+                : "border border-white/15 bg-white/5 hover:bg-white/10 hover:border-white/30 text-zinc-200 backdrop-blur-xl"
+            }`}
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Explore Services
@@ -153,7 +171,9 @@ export default function FinalCTA() {
           }}
         >
           <p
-            className="text-xs font-semibold tracking-[0.35em] uppercase text-zinc-500 font-mono"
+            className={`text-xs font-semibold tracking-[0.35em] uppercase font-mono ${
+              isLight ? "text-slate-500" : "text-zinc-500"
+            }`}
           >
             We Resolve · We Protect · We Elevate
           </p>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useTheme } from "@/components/ThemeProvider";
+
 const NAV_LINKS = [
   { label: "Services", href: "#services" },
   { label: "Platforms", href: "#platforms" },
@@ -11,6 +13,9 @@ const NAV_LINKS = [
 ];
 
 export default function Footer() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
+
   const scrollTo = (href: string) => {
     const id = href.replace("#", "");
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -19,14 +24,19 @@ export default function Footer() {
   return (
     <footer
       className="relative z-10 py-16 px-4 md:px-8"
-      style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+      style={{
+        borderTop: isLight ? "1px solid rgba(15, 23, 42, 0.08)" : "1px solid rgba(255,255,255,0.06)",
+        backgroundColor: isLight ? "#F8FAFC" : "transparent",
+      }}
       role="contentinfo"
     >
       {/* Very subtle top glow */}
       <div
         className="absolute inset-x-0 top-0 h-px"
         style={{
-          background: "linear-gradient(90deg, transparent, rgba(124,58,237,0.4), transparent)",
+          background: isLight
+            ? "linear-gradient(90deg, transparent, rgba(124,58,237,0.35), transparent)"
+            : "linear-gradient(90deg, transparent, rgba(124,58,237,0.4), transparent)",
         }}
       />
 
@@ -46,21 +56,30 @@ export default function Footer() {
               <div>
                 <p
                   className="text-sm font-semibold"
-                  style={{ color: "#FFFFFF", fontFamily: "var(--font-space-grotesk)" }}
+                  style={{
+                    color: isLight ? "#090D16" : "#FFFFFF",
+                    fontFamily: "var(--font-space-grotesk)",
+                  }}
                 >
                   SocialAssist
                 </p>
                 <p
-                  className="text-xs"
-                  style={{ color: "rgba(197,167,255,0.4)", fontFamily: "var(--font-inter)" }}
+                  className="text-xs font-medium"
+                  style={{
+                    color: isLight ? "#64748B" : "rgba(197,167,255,0.4)",
+                    fontFamily: "var(--font-inter)",
+                  }}
                 >
                   Est. 2021
                 </p>
               </div>
             </div>
             <p
-              className="text-xs tracking-wider text-center md:text-left"
-              style={{ color: "rgba(197,167,255,0.5)", fontFamily: "var(--font-inter)" }}
+              className="text-xs tracking-wider text-center md:text-left font-medium"
+              style={{
+                color: isLight ? "#475569" : "rgba(197,167,255,0.5)",
+                fontFamily: "var(--font-inter)",
+              }}
             >
               We Resolve. We Protect. We Elevate.
             </p>
@@ -73,10 +92,19 @@ export default function Footer() {
                 <button
                   key={link.href}
                   onClick={() => scrollTo(link.href)}
-                  className="text-sm transition-colors duration-200 focus-visible:outline-none"
-                  style={{ color: "rgba(217,214,227,0.45)", fontFamily: "var(--font-inter)" }}
-                  onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "#C5A7FF")}
-                  onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.color = "rgba(217,214,227,0.45)")}
+                  className="text-sm transition-colors duration-200 focus-visible:outline-none font-medium"
+                  style={{
+                    color: isLight ? "#334155" : "rgba(217,214,227,0.45)",
+                    fontFamily: "var(--font-inter)",
+                  }}
+                  onMouseEnter={(e) =>
+                    ((e.currentTarget as HTMLButtonElement).style.color = isLight ? "#7C3AED" : "#C5A7FF")
+                  }
+                  onMouseLeave={(e) =>
+                    ((e.currentTarget as HTMLButtonElement).style.color = isLight
+                      ? "#334155"
+                      : "rgba(217,214,227,0.45)")
+                  }
                 >
                   {link.label}
                 </button>
@@ -87,8 +115,11 @@ export default function Footer() {
           {/* Right — legal */}
           <div className="flex flex-col items-center md:items-end gap-2">
             <p
-              className="text-xs"
-              style={{ color: "rgba(217,214,227,0.3)", fontFamily: "var(--font-inter)" }}
+              className="text-xs font-medium"
+              style={{
+                color: isLight ? "#64748B" : "rgba(217,214,227,0.3)",
+                fontFamily: "var(--font-inter)",
+              }}
             >
               SocialAssist © 2021–Present
             </p>
@@ -98,11 +129,18 @@ export default function Footer() {
         {/* Bottom disclaimer */}
         <div
           className="mt-10 pt-6"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
+          style={{
+            borderTop: isLight ? "1px solid rgba(15, 23, 42, 0.08)" : "1px solid rgba(255,255,255,0.05)",
+          }}
         >
           <p
-            className="text-xs text-center leading-relaxed"
-            style={{ color: "rgba(217,214,227,0.2)", fontFamily: "var(--font-inter)", maxWidth: "700px", margin: "0 auto" }}
+            className="text-xs text-center leading-relaxed font-normal"
+            style={{
+              color: isLight ? "#475569" : "rgba(217,214,227,0.35)",
+              fontFamily: "var(--font-inter)",
+              maxWidth: "700px",
+              margin: "0 auto",
+            }}
           >
             SocialAssist is an independent digital services network. We are not affiliated with,
             endorsed by, or officially connected to Instagram, Facebook, WhatsApp, TikTok, X, OnlyFans,
@@ -115,10 +153,19 @@ export default function Footer() {
               <a
                 key={item}
                 href="#"
-                className="text-xs transition-colors duration-200"
-                style={{ color: "rgba(197,167,255,0.25)", fontFamily: "var(--font-inter)" }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(197,167,255,0.6)")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(197,167,255,0.25)")}
+                className="text-xs transition-colors duration-200 font-semibold"
+                style={{
+                  color: isLight ? "#7C3AED" : "rgba(197,167,255,0.45)",
+                  fontFamily: "var(--font-inter)",
+                }}
+                onMouseEnter={(e) =>
+                  ((e.currentTarget as HTMLAnchorElement).style.color = isLight ? "#6D28D9" : "#C5A7FF")
+                }
+                onMouseLeave={(e) =>
+                  ((e.currentTarget as HTMLAnchorElement).style.color = isLight
+                    ? "#7C3AED"
+                    : "rgba(197,167,255,0.45)")
+                }
               >
                 {item}
               </a>

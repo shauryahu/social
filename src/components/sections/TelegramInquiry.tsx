@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
 const SERVICE_OPTIONS = [
   "Account Recovery & Unban",
@@ -12,6 +13,8 @@ const SERVICE_OPTIONS = [
 ];
 
 export default function TelegramInquiry() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
   const [telegramUsername, setTelegramUsername] = useState("");
@@ -103,7 +106,7 @@ export default function TelegramInquiry() {
     >
       <div className="max-w-3xl mx-auto">
         <div
-          className="rounded-3xl p-6 sm:p-10 border border-white/10 bg-[#101018]/90 backdrop-blur-2xl shadow-2xl transition-all duration-700"
+          className="rounded-3xl p-6 sm:p-10 border border-white/10 bg-[#101018]/90 backdrop-blur-2xl shadow-2xl transition-all duration-700 dark-console-box"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(24px)",
@@ -226,7 +229,11 @@ export default function TelegramInquiry() {
             <button
               type="submit"
               disabled={status === "loading"}
-              className="w-full py-4 rounded-full font-bold text-sm text-white transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-lg shadow-indigo-950/50"
+              className={`w-full py-4 rounded-full font-bold text-sm transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-2 ${
+                isLight
+                  ? "btn-light-cyan font-bold text-slate-950 shadow-md"
+                  : "text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-lg shadow-indigo-950/50"
+              }`}
             >
               {status === "loading" ? (
                 <span>Transmitting Encrypted File...</span>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
 const SERVICES = [
   {
@@ -279,6 +280,8 @@ function ServiceCard({
   index: number;
   visible: boolean;
 }) {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const [hovered, setHovered] = useState(false);
   const [activePop, setActivePop] = useState(false);
 
@@ -375,12 +378,15 @@ function ServiceCard({
             e.stopPropagation();
             scrollToTarget();
           }}
-          className="group inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:outline-none"
+          className={`group inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 active:scale-95 focus-visible:outline-none ${
+            isLight
+              ? "btn-light-purple text-slate-950 font-bold"
+              : "text-white"
+          }`}
           style={{
-            background: "linear-gradient(135deg, rgba(124,58,237,0.35) 0%, rgba(155,92,255,0.45) 100%)",
-            border: "1px solid rgba(197,167,255,0.35)",
-            color: "#FFFFFF",
-            boxShadow: "0 0 16px rgba(124,58,237,0.4)",
+            background: isLight ? undefined : "linear-gradient(135deg, rgba(124,58,237,0.35) 0%, rgba(155,92,255,0.45) 100%)",
+            border: isLight ? undefined : "1px solid rgba(197,167,255,0.35)",
+            boxShadow: isLight ? undefined : "0 0 16px rgba(124,58,237,0.4)",
             fontFamily: "'Inter', sans-serif",
           }}
         >
@@ -407,6 +413,8 @@ function ServiceCard({
 }
 
 export default function ServicesSection() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -438,31 +446,36 @@ export default function ServicesSection() {
           }}
         >
           <span
-            className="text-xs font-bold tracking-[0.25em] uppercase mb-3 block"
-            style={{ color: "#C5A7FF", fontFamily: "'Inter', sans-serif" }}
+            className={`text-xs font-bold tracking-[0.25em] uppercase mb-3 block ${
+              isLight ? "text-purple-700" : "text-purple-300"
+            }`}
+            style={{ fontFamily: "'Inter', sans-serif" }}
           >
             What We Provide
           </span>
           <h2
             id="services-heading"
-            className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4"
-            style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#FFFFFF" }}
+            className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 ${
+              isLight ? "text-slate-950" : "text-white"
+            }`}
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
             Everything Digital.{" "}
             <span
-              style={{
-                background: "linear-gradient(135deg, #E0C7FF 0%, #9B5CFF 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
+              className={
+                isLight
+                  ? "inline-block bg-clip-text text-transparent bg-gradient-to-r from-purple-700 via-indigo-600 to-purple-800 font-black"
+                  : "inline-block bg-clip-text text-transparent bg-gradient-to-r from-purple-200 via-purple-400 to-purple-500 font-black"
+              }
             >
               One Connected Network.
             </span>
           </h2>
           <p
-            className="text-base md:text-lg font-medium max-w-2xl mx-auto leading-relaxed"
-            style={{ color: "rgba(235,232,245,0.8)", fontFamily: "'Inter', sans-serif" }}
+            className={`text-base md:text-lg font-medium max-w-2xl mx-auto leading-relaxed ${
+              isLight ? "text-slate-600" : "text-zinc-300"
+            }`}
+            style={{ fontFamily: "'Inter', sans-serif" }}
           >
             Specialized solutions designed around modern social platforms.
           </p>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
 const COIN_DATA = {
   USDT: { name: "Tether USD", rate: 91.45, symbol: "₮", color: "#26A17B" },
@@ -13,6 +14,8 @@ const COIN_DATA = {
 type CoinKey = keyof typeof COIN_DATA;
 
 export default function CryptoExchange() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
   const [selectedCoin, setSelectedCoin] = useState<CoinKey>("USDT");
@@ -100,7 +103,7 @@ export default function CryptoExchange() {
               transition: "opacity 0.8s ease-out 0.1s, transform 0.8s ease-out 0.1s",
             }}
           >
-            <div className="w-full max-w-md rounded-3xl p-6 sm:p-8 border border-white/10 bg-[#101018]/85 backdrop-blur-2xl shadow-2xl space-y-5">
+            <div className="w-full max-w-md rounded-3xl p-6 sm:p-8 border border-white/10 dark-console-box backdrop-blur-2xl shadow-2xl space-y-5">
               <div className="flex items-center justify-between pb-3 border-b border-white/10">
                 <span className="text-xs font-semibold uppercase tracking-wider text-zinc-300 font-mono">
                   Live OTC Rate Estimator
@@ -232,7 +235,11 @@ export default function CryptoExchange() {
 
             <button
               onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-              className="mt-6 px-8 py-3.5 rounded-full text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.03] flex items-center gap-2 border border-cyan-500/30 bg-cyan-950/30 hover:bg-cyan-900/40 shadow-lg shadow-cyan-950/40"
+              className={`mt-6 px-8 py-3.5 rounded-full text-sm font-bold transition-all duration-300 hover:scale-[1.03] flex items-center gap-2 ${
+                isLight
+                  ? "btn-light-cyan text-slate-950 font-bold shadow-md hover:shadow-lg"
+                  : "text-white border border-cyan-500/30 bg-cyan-950/30 hover:bg-cyan-900/40 shadow-lg shadow-cyan-950/40"
+              }`}
             >
               <span>Connect with OTC Desk</span>
               <span>→</span>

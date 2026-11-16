@@ -237,10 +237,14 @@ export default function Navigation() {
             {/* Direct CTA */}
             <button
               onClick={() => scrollTo("#contact")}
-              className="relative hidden sm:inline-flex px-3.5 py-1.5 rounded-full text-xs font-bold text-white transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] overflow-hidden group shadow-[0_4px_16px_rgba(37,99,235,0.35)]"
+              className={`relative hidden sm:inline-flex px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] overflow-hidden group ${
+                isLight
+                  ? "btn-light-purple"
+                  : "text-white shadow-[0_4px_16px_rgba(37,99,235,0.35)]"
+              }`}
               style={{
-                background: "linear-gradient(135deg, #2563EB 0%, #1D4ED8 50%, #7C3AED 100%)",
-                border: "1px solid rgba(255, 255, 255, 0.2)",
+                background: isLight ? undefined : "linear-gradient(135deg, #2563EB 0%, #1D4ED8 50%, #7C3AED 100%)",
+                border: isLight ? undefined : "1px solid rgba(255, 255, 255, 0.2)",
                 fontFamily: "var(--font-inter)",
               }}
             >
@@ -248,7 +252,7 @@ export default function Navigation() {
                 className="absolute inset-0 bg-gradient-to-t from-transparent via-white/15 to-white/25 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                 aria-hidden="true"
               />
-              <span className="relative z-10 text-white">Contact</span>
+              <span className={`relative z-10 ${isLight ? "text-slate-950 font-bold" : "text-white"}`}>Contact</span>
             </button>
 
             {/* Menu Toggle Button */}
@@ -367,7 +371,11 @@ export default function Navigation() {
 
             <button
               onClick={() => scrollTo("#contact")}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-full font-bold text-xs text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-md shadow-indigo-950/40 hover:opacity-95 transition-transform duration-150 active:scale-[0.98]"
+              className={`w-full sm:w-auto px-5 py-2.5 rounded-full font-bold text-xs transition-transform duration-150 active:scale-[0.98] ${
+                isLight
+                  ? "btn-light-purple text-slate-950 font-bold shadow-md hover:shadow-lg"
+                  : "text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-md shadow-indigo-950/40 hover:opacity-95"
+              }`}
             >
               Contact Operator →
             </button>

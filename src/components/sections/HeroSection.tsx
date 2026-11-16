@@ -184,10 +184,13 @@ export default function HeroSection() {
         >
           <button
             onClick={scrollToServices}
-            className="group relative w-full sm:w-auto px-8 py-3.5 rounded-full font-semibold text-sm sm:text-base text-white overflow-hidden transition-all duration-300 hover:scale-[1.04] active:scale-[0.98] flex items-center justify-center gap-2"
+            className={`group relative w-full sm:w-auto px-8 py-3.5 rounded-full font-bold text-sm sm:text-base overflow-hidden transition-all duration-300 hover:scale-[1.04] active:scale-[0.98] flex items-center justify-center gap-2 ${
+              isLight
+                ? "btn-light-purple"
+                : "text-white shadow-[0_8px_30px_rgba(79,70,229,0.45)]"
+            }`}
             style={{
-              background: "linear-gradient(135deg, #2563EB 0%, #4F46E5 50%, #7C3AED 100%)",
-              boxShadow: "0 8px 30px rgba(79, 70, 229, 0.45), inset 0 1px 0 rgba(255,255,255,0.25)",
+              background: isLight ? undefined : "linear-gradient(135deg, #2563EB 0%, #4F46E5 50%, #7C3AED 100%)",
               fontFamily: "var(--font-inter)",
             }}
           >
@@ -207,7 +210,7 @@ export default function HeroSection() {
             onClick={scrollToContact}
             className={`group w-full sm:w-auto px-8 py-3.5 rounded-full font-semibold text-sm sm:text-base transition-all duration-300 hover:scale-[1.04] active:scale-[0.98] flex items-center justify-center backdrop-blur-xl ${
               isLight
-                ? "text-slate-800 border border-slate-300/80 bg-white/90 hover:bg-white hover:border-slate-400 shadow-sm"
+                ? "text-slate-900 border border-slate-300/90 bg-white/95 hover:bg-white hover:border-slate-400 shadow-sm"
                 : "text-zinc-200 border border-white/15 bg-white/5 hover:bg-white/10 hover:border-white/30"
             }`}
             style={{ fontFamily: "var(--font-inter)" }}

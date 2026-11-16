@@ -194,13 +194,11 @@ export default function PlatformEcosystem() {
           >
             One Integrated Network.{" "}
             <span
-              style={{
-                background: isLight
-                  ? "linear-gradient(135deg, #0284C7 0%, #6366F1 50%, #9333EA 100%)"
-                  : "linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
+              className={
+                isLight
+                  ? "inline-block bg-clip-text text-transparent bg-gradient-to-r from-sky-600 via-indigo-600 to-purple-600 font-black"
+                  : "inline-block bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-400 font-black"
+              }
             >
               Every Major Platform.
             </span>

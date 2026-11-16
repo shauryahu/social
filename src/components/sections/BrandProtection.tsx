@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function BrandProtection() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -63,7 +66,7 @@ export default function BrandProtection() {
 
             {/* 3D Glass Shield Container */}
             <div
-              className="relative rounded-3xl p-8 sm:p-10 flex flex-col items-center border border-white/10 bg-[#101018]/85 backdrop-blur-2xl shadow-2xl overflow-hidden group hover:border-white/20 transition-all duration-500"
+              className="relative rounded-3xl p-8 sm:p-10 flex flex-col items-center border border-white/10 dark-console-box backdrop-blur-2xl shadow-2xl overflow-hidden group hover:border-white/20 transition-all duration-500"
             >
               {/* Top Specular Shimmer */}
               <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
@@ -214,7 +217,11 @@ export default function BrandProtection() {
 
           <button
             onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-            className="px-8 py-3.5 rounded-full text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.03] flex items-center gap-2 border border-cyan-500/30 bg-cyan-950/30 hover:bg-cyan-900/40 shadow-lg shadow-cyan-950/40"
+            className={`px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.03] flex items-center gap-2 ${
+              isLight
+                ? "btn-light-cyan font-bold"
+                : "text-white border border-cyan-500/30 bg-cyan-950/30 hover:bg-cyan-900/40 shadow-lg shadow-cyan-950/40"
+            }`}
           >
             <span>Initiate Brand Protection Review</span>
             <span>→</span>

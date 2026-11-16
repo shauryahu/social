@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
 const WHY_ITEMS = [
   {
@@ -60,6 +61,8 @@ const WHY_ITEMS = [
 ];
 
 export default function AboutSection() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -91,41 +94,48 @@ export default function AboutSection() {
             }}
           >
             <span
-              className="text-xs font-medium tracking-widest uppercase mb-4 block"
-              style={{ color: "#9B5CFF", fontFamily: "var(--font-inter)" }}
+              className={`text-xs font-semibold tracking-widest uppercase mb-4 block font-mono ${
+                isLight ? "text-purple-700" : "text-purple-400"
+              }`}
+              style={{ fontFamily: "var(--font-inter)" }}
             >
-              About
+              ✦ About SocialAssist ✦
             </span>
             <h2
               id="about-heading"
-              className="text-3xl md:text-4xl font-bold mb-6 leading-tight"
-              style={{ fontFamily: "var(--font-space-grotesk)", color: "#FFFFFF" }}
+              className={`text-3xl md:text-4xl font-black mb-6 leading-tight tracking-tight ${
+                isLight ? "text-slate-950" : "text-white"
+              }`}
+              style={{ fontFamily: "var(--font-space-grotesk)" }}
             >
               Built Around Digital Problems.{" "}
               <span
-                style={{
-                  background: "linear-gradient(135deg, #C5A7FF, #9B5CFF)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
+                className={
+                  isLight
+                    ? "inline-block bg-clip-text text-transparent bg-gradient-to-r from-purple-700 via-indigo-600 to-purple-800 font-black"
+                    : "inline-block bg-clip-text text-transparent bg-gradient-to-r from-purple-300 via-purple-400 to-purple-500 font-black"
+                }
               >
                 Designed Around Solutions.
               </span>
             </h2>
             <p
-              className="text-base leading-relaxed mb-5"
-              style={{ color: "rgba(217,214,227,0.65)", fontFamily: "var(--font-inter)" }}
+              className={`text-base leading-relaxed mb-5 ${
+                isLight ? "text-slate-700 font-medium" : "text-zinc-300"
+              }`}
+              style={{ fontFamily: "var(--font-inter)" }}
             >
               SocialAssist was established in{" "}
-              <span style={{ color: "#C5A7FF", fontWeight: 500 }}>2021</span> with a
+              <span className={`font-bold ${isLight ? "text-purple-700" : "text-purple-300"}`}>2021</span> with a
               singular goal: provide specialized assistance for increasingly
               complex problems across modern social platforms. The digital
               landscape had grown — and so had its problems.
             </p>
             <p
-              className="text-base leading-relaxed mb-5"
-              style={{ color: "rgba(217,214,227,0.55)", fontFamily: "var(--font-inter)" }}
+              className={`text-base leading-relaxed mb-5 ${
+                isLight ? "text-slate-700 font-medium" : "text-zinc-300"
+              }`}
+              style={{ fontFamily: "var(--font-inter)" }}
             >
               What began as account recovery and restoration evolved into a
               broader network of digital services — encompassing verification
@@ -133,8 +143,10 @@ export default function AboutSection() {
               advertising solutions.
             </p>
             <p
-              className="text-base leading-relaxed"
-              style={{ color: "rgba(217,214,227,0.45)", fontFamily: "var(--font-inter)" }}
+              className={`text-base leading-relaxed ${
+                isLight ? "text-slate-700 font-medium" : "text-zinc-300"
+              }`}
+              style={{ fontFamily: "var(--font-inter)" }}
             >
               Today, SocialAssist operates as a unified digital assistance
               network — one point of contact for multiple platform-related
@@ -143,27 +155,36 @@ export default function AboutSection() {
 
             {/* Founder badge */}
             <div
-              className="mt-8 inline-flex items-center gap-3 px-5 py-3 rounded-2xl"
+              className={`mt-8 inline-flex items-center gap-3 px-5 py-3 rounded-2xl ${
+                isLight
+                  ? "bg-white/95 border border-slate-200/90 shadow-md"
+                  : "bg-[#101016]/70 border border-white/10"
+              }`}
               style={{
-                background: "rgba(16,16,22,0.7)",
                 backdropFilter: "blur(16px)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
               }}
             >
               <div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
+                className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-sm"
                 style={{
-                  background: "linear-gradient(135deg, #4A16A8, #7C3AED)",
-                  color: "#C5A7FF",
                   fontFamily: "var(--font-space-grotesk)",
                 }}
               >
                 G
               </div>
               <div>
-                <p className="text-sm font-semibold" style={{ color: "#FFFFFF", fontFamily: "var(--font-space-grotesk)" }}>Gixxu</p>
-                <p className="text-xs" style={{ color: "rgba(197,167,255,0.5)", fontFamily: "var(--font-inter)" }}>Founder, SocialAssist · Est. 2021</p>
+                <p
+                  className={`text-sm font-bold ${isLight ? "text-slate-950" : "text-white"}`}
+                  style={{ fontFamily: "var(--font-space-grotesk)" }}
+                >
+                  Gixxu
+                </p>
+                <p
+                  className={`text-xs ${isLight ? "text-slate-500 font-medium" : "text-purple-300/80"}`}
+                  style={{ fontFamily: "var(--font-inter)" }}
+                >
+                  Founder, SocialAssist · Est. 2021
+                </p>
               </div>
             </div>
           </div>
@@ -177,17 +198,18 @@ export default function AboutSection() {
             }}
           >
             <div
-              className="rounded-3xl p-8 h-full"
+              className={`rounded-3xl p-8 h-full ${
+                isLight
+                  ? "bg-white/95 border border-slate-200/90 shadow-xl"
+                  : "bg-[#101016]/55 border border-white/10 shadow-2xl"
+              }`}
               style={{
-                background: "rgba(16,16,22,0.55)",
                 backdropFilter: "blur(20px)",
-                border: "1px solid rgba(255,255,255,0.07)",
-                boxShadow: "0 0 40px rgba(74,22,168,0.12), inset 0 1px 0 rgba(255,255,255,0.05)",
               }}
             >
               <h3
-                className="text-lg font-semibold mb-6"
-                style={{ color: "#FFFFFF", fontFamily: "var(--font-space-grotesk)" }}
+                className={`text-lg font-bold mb-6 ${isLight ? "text-slate-950" : "text-white"}`}
+                style={{ fontFamily: "var(--font-space-grotesk)" }}
               >
                 The Journey
               </h3>
@@ -201,41 +223,40 @@ export default function AboutSection() {
                 <div key={item.year} className="flex gap-4 mb-6 last:mb-0">
                   <div className="flex flex-col items-center">
                     <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-                      style={{
-                        background: "linear-gradient(135deg, rgba(74,22,168,0.4), rgba(124,58,237,0.3))",
-                        border: "1px solid rgba(124,58,237,0.3)",
-                        color: "#C5A7FF",
-                        fontFamily: "var(--font-inter)",
-                      }}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                        isLight
+                          ? "bg-purple-100 text-purple-800 border border-purple-300"
+                          : "bg-purple-900/40 text-purple-200 border border-purple-500/30"
+                      }`}
+                      style={{ fontFamily: "var(--font-inter)" }}
                     >
                       {i + 1}
                     </div>
                     {i < 3 && (
                       <div
-                        className="w-px flex-1 mt-1"
-                        style={{ background: "rgba(124,58,237,0.2)", minHeight: 20 }}
+                        className={`w-px flex-1 mt-1 ${isLight ? "bg-purple-200" : "bg-purple-500/20"}`}
+                        style={{ minHeight: 20 }}
                       />
                     )}
                   </div>
                   <div className="pb-2">
                     <div className="flex items-baseline gap-2">
                       <span
-                        className="text-xs font-bold"
-                        style={{ color: "#9B5CFF", fontFamily: "var(--font-inter)" }}
+                        className={`text-xs font-bold ${isLight ? "text-purple-700" : "text-purple-400"}`}
+                        style={{ fontFamily: "var(--font-inter)" }}
                       >
                         {item.year}
                       </span>
                       <span
-                        className="text-sm font-semibold"
-                        style={{ color: "#FFFFFF", fontFamily: "var(--font-space-grotesk)" }}
+                        className={`text-sm font-bold ${isLight ? "text-slate-950" : "text-white"}`}
+                        style={{ fontFamily: "var(--font-space-grotesk)" }}
                       >
                         {item.label}
                       </span>
                     </div>
                     <p
-                      className="text-xs mt-1"
-                      style={{ color: "rgba(217,214,227,0.45)", fontFamily: "var(--font-inter)" }}
+                      className={`text-xs mt-1 ${isLight ? "text-slate-600 font-medium" : "text-zinc-400"}`}
+                      style={{ fontFamily: "var(--font-inter)" }}
                     >
                       {item.desc}
                     </p>
@@ -255,17 +276,16 @@ export default function AboutSection() {
           }}
         >
           <h2
-            className="text-2xl md:text-3xl font-bold"
-            style={{ fontFamily: "var(--font-space-grotesk)", color: "#FFFFFF" }}
+            className={`text-2xl md:text-3xl font-black ${isLight ? "text-slate-950" : "text-white"}`}
+            style={{ fontFamily: "var(--font-space-grotesk)" }}
           >
             Why{" "}
             <span
-              style={{
-                background: "linear-gradient(135deg, #C5A7FF, #9B5CFF)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
+              className={
+                isLight
+                  ? "inline-block bg-clip-text text-transparent bg-gradient-to-r from-purple-700 via-indigo-600 to-purple-800 font-black"
+                  : "inline-block bg-clip-text text-transparent bg-gradient-to-r from-purple-300 via-purple-400 to-purple-500 font-black"
+              }
             >
               SocialAssist
             </span>
@@ -276,12 +296,13 @@ export default function AboutSection() {
           {WHY_ITEMS.map((item, i) => (
             <div
               key={item.title}
-              className="p-5 rounded-2xl"
+              className={`p-5 rounded-2xl ${
+                isLight
+                  ? "bg-white/95 border border-slate-200/90 shadow-md"
+                  : "bg-[#101016]/60 border border-white/10"
+              }`}
               style={{
-                background: "rgba(16,16,22,0.6)",
                 backdropFilter: "blur(16px)",
-                border: "1px solid rgba(255,255,255,0.07)",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.04)",
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(20px)",
                 transition: `opacity 0.5s ease-out ${0.2 + i * 0.08}s, transform 0.5s ease-out ${0.2 + i * 0.08}s`,
@@ -289,14 +310,14 @@ export default function AboutSection() {
             >
               <div className="mb-3">{item.icon}</div>
               <h3
-                className="text-sm font-semibold mb-1.5"
-                style={{ color: "#FFFFFF", fontFamily: "var(--font-space-grotesk)" }}
+                className={`text-sm font-bold mb-1.5 ${isLight ? "text-slate-950" : "text-white"}`}
+                style={{ fontFamily: "var(--font-space-grotesk)" }}
               >
                 {item.title}
               </h3>
               <p
-                className="text-xs leading-relaxed"
-                style={{ color: "rgba(217,214,227,0.5)", fontFamily: "var(--font-inter)" }}
+                className={`text-xs leading-relaxed ${isLight ? "text-slate-600 font-medium" : "text-zinc-400"}`}
+                style={{ fontFamily: "var(--font-inter)" }}
               >
                 {item.desc}
               </p>

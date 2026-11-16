@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
 // Channel URL — configure here
 const CHANNEL_URL = "https://t.me/socialassist";
 
 export default function ChannelShowcase() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
   const [muted, setMuted] = useState(true);
@@ -80,31 +83,30 @@ export default function ChannelShowcase() {
           }}
         >
           <span
-            className="text-xs font-medium tracking-widest uppercase mb-3 block"
-            style={{ color: "#9B5CFF", fontFamily: "var(--font-inter)" }}
+            className="text-xs font-semibold tracking-widest uppercase mb-3 block font-mono"
+            style={{ color: isLight ? "#7C3AED" : "#9B5CFF", fontFamily: "var(--font-inter)" }}
           >
-            Channel Experience
+            ✦ Channel Experience ✦
           </span>
           <h2
             id="channel-heading"
-            className="text-3xl md:text-5xl font-bold mb-4"
-            style={{ fontFamily: "var(--font-space-grotesk)", color: "#FFFFFF" }}
+            className={`text-3xl md:text-5xl font-bold mb-4 ${isLight ? "text-slate-950" : "text-white"}`}
+            style={{ fontFamily: "var(--font-space-grotesk)" }}
           >
             Inside{" "}
             <span
-              style={{
-                background: "linear-gradient(135deg, #C5A7FF, #9B5CFF)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
+              className={
+                isLight
+                  ? "inline-block bg-clip-text text-transparent bg-gradient-to-r from-purple-700 via-indigo-600 to-sky-600 font-extrabold"
+                  : "inline-block bg-clip-text text-transparent bg-gradient-to-r from-[#C5A7FF] to-[#9B5CFF] font-extrabold"
+              }
             >
               SocialAssist
             </span>
           </h2>
           <p
-            className="text-base max-w-xl mx-auto"
-            style={{ color: "rgba(217,214,227,0.6)", fontFamily: "var(--font-inter)" }}
+            className={`text-base max-w-xl mx-auto font-normal ${isLight ? "text-slate-600" : "text-zinc-300"}`}
+            style={{ fontFamily: "var(--font-inter)" }}
           >
             Explore the network, updates, services and community experience.
           </p>
@@ -253,11 +255,19 @@ export default function ChannelShowcase() {
             href={CHANNEL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-3 px-8 py-3.5 rounded-full font-semibold text-sm text-white transition-all duration-300 hover:scale-105"
-            style={{
-              background: "linear-gradient(135deg, #4A16A8, #7C3AED, #9B5CFF)",
-              boxShadow: "0 0 32px rgba(124,58,237,0.35), inset 0 1px 0 rgba(255,255,255,0.15)",
-            }}
+            className={`group inline-flex items-center gap-3 px-8 py-3.5 rounded-full font-bold text-sm transition-all duration-300 hover:scale-105 ${
+              isLight
+                ? "btn-light-purple text-slate-950 font-bold shadow-md hover:shadow-lg"
+                : "text-white"
+            }`}
+            style={
+              isLight
+                ? {}
+                : {
+                    background: "linear-gradient(135deg, #4A16A8, #7C3AED, #9B5CFF)",
+                    boxShadow: "0 0 32px rgba(124,58,237,0.35), inset 0 1px 0 rgba(255,255,255,0.15)",
+                  }
+            }
           >
             View Channel
             <svg

@@ -3,8 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { InstagramIcon, FacebookIcon, TikTokIcon, XIcon } from "@/components/icons/PlatformIcons";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function VerificationSection() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
   const [activeTier, setActiveTier] = useState<"creator" | "brand" | "executive">("brand");
@@ -144,7 +147,11 @@ export default function VerificationSection() {
 
           <button
             onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-            className="px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.03] text-white flex items-center gap-2 border border-cyan-500/30 bg-cyan-950/30 hover:bg-cyan-900/40 shadow-lg shadow-cyan-950/40"
+            className={`px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.03] flex items-center gap-2 ${
+              isLight
+                ? "btn-light-cyan font-bold"
+                : "text-white border border-cyan-500/30 bg-cyan-950/30 hover:bg-cyan-900/40 shadow-lg shadow-cyan-950/40"
+            }`}
           >
             <span>Explore Verification Pathways</span>
             <span>→</span>
@@ -161,7 +168,7 @@ export default function VerificationSection() {
           }}
         >
           <div
-            className="relative flex flex-col items-center justify-center rounded-3xl p-7 sm:p-9 w-full max-w-md border border-white/10 bg-[#101018]/85 backdrop-blur-2xl shadow-2xl overflow-hidden group"
+            className="relative flex flex-col items-center justify-center rounded-3xl p-7 sm:p-9 w-full max-w-md border border-white/10 dark-console-box backdrop-blur-2xl shadow-2xl overflow-hidden group"
           >
             {/* Ambient Badge Backlight */}
             <div

@@ -142,7 +142,8 @@ export default function AutomatedAds() {
               transition: "opacity 0.8s ease-out 0.1s",
             }}
           >
-            <div className="relative scale-90 sm:scale-100 origin-center transition-transform" style={{ width: 300, height: 300 }}>
+            <div className="relative rounded-3xl p-6 sm:p-8 flex items-center justify-center border border-white/10 dark-console-box backdrop-blur-2xl shadow-2xl overflow-hidden w-full max-w-md mx-auto">
+              <div className="relative scale-90 sm:scale-100 origin-center transition-transform" style={{ width: 300, height: 300 }}>
               {/* Center engine node */}
               <div
                 className="absolute flex flex-col items-center justify-center rounded-2xl"
@@ -242,6 +243,7 @@ export default function AutomatedAds() {
                   />
                 );
               })()}
+              </div>
             </div>
           </div>
 

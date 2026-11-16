@@ -242,7 +242,7 @@ body {
 /* ══════════════════════════════════════════════════════════════════
    APPLE-GRADE WHITE THEME (LIGHT MODE) SYSTEM
    Converts dark backdrops to clean off-white (#FAFAFC), text to dark slate,
-   while preserving vivid neon gradients, glow spheres, and liquid effects.
+   while keeping the 5 core interactive service boxes in sleek black console mode.
    ══════════════════════════════════════════════════════════════════ */
 
 html[data-theme="light"],
@@ -260,55 +260,196 @@ html.light body {
   color: #090D16 !important;
 }
 
-/* Light Theme Typography Inversion */
-html[data-theme="light"] h1,
-html[data-theme="light"] h2,
-html[data-theme="light"] h3,
-html[data-theme="light"] h4,
-html[data-theme="light"] h5,
-html[data-theme="light"] h6 {
-  color: #090D16 !important;
+/* ── 1. The 5 Core Service Boxes (Black Consoles with White/Gray Text & Glow Logos) ── */
+.dark-console-box,
+html[data-theme="light"] .dark-console-box,
+html.light .dark-console-box {
+  background-color: #0A0C14 !important;
+  background-image: linear-gradient(135deg, rgba(16, 18, 28, 0.96) 0%, rgba(9, 11, 18, 0.98) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.35), 0 0 35px rgba(56, 189, 248, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.16) !important;
+  color: #FFFFFF !important;
 }
 
-html[data-theme="light"] .text-white:not(button[class*="bg-gradient"] *):not(button[class*="bg-gradient"]):not(a[class*="bg-gradient"] *):not(a[class*="bg-gradient"]):not(.keep-white):not([data-part="value"] *) {
-  color: #090D16 !important;
+html[data-theme="light"] .dark-console-box h1,
+html[data-theme="light"] .dark-console-box h2,
+html[data-theme="light"] .dark-console-box h3,
+html[data-theme="light"] .dark-console-box h4,
+html[data-theme="light"] .dark-console-box h5,
+html[data-theme="light"] .dark-console-box h6,
+html[data-theme="light"] .dark-console-box .text-white {
+  color: #FFFFFF !important;
 }
 
-html[data-theme="light"] .text-zinc-100,
-html[data-theme="light"] .text-zinc-200,
-html[data-theme="light"] .text-zinc-300 {
-  color: #1E293B !important;
+html[data-theme="light"] .dark-console-box .text-zinc-100,
+html[data-theme="light"] .dark-console-box .text-zinc-200,
+html[data-theme="light"] .dark-console-box .text-zinc-300 {
+  color: #E2E8F0 !important;
 }
 
-html[data-theme="light"] .text-zinc-400,
-html[data-theme="light"] .text-zinc-500 {
+html[data-theme="light"] .dark-console-box .text-zinc-400 {
+  color: #94A3B8 !important;
+}
+
+html[data-theme="light"] .dark-console-box .text-zinc-500 {
   color: #64748B !important;
 }
 
-html[data-theme="light"] .text-zinc-300\/90 {
-  color: #334155 !important;
+html[data-theme="light"] .dark-console-box input,
+html[data-theme="light"] .dark-console-box textarea {
+  background-color: #07080F !important;
+  color: #FFFFFF !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
 }
 
-/* Card & Container Inversion to Frosted White */
-html[data-theme="light"] .glass,
-html[data-theme="light"] .glass-strong,
-html[data-theme="light"] .card-contrast {
-  background: rgba(255, 255, 255, 0.88) !important;
-  border-color: rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 12px 32px -8px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04) !important;
+html[data-theme="light"] .dark-console-box input::placeholder,
+html[data-theme="light"] .dark-console-box textarea::placeholder {
+  color: #64748B !important;
+}
+
+html[data-theme="light"] .dark-console-box .border-white\/10,
+html[data-theme="light"] .dark-console-box .border-white\/15,
+html[data-theme="light"] .dark-console-box .border-white\/20,
+html[data-theme="light"] .dark-console-box .border-white\/5 {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+html[data-theme="light"] .dark-console-box .bg-white\/5,
+html[data-theme="light"] .dark-console-box .bg-white\/\[0\.02\],
+html[data-theme="light"] .dark-console-box .bg-white\/\[0\.03\],
+html[data-theme="light"] .dark-console-box .bg-white\/\[0\.04\] {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* ── 2. Light Theme Typography (Outside the Dark Consoles) ── */
+html[data-theme="light"] h1:not(.dark-console-box *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
+html[data-theme="light"] h2:not(.dark-console-box *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
+html[data-theme="light"] h3:not(.dark-console-box *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
+html[data-theme="light"] h4:not(.dark-console-box *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
+html[data-theme="light"] h5:not(.dark-console-box *):not([class*="text-transparent"]):not([class*="bg-clip-text"]),
+html[data-theme="light"] h6:not(.dark-console-box *):not([class*="text-transparent"]):not([class*="bg-clip-text"]) {
   color: #090D16 !important;
 }
 
+/* Ensure gradient text spans are strictly clipped to text glyphs (no solid background strip!) */
+html[data-theme="light"] [class*="bg-clip-text"],
+html[data-theme="light"] [class*="text-transparent"],
+html[data-theme="light"] span[style*="WebkitBackgroundClip"] {
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  display: inline-block;
+}
+
+html[data-theme="light"] .text-white:not(.dark-console-box *):not(button[class*="dark"] *):not(.keep-white):not([data-part="value"] *):not([class*="text-transparent"]):not([class*="bg-clip-text"]) {
+  color: #090D16 !important;
+}
+
+html[data-theme="light"] .text-zinc-100:not(.dark-console-box *),
+html[data-theme="light"] .text-zinc-200:not(.dark-console-box *),
+html[data-theme="light"] .text-zinc-300:not(.dark-console-box *) {
+  color: #1E293B !important;
+}
+
+html[data-theme="light"] .text-zinc-400:not(.dark-console-box *),
+html[data-theme="light"] .text-zinc-500:not(.dark-console-box *) {
+  color: #64748B !important;
+}
+
+html[data-theme="light"] .text-zinc-300\/90:not(.dark-console-box *) {
+  color: #334155 !important;
+}
+
+/* ── 3. Light Button Colors (Pastel Tint Background + Black/Dark Contrast Text) ── */
+html[data-theme="light"] .btn-light-purple,
+html[data-theme="light"] button.btn-light-purple,
+html[data-theme="light"] a.btn-light-purple {
+  background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%) !important;
+  border: 1px solid #DDD6FE !important;
+  color: #090D16 !important;
+  box-shadow: 0 3px 12px -2px rgba(124, 58, 237, 0.12), 0 1px 3px rgba(124, 58, 237, 0.06) !important;
+}
+html[data-theme="light"] .btn-light-purple:hover,
+html[data-theme="light"] button.btn-light-purple:hover,
+html[data-theme="light"] a.btn-light-purple:hover {
+  background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 100%) !important;
+  border-color: #C4B5FD !important;
+  color: #090D16 !important;
+}
+
+html[data-theme="light"] .btn-light-blue,
+html[data-theme="light"] button.btn-light-blue,
+html[data-theme="light"] a.btn-light-blue {
+  background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%) !important;
+  border: 1px solid #BAE6FD !important;
+  color: #090D16 !important;
+  box-shadow: 0 3px 12px -2px rgba(2, 132, 199, 0.12), 0 1px 3px rgba(2, 132, 199, 0.06) !important;
+}
+html[data-theme="light"] .btn-light-blue:hover,
+html[data-theme="light"] button.btn-light-blue:hover,
+html[data-theme="light"] a.btn-light-blue:hover {
+  background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%) !important;
+  border-color: #7DD3FC !important;
+  color: #090D16 !important;
+}
+
+html[data-theme="light"] .btn-light-cyan,
+html[data-theme="light"] button.btn-light-cyan,
+html[data-theme="light"] a.btn-light-cyan {
+  background: linear-gradient(135deg, #ECFEFF 0%, #CFFAFE 100%) !important;
+  border: 1px solid #A5F3FC !important;
+  color: #090D16 !important;
+  box-shadow: 0 3px 12px -2px rgba(8, 145, 178, 0.12), 0 1px 3px rgba(8, 145, 178, 0.06) !important;
+}
+html[data-theme="light"] .btn-light-cyan:hover,
+html[data-theme="light"] button.btn-light-cyan:hover,
+html[data-theme="light"] a.btn-light-cyan:hover {
+  background: linear-gradient(135deg, #CFFAFE 0%, #A5F3FC 100%) !important;
+  border-color: #67E8F9 !important;
+  color: #090D16 !important;
+}
+
+html[data-theme="light"] .btn-light-emerald,
+html[data-theme="light"] button.btn-light-emerald,
+html[data-theme="light"] a.btn-light-emerald {
+  background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%) !important;
+  border: 1px solid #A7F3D0 !important;
+  color: #090D16 !important;
+  box-shadow: 0 3px 12px -2px rgba(16, 185, 129, 0.12), 0 1px 3px rgba(16, 185, 129, 0.06) !important;
+}
+html[data-theme="light"] .btn-light-emerald:hover,
+html[data-theme="light"] button.btn-light-emerald:hover,
+html[data-theme="light"] a.btn-light-emerald:hover {
+  background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%) !important;
+  border-color: #6EE7B7 !important;
+  color: #090D16 !important;
+}
+
+/* ── 4. Realistic Light Shadows on Boxes, Buttons, and Surfaces ── */
+html[data-theme="light"] .glass,
+html[data-theme="light"] .glass-strong,
+html[data-theme="light"] .card-contrast,
+html[data-theme="light"] div[class*="rounded-2xl"]:not(.dark-console-box):not([data-peak-chart]),
+html[data-theme="light"] div[class*="rounded-3xl"]:not(.dark-console-box):not([data-peak-chart]) {
+  box-shadow: 0 6px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+html[data-theme="light"] button:not(.tab-btn) {
+  box-shadow: 0 2px 8px -1px rgba(15, 23, 42, 0.07), 0 1px 3px 0 rgba(15, 23, 42, 0.03) !important;
+}
+
+/* White theme surfaces for non-console cards */
 html[data-theme="light"] .bg-\[\#07070A\],
-html[data-theme="light"] .bg-\[\#08080C\],
-html[data-theme="light"] .bg-\[\#0A0A0F\],
+html[data-theme="light"] .bg-\[\#08080C\]:not(.dark-console-box *),
+html[data-theme="light"] .bg-\[\#0A0A0F\]:not(.dark-console-box *),
 html[data-theme="light"] .bg-\[\#0A0D18\],
 html[data-theme="light"] .bg-\[\#0A1128\],
 html[data-theme="light"] .bg-\[\#0E1017\],
-html[data-theme="light"] .bg-\[\#101018\],
-html[data-theme="light"] .bg-\[\#101018\]\/85,
-html[data-theme="light"] .bg-\[\#101018\]\/90,
-html[data-theme="light"] .bg-\[\#10121C\]\/80,
+html[data-theme="light"] .bg-\[\#101018\]:not(.dark-console-box),
+html[data-theme="light"] .bg-\[\#101018\]\/85:not(.dark-console-box),
+html[data-theme="light"] .bg-\[\#101018\]\/90:not(.dark-console-box),
+html[data-theme="light"] .bg-\[\#10121C\]\/80:not(.dark-console-box),
 html[data-theme="light"] .bg-\[\#121626\],
 html[data-theme="light"] .bg-\[\#070B14\],
 html[data-theme="light"] .bg-\[\#0E1017\]\/80,
@@ -318,23 +459,71 @@ html[data-theme="light"] .bg-\[\#121522\]\/70,
 html[data-theme="light"] .bg-\[\#121626\]\/90 {
   background-color: rgba(255, 255, 255, 0.94) !important;
   border-color: rgba(15, 23, 42, 0.09) !important;
-  box-shadow: 0 12px 30px -10px rgba(15, 23, 42, 0.08), 0 4px 14px -2px rgba(15, 23, 42, 0.04) !important;
   color: #090D16 !important;
 }
 
-/* Semi-transparent dark surfaces */
-html[data-theme="light"] .bg-white\/5,
-html[data-theme="light"] .bg-white\/\[0\.02\],
-html[data-theme="light"] .bg-white\/\[0\.03\],
-html[data-theme="light"] .bg-white\/\[0\.04\] {
+/* Semi-transparent dark surfaces outside console */
+html[data-theme="light"] .bg-white\/5:not(.dark-console-box *),
+html[data-theme="light"] .bg-white\/\[0\.02\]:not(.dark-console-box *),
+html[data-theme="light"] .bg-white\/\[0\.03\]:not(.dark-console-box *),
+html[data-theme="light"] .bg-white\/\[0\.04\]:not(.dark-console-box *) {
   background-color: rgba(15, 23, 42, 0.04) !important;
   border-color: rgba(15, 23, 42, 0.08) !important;
 }
 
-html[data-theme="light"] .hover\:bg-white\/10:hover,
-html[data-theme="light"] .hover\:bg-white\/\[0\.07\]:hover,
-html[data-theme="light"] .hover\:bg-white\/\[0\.08\]:hover {
-  background-color: rgba(15, 23, 42, 0.07) !important;
+/* ── 5. About & Editorial Paragraph Inversion (Point 5) ── */
+html[data-theme="light"] p[style*="rgba(217,214,227"],
+html[data-theme="light"] p[style*="rgba(217, 214, 227"] {
+  color: #334155 !important;
+}
+
+html[data-theme="light"] span[style*="rgba(197,167,255"],
+html[data-theme="light"] p[style*="rgba(197,167,255"] {
+  color: #7C3AED !important;
+}
+
+/* ── 6. Footer Privacy Policy & Disclaimer Fix (Point 6) ── */
+html[data-theme="light"] footer p[style*="rgba(217,214,227,0.2)"],
+html[data-theme="light"] footer p[style*="rgba(217, 214, 227, 0.2)"] {
+  color: #475569 !important;
+}
+
+html[data-theme="light"] footer a[style*="rgba(197,167,255"],
+html[data-theme="light"] footer a[style*="rgba(197, 167, 255"] {
+  color: #7C3AED !important;
+  font-weight: 600 !important;
+}
+
+html[data-theme="light"] footer button[style*="rgba(217,214,227"],
+html[data-theme="light"] footer button[style*="rgba(217, 214, 227"] {
+  color: #334155 !important;
+}
+html[data-theme="light"] footer button:hover {
+  color: #7C3AED !important;
+}
+
+/* Credibility & Service items with inline dark rgba styles */
+html[data-theme="light"] div[style*="rgba(16,16,22"]:not(.dark-console-box),
+html[data-theme="light"] div[style*="rgba(16, 16, 22"]:not(.dark-console-box),
+html[data-theme="light"] div[style*="rgba(14,14,20"]:not(.dark-console-box),
+html[data-theme="light"] div[style*="rgba(20,18,32"]:not(.dark-console-box),
+html[data-theme="light"] div[style*="rgba(20, 20, 28"]:not(.dark-console-box),
+html[data-theme="light"] div[style*="rgba(30, 30, 42"]:not(.dark-console-box),
+html[data-theme="light"] div[style*="rgba(20, 20, 30"]:not(.dark-console-box) {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  color: #090D16 !important;
+}
+
+html[data-theme="light"] div[style*="rgba(14,14,20"]:not(.dark-console-box) h3,
+html[data-theme="light"] div[style*="rgba(20,18,32"]:not(.dark-console-box) h3 {
+  color: #090D16 !important;
+}
+
+html[data-theme="light"] div[style*="rgba(14,14,20"]:not(.dark-console-box) p,
+html[data-theme="light"] div[style*="rgba(20,18,32"]:not(.dark-console-box) p,
+html[data-theme="light"] p[style*="rgba(235,232,245"]:not(.dark-console-box *) {
+  color: #475569 !important;
 }
 
 /* Dividers & Borders */
@@ -342,43 +531,18 @@ html[data-theme="light"] .border-divider {
   border-color: rgba(15, 23, 42, 0.06) !important;
 }
 
-/* Form Inputs in Light Mode */
-html[data-theme="light"] input:not([type="checkbox"]):not([type="radio"]),
-html[data-theme="light"] textarea,
-html[data-theme="light"] select {
+/* Form Inputs in Light Mode outside console */
+html[data-theme="light"] input:not([type="checkbox"]):not([type="radio"]):not(.dark-console-box *),
+html[data-theme="light"] textarea:not(.dark-console-box *),
+html[data-theme="light"] select:not(.dark-console-box *) {
   background-color: #FFFFFF !important;
   color: #090D16 !important;
   border-color: rgba(15, 23, 42, 0.15) !important;
 }
 
-html[data-theme="light"] input::placeholder,
-html[data-theme="light"] textarea::placeholder {
+html[data-theme="light"] input:not(.dark-console-box *)::placeholder,
+html[data-theme="light"] textarea:not(.dark-console-box *)::placeholder {
   color: #94A3B8 !important;
-}
-
-/* Credibility & Service items with inline dark rgba styles */
-html[data-theme="light"] div[style*="rgba(16,16,22"],
-html[data-theme="light"] div[style*="rgba(16, 16, 22"],
-html[data-theme="light"] div[style*="rgba(14,14,20"],
-html[data-theme="light"] div[style*="rgba(20,18,32"],
-html[data-theme="light"] div[style*="rgba(20, 20, 28"],
-html[data-theme="light"] div[style*="rgba(30, 30, 42"],
-html[data-theme="light"] div[style*="rgba(20, 20, 30"] {
-  background: rgba(255, 255, 255, 0.94) !important;
-  border-color: rgba(15, 23, 42, 0.08) !important;
-  color: #090D16 !important;
-  box-shadow: 0 10px 28px -6px rgba(15, 23, 42, 0.07), 0 2px 8px -2px rgba(15, 23, 42, 0.04) !important;
-}
-
-html[data-theme="light"] div[style*="rgba(14,14,20"] h3,
-html[data-theme="light"] div[style*="rgba(20,18,32"] h3 {
-  color: #090D16 !important;
-}
-
-html[data-theme="light"] div[style*="rgba(14,14,20"] p,
-html[data-theme="light"] div[style*="rgba(20,18,32"] p,
-html[data-theme="light"] p[style*="rgba(235,232,245"] {
-  color: #475569 !important;
 }
 
 /* Verification & Status action buttons in light mode */
