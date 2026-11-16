@@ -49,15 +49,36 @@ export default function HeroSection() {
           className="w-full h-full"
         />
 
-        {/* Very Small Blurry Merge Area into White (compact ~56px strip) */}
+        {/* Graduated Chromatic Merge: Solid Black -> Dark Grey -> Neutral Grey -> Light Grey -> White with Layered Diffusion Blurs */}
         <div
-          className="absolute inset-x-0 bottom-0 h-14 pointer-events-none"
+          className="absolute inset-x-0 bottom-0 h-16 pointer-events-none"
           style={{
             background: isLight
-              ? "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0.75) 60%, #ffffff 100%)"
+              ? `linear-gradient(
+                  to bottom,
+                  rgba(0, 0, 0, 0) 0%,
+                  rgba(15, 18, 25, 0.75) 18%,
+                  rgba(35, 42, 58, 0.6) 36%,
+                  rgba(75, 88, 110, 0.5) 54%,
+                  rgba(148, 163, 184, 0.65) 72%,
+                  rgba(226, 232, 240, 0.88) 88%,
+                  #ffffff 100%
+                )`
               : "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(3,7,18,0.4) 30%, rgba(3,7,18,0.85) 70%, #030712 100%)",
-            backdropFilter: "blur(14px)",
-            WebkitBackdropFilter: "blur(14px)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+          }}
+        />
+
+        {/* Ethereal Optical Smoothing Layer: Ultra-Soft Secondary Blur */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-10 pointer-events-none"
+          style={{
+            background: isLight
+              ? "linear-gradient(to bottom, transparent 0%, rgba(226, 232, 240, 0.3) 50%, rgba(255, 255, 255, 0.95) 100%)"
+              : "transparent",
+            backdropFilter: "blur(22px)",
+            WebkitBackdropFilter: "blur(22px)",
           }}
         />
       </div>
