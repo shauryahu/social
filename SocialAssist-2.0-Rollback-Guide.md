@@ -51,14 +51,17 @@ git reset --hard socialassist-2.0-baseline
 
 ## 🎨 Latest Delivered Upgrades
 
-### 1. Immersive Peak Chart Statistics Console
-- **File**: `src/components/ui/peak-chart.tsx` & `src/components/AnimatedStatistics.tsx`
+### 1. Left-Stacked Metric Selector & Peak Chart
+- **File**: `src/components/AnimatedStatistics.tsx` & `src/components/ui/peak-chart.tsx`
 - **Features**:
-  - Louis Studios Peak Chart: painted multi-layer glow field, halo light spill, and subtle canvas breathing.
-  - Steffen monotone cubic curve interpolation: never overshoots, peak dot rides the top of the curve.
-  - Interactive KPI selector cards (`500+ Cases Resolved`, `99.9% Success Rate`, `100% Confidential`, `24/7 Support`).
-  - Period selection dropdown (`Weekly`, `Monthly`, `Yearly`) with dynamic curve morphing.
-  - Crosshair hover surface with live readout tooltip and date labels.
+  - The 4 core business metrics are stacked vertically on the left side of the graph:
+    1. **Cases Resolved** (sub: "Verified resolution")
+    2. **Success Rate** (sub: "Tier-1 internal channels")
+    3. **Secure Network** (sub: "Strict confidentiality")
+    4. **Direct Support** (sub: "Telegram escalation")
+  - Numbers are completely removed from the selector tiles.
+  - Numbers (`500+`, `99.9%`, `100%`, `24/7`) only show inside the glowing Peak Chart on the right when clicked.
+  - Interactive Steffen cubic curve morphing, peak dot with pulse, crosshair hover readout, and period switcher.
 
 ### 2. Nimbus UI — Liquid Navbar ("Waterline")
 - **File**: `src/components/ui/liquid-glass-navbar.tsx` & `src/components/Navigation.tsx`
