@@ -6,6 +6,7 @@ import os from "node:os";
 const CHROME_PATH = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 const USER_DATA = path.join(os.tmpdir(), "socialassist-chrome-profile-" + Date.now());
 const PREVIEWS_DIR = path.join(process.cwd(), "public", "previews");
+const BRAIN_DIR = "C:\\Users\\USER\\.gemini\\antigravity\\brain\\da496d37-3ff2-4b7f-9011-fb4d0e692a91";
 
 if (!fs.existsSync(PREVIEWS_DIR)) {
   fs.mkdirSync(PREVIEWS_DIR, { recursive: true });
@@ -100,88 +101,110 @@ async function main() {
     console.log("Navigating to http://localhost:3000 ...");
     await sendSession("Page.navigate", { url: "http://localhost:3000" });
 
-    console.log("Waiting for loading screen & animations ...");
+    console.log("Waiting for page load ...");
     await sleep(4000);
 
-    // 1. Capture Hero Section
+    // 1. Capture Hero Section with Top Compact Waterline Capsule
     console.log("Capturing 1_hero.png ...");
     const heroShot = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "1_hero.png"), Buffer.from(heroShot.data, "base64"));
 
-    // 2. Scroll to Laptop Section
+    // 2. Click a navigation tab to trigger Waterline liquid stretch & ripple
+    console.log("Clicking 'Platforms' navigation tab to test Waterline liquid motion ...");
+    await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        const buttons = Array.from(document.querySelectorAll("nav button"));
+        const platBtn = buttons.find(b => b.textContent.includes("Platforms"));
+        if (platBtn) {
+          platBtn.click();
+          return "clicked Platforms";
+        }
+        return "not found";
+      })()`,
+    });
+    await sleep(1500);
+
+    // 3. Capture Waterline dynamic bar with active item on Platforms
+    console.log("Capturing 5_dynamic_glass_navigation.png ...");
+    const navShot = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "5_dynamic_glass_navigation.png"), Buffer.from(navShot.data, "base64"));
+
+    // 4. Scroll to Laptop Section
     console.log("Scrolling to 3D Laptop ...");
     await sendSession("Runtime.evaluate", {
-      expression: `window.scrollTo(0, 900)`,
+      expression: `window.scrollTo(0, 950)`,
     });
-    await sleep(3500);
-
+    await sleep(2500);
     console.log("Capturing 2_laptop_3d.png ...");
     const laptopShot = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "2_laptop_3d.png"), Buffer.from(laptopShot.data, "base64"));
 
-    // 3. Scroll to Verification Section
-    console.log("Scrolling to Verification Section ...");
-    const verifY = await sendSession("Runtime.evaluate", {
+    // 5. Scroll to Official Verification Section
+    console.log("Scrolling to Official Verification Section ...");
+    await sendSession("Runtime.evaluate", {
       expression: `(() => {
         const el = document.getElementById("verification");
         if (el) {
           const rect = el.getBoundingClientRect();
           window.scrollTo(0, window.scrollY + rect.top - 40);
-          return window.scrollY;
         }
-        return -1;
       })()`,
-      returnByValue: true,
     });
-    console.log("Verification scrolled to Y:", verifY?.result?.value);
     await sleep(2000);
-
     console.log("Capturing 3_official_verification.png ...");
     const verifShot = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "3_official_verification.png"), Buffer.from(verifShot.data, "base64"));
 
-    // 4. Scroll to Platforms Ecosystem
+    // 6. Scroll to Platforms Ecosystem
     console.log("Scrolling to Platforms Section ...");
-    const platY = await sendSession("Runtime.evaluate", {
+    await sendSession("Runtime.evaluate", {
       expression: `(() => {
-        const el = document.getElementById("platforms") || document.getElementById("services");
+        const el = document.getElementById("platforms");
         if (el) {
           const rect = el.getBoundingClientRect();
           window.scrollTo(0, window.scrollY + rect.top - 40);
-          return window.scrollY;
         }
-        return -1;
       })()`,
-      returnByValue: true,
     });
-    console.log("Platforms scrolled to Y:", platY?.result?.value);
     await sleep(2000);
-
     console.log("Capturing 4_platforms_services.png ...");
     const platShot = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "4_platforms_services.png"), Buffer.from(platShot.data, "base64"));
 
-    // 5. Expand Dynamic Glass Navigation Bar
+    // 7. Expand Dynamic Glass Navigation Bar
     console.log("Expanding Dynamic Navigation Bar ...");
-    const clickResult = await sendSession("Runtime.evaluate", {
+    await sendSession("Runtime.evaluate", {
       expression: `(() => {
         const btn = document.querySelector("button[aria-expanded]") || document.querySelector("button[title*='Menu']");
-        if (btn) {
-          btn.click();
-          return true;
-        }
-        return false;
+        if (btn) btn.click();
       })()`,
-      returnByValue: true,
     });
-    console.log("Menu clicked:", clickResult?.result?.value);
     await sleep(1000);
 
-    console.log("Capturing 5_dynamic_glass_navigation.png ...");
-    const navShot = await sendSession("Page.captureScreenshot", { format: "png" });
-    fs.writeFileSync(path.join(PREVIEWS_DIR, "5_dynamic_glass_navigation.png"), Buffer.from(navShot.data, "base64"));
+    console.log("Capturing expanded_dynamic_bar.png ...");
+    const expShot = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "expanded_dynamic_bar.png"), Buffer.from(expShot.data, "base64"));
 
-    console.log("All screenshots captured successfully!");
+    // Copy captured files to Brain artifact directory
+    const filesToCopy = [
+      "1_hero.png",
+      "2_laptop_3d.png",
+      "3_official_verification.png",
+      "4_platforms_services.png",
+      "5_dynamic_glass_navigation.png",
+      "expanded_dynamic_bar.png"
+    ];
+
+    for (const f of filesToCopy) {
+      const src = path.join(PREVIEWS_DIR, f);
+      const dst = path.join(BRAIN_DIR, f);
+      if (fs.existsSync(src)) {
+        fs.copyFileSync(src, dst);
+        console.log(`Copied ${f} to Brain artifact directory`);
+      }
+    }
+
+    console.log("\nAll screenshots captured and saved successfully!");
     ws.close();
   } finally {
     chromeProc.kill();
