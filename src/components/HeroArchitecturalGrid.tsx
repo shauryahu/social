@@ -12,10 +12,10 @@ export default function HeroArchitecturalGrid() {
       className="absolute inset-0 pointer-events-none z-0 overflow-hidden"
       style={{
         maskImage: isLight
-          ? "linear-gradient(to bottom, transparent 0%, transparent 640px, rgba(0,0,0,0.5) 680px, rgba(0,0,0,1) 740px, rgba(0,0,0,0.5) 85%, transparent 100%)"
+          ? "linear-gradient(to bottom, transparent 0%, transparent 690px, rgba(0,0,0,0.4) 735px, rgba(0,0,0,1) 785px, rgba(0,0,0,0.5) 88%, transparent 100%)"
           : "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.65) 50%, rgba(0,0,0,0.15) 80%, transparent 100%)",
         WebkitMaskImage: isLight
-          ? "linear-gradient(to bottom, transparent 0%, transparent 640px, rgba(0,0,0,0.5) 680px, rgba(0,0,0,1) 740px, rgba(0,0,0,0.5) 85%, transparent 100%)"
+          ? "linear-gradient(to bottom, transparent 0%, transparent 690px, rgba(0,0,0,0.4) 735px, rgba(0,0,0,1) 785px, rgba(0,0,0,0.5) 88%, transparent 100%)"
           : "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.65) 50%, rgba(0,0,0,0.15) 80%, transparent 100%)",
       }}
     >
