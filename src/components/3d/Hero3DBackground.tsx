@@ -213,13 +213,13 @@ export default function Hero3DBackground() {
     observer.observe(container);
 
     // 5. Render Loop (Subtle Organic Floating & Gentle Parallax)
-    const clock = new THREE.Clock();
+    const startTime = performance.now();
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
       if (!isVisible) return;
 
-      const elapsed = clock.getElapsedTime();
+      const elapsed = (performance.now() - startTime) * 0.001;
 
       // Damped mouse follow
       mouseX += (targetMouseX - mouseX) * 0.05;

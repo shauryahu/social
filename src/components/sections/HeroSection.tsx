@@ -5,7 +5,7 @@ import CinematicLaptop from "@/components/3d/CinematicLaptop";
 import Hero3DBackground from "@/components/3d/Hero3DBackground";
 
 export default function HeroSection() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 150);

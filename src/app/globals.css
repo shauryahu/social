@@ -50,8 +50,7 @@ body {
 
 /* Section Containment for Performance & Smooth Frame Delivery */
 .section-contain {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 700px;
+  content-visibility: visible;
 }
 
 /* GPU hardware layer promotion */

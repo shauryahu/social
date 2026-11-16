@@ -26,29 +26,10 @@ export default function Home() {
       {/* Loading screen */}
       {!loaded && <LoadingScreen onComplete={() => setLoaded(true)} />}
 
-      {/*
-        Navigation is OUTSIDE the blurred div on purpose.
-        A parent element with `filter` creates a new stacking context
-        which breaks `position: fixed` on children.
-        The nav fades in separately once loaded.
-      */}
-      <div
-        style={{
-          opacity: loaded ? 1 : 0,
-          transition: "opacity 0.5s ease-out 0.1s",
-          // NO filter here — filter would break fixed positioning
-        }}
-      >
-        <Navigation />
-      </div>
+      <Navigation />
 
-      {/* Main site content — uses opacity only, no filter, so fixed nav works */}
-      <div
-        style={{
-          opacity: loaded ? 1 : 0,
-          transition: "opacity 0.7s ease-out",
-        }}
-      >
+      {/* Main site content */}
+      <div>
         {/* Background orbs & cursor glow */}
         <BackgroundEffects />
 

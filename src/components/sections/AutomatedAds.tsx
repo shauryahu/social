@@ -182,8 +182,8 @@ export default function AutomatedAds() {
               {DESTINATIONS.map((dest, i) => {
                 const rad = (dest.angle * Math.PI) / 180;
                 const r = 118;
-                const cx = 150 + r * Math.cos(rad);
-                const cy = 150 + r * Math.sin(rad);
+                const cx = Math.round(150 + r * Math.cos(rad));
+                const cy = Math.round(150 + r * Math.sin(rad));
                 const isActive = activeDest === i;
 
                 return (
@@ -221,9 +221,9 @@ export default function AutomatedAds() {
                 const dest = DESTINATIONS[activeDest];
                 const rad = (dest.angle * Math.PI) / 180;
                 const r = 118;
-                const tx = 150 + r * Math.cos(rad);
-                const ty = 150 + r * Math.sin(rad);
-                const angleDeg = (Math.atan2(ty - 150, tx - 150) * 180) / Math.PI;
+                const tx = Math.round(150 + r * Math.cos(rad));
+                const ty = Math.round(150 + r * Math.sin(rad));
+                const angleDeg = Math.round((Math.atan2(ty - 150, tx - 150) * 180) / Math.PI);
 
                 return (
                   <div

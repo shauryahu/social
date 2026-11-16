@@ -79,10 +79,10 @@ export async function POST(req: Request) {
         : "General Inquiry";
 
     const formattedMessage = `
-⚡ **NEW SOCIALASSIST TELEGRAM INQUIRY** ⚡
+⚡ **NEW INQUIRY** ⚡
 
-👤 **Client Telegram**: ${formattedUsername}
-🛠 **Services Needed**: ${servicesText}
+👤 **Client Telegram** : ${formattedUsername}
+🛠 **Services Needed** : ${servicesText}
 📅 **Submitted**: ${new Date().toLocaleString()}
 🌐 **Client IP**: ${clientIp}
 
