@@ -1,32 +1,26 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
-export default function LoadingScreen({
-  onComplete,
-}: {
+interface LoadingScreenProps {
   onComplete: () => void;
-}) {
-  const [phase, setPhase] = useState<"glow" | "logo" | "bar" | "done">("glow");
+}
+
+export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
+  const [phase, setPhase] = useState<"logo" | "bar" | "glow" | "done">("logo");
   const onCompleteRef = useRef(onComplete);
 
   useEffect(() => {
     onCompleteRef.current = onComplete;
   }, [onComplete]);
 
-  const startedRef = useRef(false);
-
   useEffect(() => {
-    if (startedRef.current) return;
-    startedRef.current = true;
-
-    // Phase 1: glow appears
-    const t1 = setTimeout(() => setPhase("logo"), 150);
-    // Phase 2: logo fades in
-    const t2 = setTimeout(() => setPhase("bar"), 450);
-    // Phase 3: bar fills
-    const t3 = setTimeout(() => setPhase("done"), 1050);
-    // Phase 4: complete
+    const t1 = setTimeout(() => setPhase("bar"), 250);
+    const t2 = setTimeout(() => setPhase("glow"), 900);
+    const t3 = setTimeout(() => setPhase("done"), 1200);
     const t4 = setTimeout(() => onCompleteRef.current(), 1350);
 
     return () => {
@@ -43,9 +37,9 @@ export default function LoadingScreen({
     <div
       aria-label="Loading SocialAssist"
       aria-live="polite"
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center gpu-layer"
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center gpu-layer transition-colors duration-300"
       style={{
-        background: "#08080C",
+        background: isLight ? "#FAFAFC" : "#08080C",
         opacity: 1,
         transition: "opacity 0.3s ease-out",
         pointerEvents: "all",
@@ -57,8 +51,9 @@ export default function LoadingScreen({
         style={{
           width: "50vw",
           height: "50vw",
-          background:
-            "radial-gradient(circle, rgba(74,22,168,0.45) 0%, transparent 65%)",
+          background: isLight
+            ? "radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 65%)"
+            : "radial-gradient(circle, rgba(74,22,168,0.45) 0%, transparent 65%)",
           filter: "blur(40px)",
           opacity: phase === "glow" ? 0 : 0.8,
           transition: "opacity 0.4s ease-out",
@@ -96,14 +91,17 @@ export default function LoadingScreen({
       >
         <p
           className="text-sm font-medium tracking-[0.35em] uppercase"
-          style={{ color: "rgba(197,167,255,0.85)", fontFamily: "var(--font-inter)" }}
+          style={{
+            color: isLight ? "#6B21A8" : "rgba(197,167,255,0.85)",
+            fontFamily: "var(--font-inter)",
+          }}
         >
           Social Assist
         </p>
         <p
           className="text-xs font-medium tracking-wider mt-1.5"
           style={{
-            background: "linear-gradient(135deg, #C5A7FF 0%, #9B5CFF 50%, #7C3AED 100%)",
+            background: "linear-gradient(135deg, #7C3AED 0%, #9B5CFF 50%, #4A16A8 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
@@ -120,7 +118,7 @@ export default function LoadingScreen({
         style={{
           width: "140px",
           height: "2px",
-          background: "rgba(255,255,255,0.08)",
+          background: isLight ? "rgba(15, 23, 42, 0.08)" : "rgba(255,255,255,0.08)",
           opacity: phase === "bar" ? 1 : 0,
           transition: "opacity 0.25s ease-out",
         }}

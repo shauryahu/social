@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { LiquidNavbar, NimbusIcons, type LiquidNavItem } from "@/components/ui/liquid-glass-navbar";
+import { useTheme } from "@/components/ThemeProvider";
+import { Sun, Moon } from "lucide-react";
 
 const NAV_ITEMS: (LiquidNavItem & { id: string })[] = [
   { id: "home", label: "Home", href: "#home", icon: NimbusIcons.home, fx: "glow" },
@@ -19,6 +21,8 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const navContainerRef = useRef<HTMLDivElement>(null);
+  const { theme, toggleTheme } = useTheme();
+  const isLight = theme === "light";
 
   // Scroll spy & background shadow on scroll
   useEffect(() => {
@@ -114,7 +118,7 @@ export default function Navigation() {
             : "opacity-0 pointer-events-none"
         }`}
         style={{
-          background: "rgba(5, 7, 14, 0.45)",
+          background: isLight ? "rgba(15, 23, 42, 0.25)" : "rgba(5, 7, 14, 0.45)",
           backdropFilter: "blur(14px)",
           WebkitBackdropFilter: "blur(14px)",
           willChange: "opacity",
@@ -129,22 +133,34 @@ export default function Navigation() {
         role="banner"
       >
         <div
-          className="relative rounded-full px-2.5 sm:px-3 py-1 flex items-center justify-between gap-1 sm:gap-2.5 transition-all duration-300 group max-w-full overflow-x-auto no-scrollbar"
+          className="relative rounded-full px-2.5 sm:px-3 py-1 flex items-center justify-between gap-1.5 sm:gap-2.5 transition-all duration-300 group max-w-full overflow-x-auto no-scrollbar"
           style={{
-            background: scrolled
+            background: isLight
+              ? scrolled
+                ? "rgba(255, 255, 255, 0.94)"
+                : "rgba(255, 255, 255, 0.84)"
+              : scrolled
               ? "rgba(10, 13, 24, 0.86)"
               : "rgba(14, 18, 30, 0.74)",
             backdropFilter: "blur(22px) saturate(180%)",
             WebkitBackdropFilter: "blur(22px) saturate(180%)",
             border: isExpanded
-              ? "1px solid rgba(56, 189, 248, 0.4)"
+              ? isLight
+                ? "1px solid rgba(2, 132, 199, 0.35)"
+                : "1px solid rgba(56, 189, 248, 0.4)"
+              : isLight
+              ? "1px solid rgba(15, 23, 42, 0.1)"
               : "1px solid rgba(255, 255, 255, 0.15)",
-            boxShadow: scrolled
+            boxShadow: isLight
+              ? scrolled
+                ? "0 14px 34px -8px rgba(15, 23, 42, 0.12), 0 0 20px -2px rgba(56, 189, 248, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9)"
+                : "0 6px 24px -4px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8)"
+              : scrolled
               ? "0 18px 42px -8px rgba(0, 0, 0, 0.75), 0 0 24px -2px rgba(56, 189, 248, 0.18), inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4)"
               : "0 8px 30px -5px rgba(0, 0, 0, 0.5), 0 0 18px -2px rgba(56, 189, 248, 0.12), inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.28), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3)",
           }}
         >
-          {/* Top Specular Rim Reflection (Realistic Glass Reflection Highlight) */}
+          {/* Top Specular Rim Reflection */}
           <div
             className="absolute inset-x-4 top-0 h-[1.5px] rounded-t-full bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none opacity-80"
             aria-hidden="true"
@@ -171,7 +187,9 @@ export default function Navigation() {
               />
             </div>
             <span
-              className="text-xs font-bold tracking-[0.16em] uppercase text-white hidden xs:inline"
+              className={`text-xs font-bold tracking-[0.16em] uppercase hidden xs:inline transition-colors ${
+                isLight ? "text-slate-900" : "text-white"
+              }`}
               style={{ fontFamily: "var(--font-space-grotesk)" }}
             >
               SocialAssist
@@ -181,10 +199,11 @@ export default function Navigation() {
           {/* 
             ── NIMBUS UI LIQUID NAVBAR ("WATERLINE") ──
             Full WebGL water shader, spring deformation physics, icon animations, and ripples
+            Automatically switches between tone="light" and tone="dark"!
           */}
           <div className="hidden md:flex items-center">
             <LiquidNavbar
-              tone="dark"
+              tone={isLight ? "light" : "dark"}
               items={NAV_ITEMS}
               active={activeIndex}
               onChange={(idx, item) => {
@@ -195,8 +214,27 @@ export default function Navigation() {
             />
           </div>
 
-          {/* Right Controls: Direct CTA + Nimbus Liquid Menu Button */}
+          {/* Right Controls: Theme Toggle + Contact CTA + Menu Button */}
           <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+            {/* ── THEME SWITCHER BUTTON (Sun / Moon) ── */}
+            <button
+              onClick={toggleTheme}
+              className={`relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 border ${
+                isLight
+                  ? "bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300/80 shadow-sm"
+                  : "bg-white/5 hover:bg-white/10 text-amber-300 border-white/10"
+              }`}
+              title={isLight ? "Switch to Dark Theme" : "Switch to Light Theme"}
+              aria-label="Toggle White and Dark Theme"
+            >
+              {isLight ? (
+                <Moon className="w-4 h-4 text-slate-700 transition-transform duration-200 hover:-rotate-12" />
+              ) : (
+                <Sun className="w-4 h-4 text-amber-300 transition-transform duration-200 hover:rotate-45" />
+              )}
+            </button>
+
+            {/* Direct CTA */}
             <button
               onClick={() => scrollTo("#contact")}
               className="relative hidden sm:inline-flex px-3.5 py-1.5 rounded-full text-xs font-bold text-white transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] overflow-hidden group shadow-[0_4px_16px_rgba(37,99,235,0.35)]"
@@ -210,7 +248,7 @@ export default function Navigation() {
                 className="absolute inset-0 bg-gradient-to-t from-transparent via-white/15 to-white/25 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                 aria-hidden="true"
               />
-              <span className="relative z-10">Contact</span>
+              <span className="relative z-10 text-white">Contact</span>
             </button>
 
             {/* Menu Toggle Button */}
@@ -218,7 +256,11 @@ export default function Navigation() {
               onClick={() => setIsExpanded((prev) => !prev)}
               className={`relative flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all duration-200 text-xs font-semibold overflow-hidden ${
                 isExpanded
-                  ? "bg-cyan-500/20 text-white border border-cyan-400/40 shadow-[0_0_12px_rgba(56,189,248,0.3)]"
+                  ? isLight
+                    ? "bg-sky-500/15 text-sky-700 border border-sky-400/40 shadow-[0_0_12px_rgba(2,132,199,0.2)]"
+                    : "bg-cyan-500/20 text-white border border-cyan-400/40 shadow-[0_0_12px_rgba(56,189,248,0.3)]"
+                  : isLight
+                  ? "bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-300/80"
                   : "bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white border border-white/10"
               }`}
               title={isExpanded ? "Close Menu (Esc)" : "Expand Navigation Menu"}
@@ -262,26 +304,23 @@ export default function Navigation() {
         }}
       >
         <div
-          className="relative rounded-3xl p-5 sm:p-6 overflow-hidden"
+          className="relative rounded-3xl p-5 sm:p-6 overflow-hidden transition-colors"
           style={{
-            background: "rgba(11, 14, 25, 0.82)",
+            background: isLight ? "rgba(255, 255, 255, 0.95)" : "rgba(11, 14, 25, 0.82)",
             backdropFilter: "blur(24px) saturate(180%)",
             WebkitBackdropFilter: "blur(24px) saturate(180%)",
-            border: "1px solid rgba(56, 189, 248, 0.3)",
-            boxShadow:
-              "0 28px 70px rgba(0, 0, 0, 0.75), 0 0 36px rgba(56, 189, 248, 0.16), inset 0 1.5px 1px rgba(255, 255, 255, 0.28), inset 0 -1px 2px rgba(0, 0, 0, 0.4)",
+            border: isLight ? "1px solid rgba(15, 23, 42, 0.1)" : "1px solid rgba(56, 189, 248, 0.3)",
+            boxShadow: isLight
+              ? "0 28px 70px rgba(15, 23, 42, 0.15), 0 0 36px rgba(56, 189, 248, 0.12), inset 0 1.5px 1px rgba(255, 255, 255, 0.9)"
+              : "0 28px 70px rgba(0, 0, 0, 0.75), 0 0 36px rgba(56, 189, 248, 0.16), inset 0 1.5px 1px rgba(255, 255, 255, 0.28), inset 0 -1px 2px rgba(0, 0, 0, 0.4)",
           }}
         >
-          {/* Top Glass Specular Highlight for Expanded Window */}
-          <div
-            className="absolute inset-x-8 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none"
-            aria-hidden="true"
-          />
-
           {/* Header row in expanded menu */}
-          <div className="flex items-center justify-between text-xs text-zinc-400 font-mono pb-3 border-b border-white/10">
-            <span className="tracking-wider uppercase font-semibold text-white/90">Navigation Directory</span>
-            <span className="text-cyan-400 flex items-center gap-1.5 font-semibold">
+          <div className="flex items-center justify-between text-xs text-zinc-400 font-mono pb-3 border-b border-black/10 dark:border-white/10">
+            <span className={`tracking-wider uppercase font-semibold ${isLight ? "text-slate-900" : "text-white/90"}`}>
+              Navigation Directory
+            </span>
+            <span className="text-cyan-500 dark:text-cyan-400 flex items-center gap-1.5 font-semibold">
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
               Active: #{activeSection}
             </span>
@@ -297,16 +336,14 @@ export default function Navigation() {
                   onClick={() => item.href && scrollTo(item.href)}
                   className={`relative p-3 rounded-2xl text-left transition-all duration-150 flex flex-col justify-between overflow-hidden group ${
                     isActive
-                      ? "bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-400/50 text-white shadow-lg shadow-cyan-950/40"
+                      ? "bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-400/50 text-slate-900 dark:text-white shadow-lg shadow-cyan-950/20"
+                      : isLight
+                      ? "bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-700 hover:text-slate-900"
                       : "bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 hover:border-white/20 text-zinc-300 hover:text-white"
                   }`}
                 >
-                  {/* Subtle Top Specular line for active cards */}
-                  {isActive && (
-                    <div className="absolute inset-x-2 top-0 h-[1px] bg-white/40 pointer-events-none" />
-                  )}
                   <span className="text-xs font-bold">{item.label}</span>
-                  <span className="text-[10px] text-zinc-400 font-mono mt-1 group-hover:text-cyan-300 transition-colors">
+                  <span className="text-[10px] text-zinc-400 font-mono mt-1 group-hover:text-cyan-500 transition-colors">
                     {item.href}
                   </span>
                 </button>
@@ -315,14 +352,14 @@ export default function Navigation() {
           </div>
 
           {/* Footer of Expanded Menu */}
-          <div className="mt-5 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <div className="mt-5 pt-4 border-t border-black/10 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2 text-zinc-400 text-[11px]">
               <span>Direct Escalation Desk:</span>
               <a
                 href="https://t.me/socialassist"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-cyan-300 hover:underline font-mono"
+                className="text-cyan-500 dark:text-cyan-300 hover:underline font-mono"
               >
                 @socialassist
               </a>

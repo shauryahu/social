@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { PeakChart } from "@/components/ui/peak-chart";
 import { ShieldCheck, TrendingUp, Lock, Headphones, ChevronRight } from "lucide-react";
+import { useTheme } from "@/components/ThemeProvider";
 
 interface StatConfig {
   id: string;
@@ -123,6 +124,8 @@ const STAT_CONFIGS: StatConfig[] = [
 ];
 
 export default function AnimatedStatistics() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const [selectedId, setSelectedId] = useState("cases");
   const [period, setPeriod] = useState("Monthly");
   const [chartWidth, setChartWidth] = useState(360);
@@ -189,8 +192,12 @@ export default function AnimatedStatistics() {
                 onClick={() => setSelectedId(stat.id)}
                 className={`relative p-3.5 sm:p-4 rounded-2xl border text-left transition-all duration-300 group overflow-hidden focus-visible:outline-none flex items-center justify-between gap-3 ${
                   isSelected
-                    ? "border-cyan-400/60 bg-gradient-to-r from-cyan-950/40 via-[#121626]/90 to-[#121626]/90 shadow-[0_0_24px_rgba(56,189,248,0.22)] scale-[1.02]"
-                    : "border-white/10 bg-[#0E1017]/70 hover:border-white/20 hover:bg-[#121522]/70 backdrop-blur-xl"
+                    ? isLight
+                      ? "border-sky-500/70 bg-gradient-to-r from-sky-100/90 via-white to-sky-50/70 shadow-[0_8px_24px_rgba(2,132,199,0.18)] scale-[1.02]"
+                      : "border-cyan-400/60 bg-gradient-to-r from-cyan-950/40 via-[#121626]/90 to-[#121626]/90 shadow-[0_0_24px_rgba(56,189,248,0.22)] scale-[1.02]"
+                    : isLight
+                      ? "border-slate-200/90 bg-white/95 hover:border-slate-300 hover:bg-white shadow-sm"
+                      : "border-white/10 bg-[#0E1017]/70 hover:border-white/20 hover:bg-[#121522]/70 backdrop-blur-xl"
                 }`}
               >
                 {/* Active Specular Glow Line */}
@@ -208,8 +215,12 @@ export default function AnimatedStatistics() {
                   <div
                     className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${
                       isSelected
-                        ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/30"
-                        : "bg-white/5 text-zinc-400 group-hover:text-white border border-white/5"
+                        ? isLight
+                          ? "bg-sky-500/15 text-sky-700 border border-sky-400/30"
+                          : "bg-cyan-500/20 text-cyan-300 border border-cyan-400/30"
+                        : isLight
+                          ? "bg-slate-100 text-slate-500 group-hover:text-slate-900 border border-slate-200"
+                          : "bg-white/5 text-zinc-400 group-hover:text-white border border-white/5"
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -218,14 +229,22 @@ export default function AnimatedStatistics() {
                   <div className="min-w-0">
                     <div
                       className={`text-sm sm:text-base font-bold tracking-wide transition-colors ${
-                        isSelected ? "text-white" : "text-zinc-200 group-hover:text-white"
+                        isSelected
+                          ? isLight
+                            ? "text-slate-950"
+                            : "text-white"
+                          : isLight
+                            ? "text-slate-700 group-hover:text-slate-950"
+                            : "text-zinc-200 group-hover:text-white"
                       }`}
                       style={{ fontFamily: "var(--font-space-grotesk)" }}
                     >
                       {stat.label}
                     </div>
                     <div
-                      className="text-[11px] sm:text-xs text-zinc-400 font-normal truncate mt-0.5"
+                      className={`text-[11px] sm:text-xs font-normal truncate mt-0.5 ${
+                        isLight ? "text-slate-500" : "text-zinc-400"
+                      }`}
                       style={{ fontFamily: "var(--font-inter)" }}
                     >
                       {stat.sub}
@@ -239,7 +258,9 @@ export default function AnimatedStatistics() {
                     className={`w-2 h-2 rounded-full transition-all ${
                       isSelected
                         ? "animate-pulse"
-                        : "bg-zinc-600 group-hover:bg-zinc-400"
+                        : isLight
+                          ? "bg-slate-300 group-hover:bg-slate-400"
+                          : "bg-zinc-600 group-hover:bg-zinc-400"
                     }`}
                     style={{
                       backgroundColor: isSelected ? stat.accent : undefined,
@@ -249,8 +270,12 @@ export default function AnimatedStatistics() {
                   <ChevronRight
                     className={`w-4 h-4 transition-transform duration-200 ${
                       isSelected
-                        ? "text-cyan-400 translate-x-0.5"
-                        : "text-zinc-500 group-hover:text-zinc-300"
+                        ? isLight
+                          ? "text-sky-600 translate-x-0.5"
+                          : "text-cyan-400 translate-x-0.5"
+                        : isLight
+                          ? "text-slate-400 group-hover:text-slate-600"
+                          : "text-zinc-500 group-hover:text-zinc-300"
                     }`}
                   />
                 </div>
@@ -264,7 +289,13 @@ export default function AnimatedStatistics() {
           The numbers ONLY appear here in the chart!
           Morphs smoothly on click with Louis Studios glow, Steffen curve, peak dot, and period selector
         */}
-        <div className="relative p-2 sm:p-4 rounded-3xl border border-white/10 bg-[#070B14]/90 backdrop-blur-2xl shadow-2xl shadow-black/80 flex flex-col items-center overflow-hidden">
+        <div
+          className={`relative p-2 sm:p-4 rounded-3xl border backdrop-blur-2xl flex flex-col items-center overflow-hidden ${
+            isLight
+              ? "border-slate-200/90 bg-white/95 shadow-2xl shadow-slate-200/80"
+              : "border-white/10 bg-[#070B14]/90 shadow-2xl shadow-black/80"
+          }`}
+        >
           {/* Subtle Dynamic Ambient Glow */}
           <div
             className="absolute inset-0 pointer-events-none rounded-3xl transition-all duration-700"

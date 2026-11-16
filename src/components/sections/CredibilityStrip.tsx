@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/components/ThemeProvider";
 
 const ITEMS = [
   { label: "Established 2021", icon: "◈" },
@@ -11,12 +12,16 @@ const ITEMS = [
 ];
 
 export default function CredibilityStrip() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
       { threshold: 0.2 }
     );
     if (ref.current) observer.observe(ref.current);
@@ -29,19 +34,19 @@ export default function CredibilityStrip() {
       className="relative z-10 py-10 px-4"
       aria-label="Network credentials"
     >
-      <div
-        className="max-w-5xl mx-auto flex flex-wrap items-center justify-center gap-3"
-      >
+      <div className="max-w-5xl mx-auto flex flex-wrap items-center justify-center gap-3">
         {ITEMS.map((item, i) => (
           <div key={item.label} className="flex items-center gap-3">
             <div
-              className="flex items-center gap-2 px-4 py-2 rounded-full"
+              className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300"
               style={{
-                background: "rgba(16,16,22,0.7)",
+                background: isLight ? "rgba(255, 255, 255, 0.92)" : "rgba(16,16,22,0.7)",
                 backdropFilter: "blur(16px)",
                 WebkitBackdropFilter: "blur(16px)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                boxShadow: "0 4px 20px rgba(74,22,168,0.1), inset 0 1px 0 rgba(255,255,255,0.05)",
+                border: isLight ? "1px solid rgba(15, 23, 42, 0.1)" : "1px solid rgba(255,255,255,0.08)",
+                boxShadow: isLight
+                  ? "0 4px 16px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255,255,255,0.9)"
+                  : "0 4px 20px rgba(74,22,168,0.1), inset 0 1px 0 rgba(255,255,255,0.05)",
                 opacity: visible ? 1 : 0,
                 transform: visible ? "translateY(0)" : "translateY(12px)",
                 transition: `opacity 0.5s ease-out ${i * 0.1}s, transform 0.5s ease-out ${i * 0.1}s`,
@@ -49,7 +54,7 @@ export default function CredibilityStrip() {
             >
               <span
                 style={{
-                  color: "#9B5CFF",
+                  color: isLight ? "#7C3AED" : "#9B5CFF",
                   fontSize: "10px",
                 }}
               >
@@ -57,7 +62,10 @@ export default function CredibilityStrip() {
               </span>
               <span
                 className="text-xs font-medium whitespace-nowrap"
-                style={{ color: "#D9D6E3", fontFamily: "var(--font-inter)" }}
+                style={{
+                  color: isLight ? "#1E293B" : "#D9D6E3",
+                  fontFamily: "var(--font-inter)",
+                }}
               >
                 {item.label}
               </span>
@@ -65,7 +73,9 @@ export default function CredibilityStrip() {
             {i < ITEMS.length - 1 && (
               <div
                 className="hidden sm:block w-px h-4"
-                style={{ background: "rgba(255,255,255,0.08)" }}
+                style={{
+                  background: isLight ? "rgba(15, 23, 42, 0.1)" : "rgba(255,255,255,0.08)",
+                }}
               />
             )}
           </div>

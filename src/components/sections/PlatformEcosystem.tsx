@@ -13,6 +13,7 @@ import {
   TelegramIcon,
   YouTubeIcon,
 } from "@/components/icons/PlatformIcons";
+import { useTheme } from "@/components/ThemeProvider";
 
 interface PlatformItem {
   name: string;
@@ -61,9 +62,9 @@ const PLATFORMS: PlatformItem[] = [
   {
     name: "Telegram",
     category: "Direct Channel",
-    color: "#2AABEE",
-    glow: "rgba(42, 171, 238, 0.35)",
-    icon: <TelegramIcon className="w-8 h-8 drop-shadow-[0_4px_12px_rgba(42,171,238,0.4)]" />,
+    color: "#229ED9",
+    glow: "rgba(34, 158, 217, 0.35)",
+    icon: <TelegramIcon className="w-8 h-8 drop-shadow-[0_4px_12px_rgba(34,158,217,0.4)]" />,
   },
   {
     name: "Discord",
@@ -96,6 +97,8 @@ const PLATFORMS: PlatformItem[] = [
 ];
 
 export default function PlatformEcosystem() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -159,8 +162,9 @@ export default function PlatformEcosystem() {
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[900px] h-[500px] pointer-events-none rounded-full"
         style={{
-          background:
-            "radial-gradient(ellipse at center, rgba(37, 99, 235, 0.08) 0%, rgba(124, 58, 237, 0.05) 50%, transparent 70%)",
+          background: isLight
+            ? "radial-gradient(ellipse at center, rgba(37, 99, 235, 0.12) 0%, rgba(124, 58, 237, 0.08) 50%, transparent 70%)"
+            : "radial-gradient(ellipse at center, rgba(37, 99, 235, 0.08) 0%, rgba(124, 58, 237, 0.05) 50%, transparent 70%)",
           filter: "blur(90px)",
         }}
       />
@@ -176,20 +180,24 @@ export default function PlatformEcosystem() {
           }}
         >
           <span
-            className="text-xs font-semibold tracking-widest uppercase mb-3 block text-cyan-400 font-mono"
+            className="text-xs font-semibold tracking-widest uppercase mb-3 block text-cyan-500 font-mono"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             ✦ Verified Platform Coverage ✦
           </span>
           <h2
             id="platforms-heading"
-            className="text-3xl md:text-5xl font-black mb-4 tracking-tight"
-            style={{ fontFamily: "var(--font-space-grotesk)", color: "#FFFFFF" }}
+            className={`text-3xl md:text-5xl font-black mb-4 tracking-tight ${
+              isLight ? "text-slate-950" : "text-white"
+            }`}
+            style={{ fontFamily: "var(--font-space-grotesk)" }}
           >
             One Integrated Network.{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%)",
+                background: isLight
+                  ? "linear-gradient(135deg, #0284C7 0%, #6366F1 50%, #9333EA 100%)"
+                  : "linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -198,7 +206,9 @@ export default function PlatformEcosystem() {
             </span>
           </h2>
           <p
-            className="text-base sm:text-lg max-w-2xl mx-auto text-zinc-400 font-normal"
+            className={`text-base sm:text-lg max-w-2xl mx-auto font-normal ${
+              isLight ? "text-slate-600" : "text-zinc-400"
+            }`}
             style={{ fontFamily: "var(--font-inter)" }}
           >
             SocialAssist operates across all major global digital platforms with direct policy channels,
@@ -217,7 +227,13 @@ export default function PlatformEcosystem() {
           {/* Top Row: 5 Platforms */}
           <div className="flex gap-3 sm:gap-5 flex-wrap justify-center px-2">
             {top.map((p, i) => (
-              <PlatformCard key={p.name} platform={p} index={i} visible={visible} />
+              <PlatformCard
+                key={p.name}
+                platform={p}
+                index={i}
+                visible={visible}
+                isLight={isLight}
+              />
             ))}
           </div>
 
@@ -233,13 +249,15 @@ export default function PlatformEcosystem() {
             <div
               className="flex items-center justify-center rounded-3xl p-3 sm:p-4 w-[110px] h-[110px] sm:w-[130px] sm:h-[130px] transition-transform duration-500 hover:scale-105"
               style={{
-                background:
-                  "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(20, 20, 30, 0.85) 100%)",
+                background: isLight
+                  ? "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.88) 100%)"
+                  : "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(20, 20, 30, 0.85) 100%)",
                 backdropFilter: "blur(28px) saturate(190%)",
                 WebkitBackdropFilter: "blur(28px) saturate(190%)",
-                border: "1px solid rgba(255, 255, 255, 0.18)",
-                boxShadow:
-                  "0 16px 48px rgba(0,0,0,0.7), 0 0 32px rgba(56, 189, 248, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4)",
+                border: isLight ? "1px solid rgba(15, 23, 42, 0.12)" : "1px solid rgba(255, 255, 255, 0.18)",
+                boxShadow: isLight
+                  ? "0 16px 40px rgba(15, 23, 42, 0.12), 0 0 32px rgba(56, 189, 248, 0.18), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9)"
+                  : "0 16px 48px rgba(0,0,0,0.7), 0 0 32px rgba(56, 189, 248, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4)",
               }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -253,7 +271,7 @@ export default function PlatformEcosystem() {
             {/* Radial Connection Energy Rays */}
             <div
               className="absolute inset-0 pointer-events-none"
-              style={{ opacity: visible ? 0.35 : 0, transition: "opacity 1s ease-out 0.4s" }}
+              style={{ opacity: visible ? (isLight ? 0.25 : 0.35) : 0, transition: "opacity 1s ease-out 0.4s" }}
             >
               {[0, 36, 72, 108, 144, 180, 216, 252, 288, 324].map((angle) => (
                 <div
@@ -262,7 +280,9 @@ export default function PlatformEcosystem() {
                   style={{
                     width: "100px",
                     height: "1px",
-                    background: "linear-gradient(90deg, rgba(56,189,248,0.7), transparent)",
+                    background: isLight
+                      ? "linear-gradient(90deg, rgba(2, 132, 199, 0.5), transparent)"
+                      : "linear-gradient(90deg, rgba(56,189,248,0.7), transparent)",
                     transformOrigin: "left center",
                     left: "50%",
                     top: "50%",
@@ -276,7 +296,13 @@ export default function PlatformEcosystem() {
           {/* Bottom Row: 5 Platforms */}
           <div className="flex gap-3 sm:gap-5 flex-wrap justify-center px-2">
             {bottom.map((p, i) => (
-              <PlatformCard key={p.name} platform={p} index={i + 5} visible={visible} />
+              <PlatformCard
+                key={p.name}
+                platform={p}
+                index={i + 5}
+                visible={visible}
+                isLight={isLight}
+              />
             ))}
           </div>
         </div>
@@ -289,10 +315,12 @@ function PlatformCard({
   platform,
   index,
   visible,
+  isLight = false,
 }: {
   platform: PlatformItem;
   index: number;
   visible: boolean;
+  isLight?: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
   const delay = index * 0.05;
@@ -314,20 +342,36 @@ function PlatformCard({
         style={{
           width: 82,
           height: 82,
-          background: hovered
-            ? `linear-gradient(135deg, rgba(30, 30, 42, 0.95) 0%, rgba(15, 15, 22, 0.9) 100%)`
+          background: isLight
+            ? hovered
+              ? "linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(241, 245, 249, 0.95) 100%)"
+              : "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%)"
+            : hovered
+            ? "linear-gradient(135deg, rgba(30, 30, 42, 0.95) 0%, rgba(15, 15, 22, 0.9) 100%)"
             : "linear-gradient(135deg, rgba(20, 20, 28, 0.75) 0%, rgba(12, 12, 18, 0.65) 100%)",
           backdropFilter: "blur(20px) saturate(180%)",
           WebkitBackdropFilter: "blur(20px) saturate(180%)",
-          border: hovered ? `1px solid ${platform.color}70` : "1px solid rgba(255,255,255,0.1)",
+          border: hovered
+            ? `1px solid ${platform.color}70`
+            : isLight
+            ? "1px solid rgba(15, 23, 42, 0.09)"
+            : "1px solid rgba(255,255,255,0.1)",
           boxShadow: hovered
             ? `0 14px 30px ${platform.glow}, 0 0 0 1px ${platform.color}30, inset 0 1px 0 rgba(255,255,255,0.25)`
+            : isLight
+            ? "0 6px 18px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255,255,255,0.95)"
             : "0 6px 16px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)",
           transform: hovered ? "translateY(-6px) scale(1.06)" : "translateY(0) scale(1)",
         }}
       >
         {/* Subtle Specular Top Highlight */}
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+        <div
+          className={`absolute top-0 inset-x-0 h-px ${
+            isLight
+              ? "bg-gradient-to-r from-transparent via-white to-transparent"
+              : "bg-gradient-to-r from-transparent via-white/25 to-transparent"
+          }`}
+        />
 
         <div className="transition-transform duration-300 group-hover:scale-110">
           {platform.icon}
@@ -337,15 +381,20 @@ function PlatformCard({
       {/* Label and Platform Subtext */}
       <div className="text-center">
         <span
-          className="text-xs font-semibold block transition-colors duration-200"
-          style={{
-            color: hovered ? "#FFFFFF" : "rgba(226, 232, 240, 0.75)",
-            fontFamily: "var(--font-inter)",
-          }}
+          className={`text-xs font-semibold block transition-colors duration-200 ${
+            isLight
+              ? hovered ? "text-slate-950 font-bold" : "text-slate-800"
+              : hovered ? "text-white" : "text-zinc-200"
+          }`}
+          style={{ fontFamily: "var(--font-inter)" }}
         >
           {platform.name}
         </span>
-        <span className="text-[10px] text-zinc-500 hidden sm:block font-mono">
+        <span
+          className={`text-[10px] hidden sm:block font-mono ${
+            isLight ? "text-slate-500 font-medium" : "text-zinc-500"
+          }`}
+        >
           {platform.category}
         </span>
       </div>

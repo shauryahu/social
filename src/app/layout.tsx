@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -79,12 +80,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable}`}
+      data-theme="light"
+      className={`${inter.variable} ${spaceGrotesk.variable} light`}
       style={{ scrollBehavior: "smooth" }}
+      suppressHydrationWarning
     >
       <head>
         <link rel="icon" href="/images/toplogo1.png" type="image/png" />
-        <meta name="theme-color" content="#08080C" />
+        <meta name="theme-color" content="#FAFAFC" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -107,8 +110,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-[#08080C] text-white antialiased overflow-x-hidden">
-        {children}
+      <body className="min-h-screen antialiased overflow-x-hidden transition-colors duration-300">
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
