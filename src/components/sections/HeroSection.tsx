@@ -1,37 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
+import CinematicLaptop from "@/components/3d/CinematicLaptop";
 
 export default function HeroSection() {
   const [visible, setVisible] = useState(false);
-  const [muted, setMuted] = useState(true);
-  const [playing, setPlaying] = useState(true);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 200);
+    const t = setTimeout(() => setVisible(true), 150);
     return () => clearTimeout(t);
   }, []);
-
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !videoRef.current.muted;
-      setMuted(videoRef.current.muted);
-    }
-  };
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play();
-        setPlaying(true);
-      } else {
-        videoRef.current.pause();
-        setPlaying(false);
-      }
-    }
-  };
 
   const scrollToServices = () => {
     document.getElementById("services")?.scrollIntoView({ behavior: "smooth" });
@@ -43,343 +21,225 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex flex-col items-center justify-start pt-36 sm:pt-40 pb-16 px-4 md:px-8 overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-start pt-32 sm:pt-36 pb-20 px-4 md:px-8 overflow-hidden"
       aria-labelledby="hero-heading"
     >
-      {/* Hero content */}
-      <div className="relative z-10 flex flex-col items-start text-left max-w-4xl w-full">
+      {/* Background Cinematic Atmosphere: Soft Metallic Blue & Midnight Glow */}
+      <div
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85vw] max-w-[1200px] h-[500px] pointer-events-none rounded-full"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, rgba(56, 189, 248, 0.08) 0%, rgba(139, 92, 246, 0.06) 40%, transparent 70%)",
+          filter: "blur(90px)",
+        }}
+      />
 
-        {/* 1. Est. 2021 Badge (Top Left) */}
+      {/* Hero content container */}
+      <div className="relative z-10 flex flex-col items-center text-center max-w-5xl w-full mx-auto">
+        {/* 1. Est. 2021 · Apple-style pill badge */}
         <div
-          className="px-3.5 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-bold tracking-widest uppercase inline-block"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase transition-all duration-700"
           style={{
-            background: "rgba(74,22,168,0.25)",
-            border: "1px solid rgba(124,58,237,0.4)",
-            color: "#C5A7FF",
+            background: "rgba(255, 255, 255, 0.03)",
+            border: "1px solid rgba(255, 255, 255, 0.12)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            color: "#E2E8F0",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15)",
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.7s ease-out 0.1s, transform 0.7s ease-out 0.1s",
+            transform: visible ? "translateY(0)" : "translateY(14px)",
             fontFamily: "var(--font-inter)",
           }}
         >
-          Est. 2021 · Digital Assistance Network
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#38bdf8]" />
+          <span>Est. 2021 · Digital Assistance & Resolution Network</span>
         </div>
 
-        {/* 2. Translucent Blurry Glass Capsule enclosing Logo + · SOCIALASSIST */}
+        {/* 2. Glass Capsule enclosing SA Brand Icon + SocialAssist Title */}
         <div
-          className="mt-5 inline-flex items-center gap-3.5 sm:gap-5 px-5 py-2.5 sm:px-6 sm:py-3.5 rounded-full transition-transform duration-300 hover:scale-[1.02]"
+          className="mt-6 inline-flex items-center gap-4 px-6 py-3 rounded-full transition-all duration-500 hover:scale-[1.02]"
           style={{
             background:
-              "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%)",
-            backdropFilter: "blur(28px) saturate(180%)",
-            WebkitBackdropFilter: "blur(28px) saturate(180%)",
-            border: "1px solid rgba(255, 255, 255, 0.07)",
+              "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.015) 100%)",
+            backdropFilter: "blur(28px) saturate(190%)",
+            WebkitBackdropFilter: "blur(28px) saturate(190%)",
+            border: "1px solid rgba(255, 255, 255, 0.12)",
             boxShadow:
-              "0 8px 32px rgba(0, 0, 0, 0.35), 0 0 24px rgba(168, 85, 247, 0.3), inset 0 1px 1px 0 rgba(255, 255, 255, 0.45)",
+              "0 12px 40px rgba(0, 0, 0, 0.45), 0 0 24px rgba(56, 189, 248, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.3)",
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.75s ease-out 0.15s, transform 0.75s ease-out 0.15s",
+            transition: "opacity 0.75s ease-out 0.1s, transform 0.75s ease-out 0.1s",
           }}
         >
-          {/* Larger White SA Icon PNG Logo */}
+          {/* SA Logo PNG */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/images/toplogo1.png"
-            alt="SocialAssist SA Logo"
-            width={96}
-            height={96}
-            className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain block"
-            style={{
-              filter:
-                "drop-shadow(0 0 18px rgba(124,58,237,0.9)) drop-shadow(0 0 36px rgba(155,92,255,0.7))",
-            }}
+            alt="SocialAssist Logo"
+            width={72}
+            height={72}
+            className="w-10 h-10 sm:w-12 sm:h-12 object-contain block drop-shadow-[0_0_16px_rgba(139,92,246,0.6)]"
           />
 
-          {/* Thin Vertical Glass Divider */}
-          <div
-            style={{
-              width: "1px",
-              height: "32px",
-              background: "rgba(255, 255, 255, 0.18)",
-            }}
-          />
+          <div className="w-px h-6 bg-white/15" />
 
-          {/* · SOCIALASSIST Text label next to logo inside capsule */}
           <div
-            className="flex items-center gap-2 text-lg sm:text-xl md:text-2xl font-black tracking-[0.25em] uppercase"
+            className="text-lg sm:text-xl font-bold tracking-[0.2em] uppercase text-white flex items-center gap-2"
             style={{
-              color: "#C5A7FF",
               fontFamily: "var(--font-space-grotesk)",
-              textShadow: "0 0 18px rgba(155,92,255,0.7)",
+              textShadow: "0 0 20px rgba(255,255,255,0.2)",
             }}
           >
-            <span className="w-2.5 h-2.5 rounded-full bg-[#9B5CFF] inline-block shadow-[0_0_14px_#9B5CFF]" />
             SocialAssist
+            <span className="text-[10px] px-2 py-0.5 rounded bg-white/10 border border-white/20 text-cyan-300 font-mono tracking-normal font-medium">
+              2.0
+            </span>
           </div>
         </div>
 
-        {/* 3. Main headline / Slogan — Ultra-Bold High-Impact Typography */}
+        {/* 3. Main Headline — Apple-Inspired High-Impact Precision */}
         <h1
           id="hero-heading"
-          className="mt-4 leading-[1.05] font-black tracking-tight"
+          className="mt-8 leading-[1.05] font-black tracking-tight"
           style={{
-            fontSize: "clamp(2.2rem, 7vw, 5.5rem)",
+            fontSize: "clamp(2.4rem, 6.5vw, 5.2rem)",
             fontFamily: "var(--font-space-grotesk)",
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(24px)",
-            transition: "opacity 0.8s ease-out 0.25s, transform 0.8s ease-out 0.25s",
+            transform: visible ? "translateY(0)" : "translateY(20px)",
+            transition: "opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s",
           }}
         >
-          <span style={{ color: "#FFFFFF", textShadow: "0 0 40px rgba(255,255,255,0.15)" }}>
+          <span className="text-white drop-shadow-[0_4px_30px_rgba(255,255,255,0.2)]">
             We Resolve.
-          </span>
-          <br />
+          </span>{" "}
           <span
             style={{
-              background: "linear-gradient(135deg, #E0C7FF 0%, #A855F7 50%, #7C3AED 100%)",
+              background: "linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              filter: "drop-shadow(0 0 30px rgba(168,85,247,0.35))",
+              filter: "drop-shadow(0 0 35px rgba(56,189,248,0.3))",
             }}
           >
             We Protect.
-          </span>
-          <br />
-          <span
-            style={{
-              background: "linear-gradient(135deg, #FFFFFF 0%, #D8B4FE 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
+          </span>{" "}
+          <span className="text-zinc-200">
             We Elevate.
           </span>
         </h1>
 
-        {/* Supporting copy — Bold & Clear High-Contrast Typography */}
+        {/* Supporting copy */}
         <p
-          className="mt-5 max-w-2xl text-base sm:text-lg md:text-xl leading-relaxed font-medium"
+          className="mt-6 max-w-3xl text-base sm:text-lg md:text-xl leading-relaxed text-zinc-300/90 font-normal"
           style={{
-            color: "rgba(235,232,245,0.85)",
             fontFamily: "var(--font-inter)",
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.8s ease-out 0.35s, transform 0.8s ease-out 0.35s",
+            transform: visible ? "translateY(0)" : "translateY(18px)",
+            transition: "opacity 0.8s ease-out 0.3s, transform 0.8s ease-out 0.3s",
           }}
         >
-          Specialized <strong className="font-bold text-white underline decoration-purple-500/50 underline-offset-4">social media assistance</strong>, <strong className="font-bold text-white">verification support</strong>, <strong className="font-bold text-white">digital protection</strong>, <strong className="font-bold text-white">crypto exchange</strong> and <strong className="font-bold text-white">automated advertising</strong> — connected through one network.
+          Specialized{" "}
+          <strong className="font-semibold text-white">social media assistance</strong>,{" "}
+          <strong className="font-semibold text-white">verification support</strong>,{" "}
+          <strong className="font-semibold text-white">brand protection</strong>,{" "}
+          <strong className="font-semibold text-white">crypto OTC exchange</strong>, and{" "}
+          <strong className="font-semibold text-white">automated advertising</strong> — unified through one high-security network.
         </p>
 
-        {/* CTA Buttons */}
+        {/* Action Buttons */}
         <div
-          className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-start"
+          className="mt-8 flex flex-col sm:flex-row gap-3.5 w-full sm:w-auto justify-center items-center"
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.8s ease-out 0.45s, transform 0.8s ease-out 0.45s",
+            transform: visible ? "translateY(0)" : "translateY(18px)",
+            transition: "opacity 0.8s ease-out 0.4s, transform 0.8s ease-out 0.4s",
           }}
         >
           <button
             onClick={scrollToServices}
-            className="group relative w-full sm:w-auto px-8 py-4 rounded-full font-bold text-sm sm:text-base text-white overflow-hidden transition-all duration-300 hover:scale-105 flex items-center justify-center"
+            className="group relative w-full sm:w-auto px-8 py-3.5 rounded-full font-semibold text-sm sm:text-base text-white overflow-hidden transition-all duration-300 hover:scale-[1.04] active:scale-[0.98] flex items-center justify-center gap-2"
             style={{
-              background: "linear-gradient(135deg, #4A16A8 0%, #7C3AED 50%, #9B5CFF 100%)",
-              boxShadow: "0 0 28px rgba(124,58,237,0.5), inset 0 1px 0 rgba(255,255,255,0.2)",
+              background: "linear-gradient(135deg, #2563EB 0%, #4F46E5 50%, #7C3AED 100%)",
+              boxShadow: "0 8px 30px rgba(79, 70, 229, 0.45), inset 0 1px 0 rgba(255,255,255,0.25)",
               fontFamily: "var(--font-inter)",
             }}
           >
-            <span className="relative z-10 flex items-center gap-2 tracking-wide">
-              Explore Services
-              <svg width="16" height="16" viewBox="0 0 14 14" fill="none" className="transition-transform duration-300 group-hover:translate-x-1">
-                <path d="M1 7h12M8 3l5 4-5 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </span>
+            <span>Explore Services</span>
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 16 16"
+              fill="none"
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            >
+              <path d="M1 8h14M9 3l6 5-6 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </button>
 
           <button
             onClick={scrollToContact}
-            className="group w-full sm:w-auto px-8 py-4 rounded-full font-bold text-sm sm:text-base transition-all duration-300 hover:scale-105 flex items-center justify-center"
-            style={{
-              background: "rgba(255,255,255,0.08)",
-              border: "1px solid rgba(255,255,255,0.2)",
-              backdropFilter: "blur(12px)",
-              color: "#FFFFFF",
-              fontFamily: "var(--font-inter)",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(168,85,247,0.6)";
-              (e.currentTarget as HTMLButtonElement).style.background = "rgba(124,58,237,0.18)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.2)";
-              (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.08)";
-            }}
+            className="group w-full sm:w-auto px-8 py-3.5 rounded-full font-semibold text-sm sm:text-base text-zinc-200 transition-all duration-300 hover:scale-[1.04] active:scale-[0.98] flex items-center justify-center border border-white/15 bg-white/5 hover:bg-white/10 hover:border-white/30 backdrop-blur-xl"
+            style={{ fontFamily: "var(--font-inter)" }}
           >
-            Contact
+            Contact Network
           </button>
         </div>
-      </div>
 
-        {/* High-Impact Bold Highlights Strip */}
+        {/* Metrics Grid */}
         <div
-          className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full"
+          className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full max-w-4xl"
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.85s ease-out 0.5s, transform 0.85s ease-out 0.5s",
+            transform: visible ? "translateY(0)" : "translateY(18px)",
+            transition: "opacity 0.85s ease-out 0.45s, transform 0.85s ease-out 0.45s",
           }}
         >
           {[
-            { value: "500+", label: "Cases Resolved" },
-            { value: "100%", label: "Secure Network" },
-            { value: "24/7", label: "Direct Support" },
-            { value: "99.9%", label: "Success Rate" },
+            { value: "500+", label: "Cases Resolved", sub: "Verified resolution" },
+            { value: "100%", label: "Secure Network", sub: "Strict confidentiality" },
+            { value: "24/7", label: "Direct Support", sub: "Telegram escalation" },
+            { value: "99.9%", label: "Success Rate", sub: "Tier-1 internal channels" },
           ].map((stat, idx) => (
             <div
               key={idx}
-              className="p-3.5 sm:p-4 rounded-xl border border-white/10"
-              style={{
-                background: "rgba(20, 16, 32, 0.55)",
-                backdropFilter: "blur(16px)",
-              }}
+              className="p-4 rounded-2xl border border-white/10 bg-[#12121A]/70 backdrop-blur-xl hover:border-white/20 transition-all duration-300 text-left group"
             >
               <div
-                className="text-2xl sm:text-3xl font-black"
-                style={{
-                  background: "linear-gradient(135deg, #FFFFFF 0%, #C5A7FF 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  fontFamily: "var(--font-space-grotesk)",
-                }}
+                className="text-2xl sm:text-3xl font-black text-white group-hover:text-cyan-300 transition-colors"
+                style={{ fontFamily: "var(--font-space-grotesk)" }}
               >
                 {stat.value}
               </div>
-              <div
-                className="text-xs sm:text-sm font-bold mt-1 text-purple-200/90"
-                style={{ fontFamily: "var(--font-inter)" }}
-              >
+              <div className="text-xs sm:text-sm font-semibold text-zinc-200 mt-1">
                 {stat.label}
+              </div>
+              <div className="text-[11px] text-zinc-500 mt-0.5">
+                {stat.sub}
               </div>
             </div>
           ))}
         </div>
 
-        {/* VIDEO — main intro */}
+        {/* 4. SIGNATURE CINEMATIC 3D LAPTOP ANIMATION
+            Renders 3D metallic laptop with hinge opening, screen glow, and actual intro video inside
+        */}
         <div
-          className="mt-12 w-full max-w-3xl mx-auto"
+          className="mt-10 sm:mt-14 w-full"
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0) scale(1)" : "translateY(30px) scale(0.97)",
-            filter: visible ? "blur(0px)" : "blur(6px)",
-            transition: "opacity 1s ease-out 0.55s, transform 1s ease-out 0.55s, filter 1s ease-out 0.55s",
+            transform: visible ? "translateY(0)" : "translateY(24px)",
+            transition: "opacity 1s ease-out 0.5s, transform 1s ease-out 0.5s",
           }}
         >
-          {/* Glass video frame */}
-          <div
-            className="relative rounded-2xl overflow-hidden"
-            style={{
-              background: "rgba(16,16,22,0.7)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              boxShadow:
-                "0 0 60px rgba(74,22,168,0.3), 0 0 120px rgba(74,22,168,0.15), inset 0 1px 0 rgba(255,255,255,0.08)",
-            }}
-          >
-            {/* Top bar chrome */}
-            <div
-              className="flex items-center gap-2 px-4 py-3"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
-            >
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#FF5F57" }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#FFBD2E" }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#28CA42" }} />
-              <span
-                className="ml-auto text-xs"
-                style={{ color: "rgba(197,167,255,0.5)", fontFamily: "var(--font-inter)" }}
-              >
-                SocialAssist · Official
-              </span>
-            </div>
-
-            {/* Video */}
-            <div className="relative" style={{ aspectRatio: "16/9" }}>
-              <video
-                ref={videoRef}
-                src="/videos/intro.mp4"
-                autoPlay
-                muted={muted}
-                loop
-                playsInline
-                preload="metadata"
-                className="w-full h-full object-cover"
-                aria-label="SocialAssist introduction video"
-              />
-
-              {/* Subtle top gradient overlay — does NOT cover important content */}
-              <div
-                className="absolute inset-x-0 bottom-0 h-16 pointer-events-none"
-                style={{
-                  background: "linear-gradient(to top, rgba(8,8,12,0.5), transparent)",
-                }}
-              />
-
-              {/* Controls */}
-              <div className="absolute bottom-4 right-4 flex items-center gap-2">
-                {/* Play/pause */}
-                <button
-                  onClick={togglePlay}
-                  className="flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 hover:scale-110"
-                  style={{
-                    background: "rgba(8,8,12,0.75)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                  }}
-                  aria-label={playing ? "Pause video" : "Play video"}
-                >
-                  {playing ? (
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="#C5A7FF">
-                      <rect x="2" y="1" width="3" height="10" rx="1"/>
-                      <rect x="7" y="1" width="3" height="10" rx="1"/>
-                    </svg>
-                  ) : (
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="#C5A7FF">
-                      <path d="M3 2l7 4-7 4V2z"/>
-                    </svg>
-                  )}
-                </button>
-
-                {/* Mute/unmute */}
-                <button
-                  onClick={toggleMute}
-                  className="flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 hover:scale-110"
-                  style={{
-                    background: muted ? "rgba(124,58,237,0.5)" : "rgba(8,8,12,0.75)",
-                    backdropFilter: "blur(10px)",
-                    border: muted
-                      ? "1px solid rgba(124,58,237,0.6)"
-                      : "1px solid rgba(255,255,255,0.1)",
-                  }}
-                  aria-label={muted ? "Unmute video" : "Mute video"}
-                >
-                  {muted ? (
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C5A7FF" strokeWidth="2" strokeLinecap="round">
-                      <path d="M11 5L6 9H2v6h4l5 4V5z"/>
-                      <line x1="23" y1="9" x2="17" y2="15"/>
-                      <line x1="17" y1="9" x2="23" y2="15"/>
-                    </svg>
-                  ) : (
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C5A7FF" strokeWidth="2" strokeLinecap="round">
-                      <path d="M11 5L6 9H2v6h4l5 4V5z"/>
-                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-                      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-                    </svg>
-                  )}
-                </button>
-              </div>
-            </div>
+          <div className="text-center mb-3">
+            <span className="text-[11px] uppercase tracking-widest text-zinc-400 font-mono">
+              ✦ Cinematic Presentation · Real-time 3D Engine ✦
+            </span>
           </div>
+
+          {/* 3D Laptop Component with actual intro.mp4 */}
+          <CinematicLaptop />
         </div>
-      </section>
+      </div>
+    </section>
   );
 }

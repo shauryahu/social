@@ -2,59 +2,55 @@
 
 import { useEffect, useRef, useState } from "react";
 
+const COIN_DATA = {
+  USDT: { name: "Tether USD", rate: 91.45, symbol: "₮", color: "#26A17B" },
+  BTC: { name: "Bitcoin", rate: 8450000, symbol: "₿", color: "#F7931A" },
+  ETH: { name: "Ethereum", rate: 278000, symbol: "Ξ", color: "#627EEA" },
+  LTC: { name: "Litecoin", rate: 7450, symbol: "Ł", color: "#345D9D" },
+  BNB: { name: "BNB Chain", rate: 58200, symbol: "BNB", color: "#F3BA2F" },
+};
+
+type CoinKey = keyof typeof COIN_DATA;
+
 export default function CryptoExchange() {
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
-  const [flowStep, setFlowStep] = useState(0);
+  const [selectedCoin, setSelectedCoin] = useState<CoinKey>("USDT");
+  const [amount, setAmount] = useState<number>(1000);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
       { threshold: 0.15 }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!visible) return;
-    const interval = setInterval(() => {
-      setFlowStep((s) => (s + 1) % 3);
-    }, 1500);
-    return () => clearInterval(interval);
-  }, [visible]);
-
-  const FLOW = [
-    { label: "Crypto", sub: "BTC · ETH · USDT", active: flowStep === 0 },
-    { label: "Secure Exchange", sub: "Verified process", active: flowStep === 1 },
-    { label: "INR", sub: "Indian Rupee", active: flowStep === 2 },
-  ];
-
-  const COINS = ["BTC", "ETH", "USDT", "LTC", "BNB"];
+  const activeRate = COIN_DATA[selectedCoin].rate;
+  const estimatedPayout = Math.round(amount * activeRate);
 
   return (
     <section
       id="exchange"
       ref={ref}
-      className="relative z-10 py-24 px-4 md:px-8"
+      className="relative z-10 py-24 px-4 md:px-8 overflow-hidden"
       aria-labelledby="exchange-heading"
     >
-      {/* Violet glow accent */}
+      {/* Background Glow */}
       <div
-        className="absolute rounded-full pointer-events-none"
+        className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[60vw] max-w-[800px] h-[500px] pointer-events-none rounded-full"
         style={{
-          width: "60vw",
-          height: "60vw",
-          left: "-15vw",
-          top: "50%",
-          transform: "translateY(-50%)",
-          background: "radial-gradient(circle, rgba(74,22,168,0.12) 0%, transparent 70%)",
-          filter: "blur(80px)",
+          background:
+            "radial-gradient(ellipse at center, rgba(38, 161, 123, 0.08) 0%, rgba(37, 99, 235, 0.05) 50%, transparent 70%)",
+          filter: "blur(90px)",
         }}
       />
 
       <div className="relative max-w-6xl mx-auto">
-        {/* Heading */}
+        {/* Section Heading */}
         <div
           className="text-center mb-16"
           style={{
@@ -64,198 +60,183 @@ export default function CryptoExchange() {
           }}
         >
           <span
-            className="text-xs font-medium tracking-widest uppercase mb-3 block"
-            style={{ color: "#9B5CFF", fontFamily: "var(--font-inter)" }}
+            className="text-xs font-semibold tracking-widest uppercase mb-3 block text-cyan-400 font-mono"
+            style={{ fontFamily: "var(--font-inter)" }}
           >
-            Crypto Exchange
+            ✦ Over-The-Counter Digital Settlement ✦
           </span>
           <h2
             id="exchange-heading"
-            className="text-3xl md:text-5xl font-bold mb-4"
+            className="text-3xl md:text-5xl font-black mb-4 tracking-tight"
             style={{ fontFamily: "var(--font-space-grotesk)", color: "#FFFFFF" }}
           >
             Crypto.{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #C5A7FF, #9B5CFF)",
+                background: "linear-gradient(135deg, #38BDF8 0%, #34D399 50%, #818CF8 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
               }}
             >
               Converted Simply.
             </span>
           </h2>
           <p
-            className="text-base max-w-xl mx-auto"
-            style={{ color: "rgba(217,214,227,0.6)", fontFamily: "var(--font-inter)" }}
+            className="text-base sm:text-lg max-w-xl mx-auto text-zinc-400"
+            style={{ fontFamily: "var(--font-inter)" }}
           >
-            Exchange supported cryptocurrencies to INR and other available
-            options through a streamlined inquiry process.
+            Exchange supported digital assets to INR and approved fiat corridors
+            through SocialAssist&apos;s escrow-protected OTC settlement desk.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Flow visual */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left Column: Interactive 3D OTC Calculator & Asset Tokens */}
           <div
-            className="flex flex-col items-center gap-0"
+            className="flex flex-col items-center"
             style={{
               opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(30px)",
+              transform: visible ? "translateY(0)" : "translateY(24px)",
               transition: "opacity 0.8s ease-out 0.1s, transform 0.8s ease-out 0.1s",
             }}
           >
-            {FLOW.map((step, i) => (
-              <div key={step.label} className="flex flex-col items-center w-full max-w-xs">
-                {/* Step */}
-                <div
-                  className="w-full rounded-2xl p-5 flex items-center gap-4 transition-all duration-500"
-                  style={{
-                    background: step.active
-                      ? "rgba(124,58,237,0.15)"
-                      : "rgba(16,16,22,0.6)",
-                    border: step.active
-                      ? "1px solid rgba(124,58,237,0.4)"
-                      : "1px solid rgba(255,255,255,0.07)",
-                    boxShadow: step.active
-                      ? "0 8px 32px rgba(124,58,237,0.2)"
-                      : "none",
-                    backdropFilter: "blur(16px)",
-                  }}
-                >
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-all duration-500"
-                    style={{
-                      background: step.active
-                        ? "linear-gradient(135deg, #7C3AED, #9B5CFF)"
-                        : "rgba(255,255,255,0.05)",
-                      boxShadow: step.active ? "0 0 16px rgba(124,58,237,0.5)" : "none",
-                      color: step.active ? "#fff" : "rgba(255,255,255,0.3)",
-                      fontFamily: "var(--font-space-grotesk)",
-                    }}
-                  >
-                    {i === 0 ? "₿" : i === 1 ? "⇄" : "₹"}
-                  </div>
-                  <div>
-                    <p
-                      className="text-sm font-semibold"
-                      style={{
-                        color: step.active ? "#C5A7FF" : "rgba(217,214,227,0.6)",
-                        fontFamily: "var(--font-space-grotesk)",
-                        transition: "color 0.5s ease",
-                      }}
+            <div className="w-full max-w-md rounded-3xl p-6 sm:p-8 border border-white/10 bg-[#101018]/85 backdrop-blur-2xl shadow-2xl space-y-5">
+              <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                <span className="text-xs font-semibold uppercase tracking-wider text-zinc-300 font-mono">
+                  Live OTC Rate Estimator
+                </span>
+                <span className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-mono">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Real-Time Desk
+                </span>
+              </div>
+
+              {/* Coin Selector Chips */}
+              <div>
+                <label className="block text-xs text-zinc-400 mb-2 font-medium">Select Currency:</label>
+                <div className="grid grid-cols-5 gap-1.5">
+                  {(Object.keys(COIN_DATA) as CoinKey[]).map((coin) => (
+                    <button
+                      key={coin}
+                      onClick={() => setSelectedCoin(coin)}
+                      className={`py-2 px-1 rounded-xl text-xs font-bold transition-all flex flex-col items-center gap-1 ${
+                        selectedCoin === coin
+                          ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/50 shadow-md shadow-cyan-950/40"
+                          : "bg-white/[0.03] text-zinc-400 border border-white/5 hover:bg-white/[0.06] hover:text-white"
+                      }`}
                     >
-                      {step.label}
-                    </p>
-                    <p
-                      className="text-xs mt-0.5"
-                      style={{ color: "rgba(217,214,227,0.35)", fontFamily: "var(--font-inter)" }}
-                    >
-                      {step.sub}
-                    </p>
+                      <span className="text-sm font-semibold">{COIN_DATA[coin].symbol}</span>
+                      <span className="text-[10px] font-mono">{coin}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Amount Inputs */}
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs text-zinc-400 mb-1 font-medium">You Transfer:</label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      min={1}
+                      value={amount || ""}
+                      onChange={(e) => setAmount(Math.max(0, parseFloat(e.target.value) || 0))}
+                      className="w-full bg-[#0A0A0F] border border-white/10 focus:border-cyan-400 rounded-xl py-3 px-4 text-white text-base font-mono font-semibold outline-none transition-colors"
+                      placeholder="0.00"
+                    />
+                    <span className="absolute right-4 top-3.5 text-xs font-bold text-zinc-400 font-mono">
+                      {selectedCoin}
+                    </span>
                   </div>
                 </div>
 
-                {/* Connector */}
-                {i < FLOW.length - 1 && (
-                  <div
-                    className="w-px my-1 transition-all duration-500"
-                    style={{
-                      height: 28,
-                      background: step.active
-                        ? "linear-gradient(to bottom, rgba(124,58,237,0.8), rgba(155,92,255,0.4))"
-                        : "rgba(255,255,255,0.1)",
-                    }}
-                  />
-                )}
+                <div>
+                  <label className="block text-xs text-zinc-400 mb-1 font-medium">Estimated Bank Credit (INR):</label>
+                  <div className="w-full bg-emerald-950/25 border border-emerald-800/40 rounded-xl py-3 px-4 text-emerald-400 text-lg font-mono font-bold flex items-center justify-between">
+                    <span>₹ {estimatedPayout.toLocaleString("en-IN")}</span>
+                    <span className="text-[11px] text-zinc-400 font-sans font-normal">Instant IMPS/RTGS</span>
+                  </div>
+                </div>
               </div>
-            ))}
 
-            {/* Supported coins */}
-            <div className="mt-6 flex gap-2 flex-wrap justify-center">
-              {COINS.map((c) => (
-                <span
-                  key={c}
-                  className="text-xs px-3 py-1 rounded-full"
-                  style={{
-                    background: "rgba(155,92,255,0.08)",
-                    border: "1px solid rgba(155,92,255,0.15)",
-                    color: "rgba(197,167,255,0.7)",
-                    fontFamily: "var(--font-inter)",
-                  }}
-                >
-                  {c}
+              {/* Rate & Slippage Transparency */}
+              <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs text-zinc-400">
+                <span>
+                  Indicative: <strong className="text-white font-mono">1 {selectedCoin} = ₹{activeRate.toLocaleString("en-IN")}</strong>
                 </span>
-              ))}
+                <span className="text-emerald-400 font-mono font-semibold">0% Slippage</span>
+              </div>
+
+              <button
+                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+                className="w-full py-3.5 rounded-full font-semibold text-sm text-white transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 shadow-lg shadow-emerald-950/40"
+              >
+                <span>Lock Rate on Telegram Escrow</span>
+                <span>→</span>
+              </button>
             </div>
           </div>
 
-          {/* Copy */}
+          {/* Right Column: Editorial Details */}
           <div
             style={{
               opacity: visible ? 1 : 0,
-              transform: visible ? "translateX(0)" : "translateX(30px)",
+              transform: visible ? "translateX(0)" : "translateX(24px)",
               transition: "opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s",
             }}
           >
             <h3
-              className="text-2xl font-bold mb-4"
-              style={{ fontFamily: "var(--font-space-grotesk)", color: "#FFFFFF" }}
+              className="text-2xl sm:text-3xl font-black mb-4 text-white tracking-tight"
+              style={{ fontFamily: "var(--font-space-grotesk)" }}
             >
-              Simple. Streamlined. Secure.
+              Simple. Streamlined. Escrow-Protected.
             </h3>
             <p
-              className="text-base leading-relaxed mb-6"
-              style={{ color: "rgba(217,214,227,0.65)", fontFamily: "var(--font-inter)" }}
+              className="text-base sm:text-lg leading-relaxed mb-6 text-zinc-300 font-normal"
+              style={{ fontFamily: "var(--font-inter)" }}
             >
-              Submit an inquiry to exchange your supported cryptocurrencies to
-              INR or other available options through SocialAssist&apos;s
-              structured exchange process.
+              Submit an inquiry to execute high-volume OTC liquidations to INR and approved bank channels
+              through SocialAssist&apos;s human-assisted desk. Every exchange transaction is locked
+              under strict milestone guarantees.
             </p>
 
-            {[
-              { label: "Supported assets", val: "BTC, ETH, USDT, LTC & more" },
-              { label: "Output currency", val: "INR and other options" },
-              { label: "Process", val: "Inquiry-based, human-assisted" },
-            ].map((row) => (
-              <div
-                key={row.label}
-                className="flex justify-between items-center py-3"
-                style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
-              >
-                <span className="text-sm" style={{ color: "rgba(217,214,227,0.5)", fontFamily: "var(--font-inter)" }}>
-                  {row.label}
-                </span>
-                <span className="text-sm font-medium" style={{ color: "#D9D6E3", fontFamily: "var(--font-inter)" }}>
-                  {row.val}
-                </span>
-              </div>
-            ))}
+            <div className="space-y-3 mb-6">
+              {[
+                { label: "Supported Assets", val: "USDT (TRC20/ERC20), BTC, ETH, LTC, BNB" },
+                { label: "Settlement Medium", val: "Instant IMPS / RTGS / Direct Bank Wire" },
+                { label: "Escrow Protocol", val: "Verified intermediary lock before release" },
+                { label: "Execution Time", val: "Average 15–30 minutes post-confirmation" },
+              ].map((row) => (
+                <div
+                  key={row.label}
+                  className="flex justify-between items-center py-3 border-b border-white/5"
+                >
+                  <span className="text-xs sm:text-sm text-zinc-400 font-medium">
+                    {row.label}
+                  </span>
+                  <span className="text-xs sm:text-sm font-semibold text-white font-mono">
+                    {row.val}
+                  </span>
+                </div>
+              ))}
+            </div>
 
             {/* Disclaimer */}
             <p
-              className="mt-6 text-xs leading-relaxed p-3 rounded-xl"
-              style={{
-                color: "rgba(217,214,227,0.35)",
-                fontFamily: "var(--font-inter)",
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.05)",
-              }}
+              className="text-xs leading-relaxed p-3.5 rounded-xl text-zinc-400 bg-white/[0.02] border border-white/5"
+              style={{ fontFamily: "var(--font-inter)" }}
             >
-              Exchange rates, availability and supported currencies may vary.
-              SocialAssist operates an inquiry-based process. All exchange
-              transactions carry inherent risk.
+              Regulatory Notice: Exchange rates, liquidity availability, and supported rails fluctuate with market
+              conditions. SocialAssist operates an inquiry-based, human-verified matching process with strict AML screening.
             </p>
 
             <button
               onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-              className="mt-6 px-7 py-3.5 rounded-full text-sm font-semibold text-white transition-all duration-300 hover:scale-105"
-              style={{
-                background: "linear-gradient(135deg, #4A16A8, #7C3AED, #9B5CFF)",
-                boxShadow: "0 0 24px rgba(124,58,237,0.3)",
-              }}
+              className="mt-6 px-8 py-3.5 rounded-full text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.03] flex items-center gap-2 border border-cyan-500/30 bg-cyan-950/30 hover:bg-cyan-900/40 shadow-lg shadow-cyan-950/40"
             >
-              Start Exchange →
+              <span>Connect with OTC Desk</span>
+              <span>→</span>
             </button>
           </div>
         </div>

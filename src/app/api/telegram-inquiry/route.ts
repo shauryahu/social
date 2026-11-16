@@ -61,11 +61,17 @@ export async function POST(req: Request) {
       );
     }
 
-    // Target bot credentials
-    const botToken =
-      process.env.TELEGRAM_BOT_TOKEN ||
-      "8929359321:AAH93RhVaOjTwO1unV9m3JIfwq7g5NC-Vkg";
-    const chatId = process.env.TELEGRAM_CHAT_ID || "7330752212";
+    // Target bot credentials configured in .env.local
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+
+    if (!botToken || !chatId) {
+      console.error("[SocialAssist API] Telegram Bot credentials missing in environment variables.");
+      return NextResponse.json(
+        { error: "Inquiry service configuration error. Please contact via Telegram directly." },
+        { status: 500 }
+      );
+    }
 
     const servicesText =
       Array.isArray(selectedServices) && selectedServices.length > 0
@@ -117,7 +123,7 @@ ${customDetails}
       success: true,
       message: "Your inquiry has been delivered directly to our Telegram bot!",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Server Error sending Telegram inquiry:", error);
     return NextResponse.json(
       { error: "Internal server error processing inquiry." },

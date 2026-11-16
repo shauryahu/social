@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 const NAV_LINKS = [
   { label: "Services", href: "#services" },
   { label: "Platforms", href: "#platforms" },

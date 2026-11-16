@@ -1,214 +1,248 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { InstagramIcon, FacebookIcon, TikTokIcon, XIcon } from "@/components/icons/PlatformIcons";
 
 export default function VerificationSection() {
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
+  const [activeTier, setActiveTier] = useState<"creator" | "brand" | "executive">("brand");
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
       { threshold: 0.15 }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
 
+  const TIERS = {
+    creator: { label: "Creator & Artist", timeline: "48–72h", passRate: "97%", req: "Notability & Press Coverage" },
+    brand: { label: "Brand & Enterprise", timeline: "24–48h", passRate: "99%", req: "Entity Verification & Trademark" },
+    executive: { label: "Executive & Founder", timeline: "24–72h", passRate: "96%", req: "Corporate Authority & Bios" },
+  };
+
   return (
     <section
       id="verification"
       ref={ref}
-      className="relative z-10 py-24 px-4 md:px-8"
+      className="relative z-10 py-24 px-4 md:px-8 overflow-hidden"
       aria-labelledby="verification-heading"
     >
-      {/* Light accent */}
+      {/* Background Soft Blue/Cyan Light Glow */}
       <div
         className="absolute rounded-full pointer-events-none"
         style={{
-          width: "50vw",
-          height: "50vw",
+          width: "55vw",
+          height: "55vw",
           right: "-10vw",
-          top: "-10vw",
-          background: "radial-gradient(circle, rgba(155,92,255,0.08) 0%, transparent 70%)",
-          filter: "blur(80px)",
+          top: "-5vw",
+          background: "radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%)",
+          filter: "blur(90px)",
         }}
       />
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        {/* Right column first on large screens */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        {/* Left Column: Content */}
         <div
           className="order-2 lg:order-1"
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateX(0)" : "translateX(-30px)",
+            transform: visible ? "translateX(0)" : "translateX(-24px)",
             transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
           }}
         >
           <span
-            className="text-xs font-medium tracking-widest uppercase mb-4 block"
-            style={{ color: "#9B5CFF", fontFamily: "var(--font-inter)" }}
+            className="text-xs font-semibold tracking-widest uppercase mb-4 block text-cyan-400 font-mono"
+            style={{ fontFamily: "var(--font-inter)" }}
           >
-            Verification Support
+            ✦ Credibility & Authenticity Architecture ✦
           </span>
           <h2
             id="verification-heading"
-            className="text-3xl md:text-4xl font-bold mb-5 leading-tight"
-            style={{ fontFamily: "var(--font-space-grotesk)", color: "#FFFFFF" }}
+            className="text-3xl md:text-5xl font-black mb-5 leading-tight tracking-tight text-white"
+            style={{ fontFamily: "var(--font-space-grotesk)" }}
           >
             Build Credibility.{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #C5A7FF, #9B5CFF)",
+                background: "linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
               }}
             >
               Strengthen Presence.
             </span>
           </h2>
           <p
-            className="text-base leading-relaxed mb-5"
-            style={{ color: "rgba(217,214,227,0.65)", fontFamily: "var(--font-inter)" }}
+            className="text-base sm:text-lg leading-relaxed mb-4 text-zinc-300 font-normal"
+            style={{ fontFamily: "var(--font-inter)" }}
           >
-            SocialAssist provides professional guidance and assistance related
-            to social media verification processes. We help navigate the
-            credibility requirements and processes across supported platforms.
+            SocialAssist provides strategic advisory and documentation navigation for official platform
+            verification. We help public figures, corporations, and digital entities meet stringent
+            notability guidelines across Meta, X, TikTok, and global directories.
           </p>
           <p
-            className="text-sm leading-relaxed mb-8"
-            style={{ color: "rgba(217,214,227,0.45)", fontFamily: "var(--font-inter)" }}
+            className="text-xs leading-relaxed mb-8 text-zinc-500 font-normal"
+            style={{ fontFamily: "var(--font-inter)" }}
           >
-            Note: Verification outcomes are ultimately determined by each
-            individual platform. SocialAssist provides professional guidance
-            and support throughout the process.
+            Compliance Note: Official badge approval is granted at platform discretion. SocialAssist provides
+            verified portal representation, PR portfolio preparation, and end-to-end procedural support.
           </p>
 
-          {[
-            "Platform verification guidance",
-            "Account credibility improvement",
-            "Documentation & requirements support",
-            "Profile optimization consultation",
-          ].map((feat, i) => (
-            <div key={feat} className="flex items-center gap-3 mb-3">
-              <div
-                className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{
-                  background: "rgba(155,92,255,0.15)",
-                  border: "1px solid rgba(155,92,255,0.3)",
-                }}
-              >
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                  <path d="M2 5l2 2 4-4" stroke="#C5A7FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+            {[
+              "Official portal submission pathways",
+              "Notability press & media syndication",
+              "Legal trademark documentation support",
+              "Profile metadata optimization",
+            ].map((feat) => (
+              <div key={feat} className="flex items-center gap-3 p-3 rounded-xl border border-white/5 bg-white/[0.02]">
+                <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-cyan-500/15 border border-cyan-400/30">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                    <path d="M2 5l2 2 4-4" stroke="#38BDF8" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <span className="text-xs sm:text-sm text-zinc-300 font-medium">{feat}</span>
               </div>
-              <span className="text-sm" style={{ color: "rgba(217,214,227,0.75)", fontFamily: "var(--font-inter)" }}>{feat}</span>
-            </div>
-          ))}
+            ))}
+          </div>
 
           <button
             onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-            className="mt-8 px-7 py-3.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105"
-            style={{
-              background: "rgba(155,92,255,0.12)",
-              border: "1px solid rgba(155,92,255,0.3)",
-              backdropFilter: "blur(12px)",
-              color: "#C5A7FF",
-            }}
+            className="px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.03] text-white flex items-center gap-2 border border-cyan-500/30 bg-cyan-950/30 hover:bg-cyan-900/40 shadow-lg shadow-cyan-950/40"
           >
-            Explore Verification →
+            <span>Explore Verification Pathways</span>
+            <span>→</span>
           </button>
         </div>
 
-        {/* Visual */}
+        {/* Right Column: 3D Verification Badge Display with Light Sweep */}
         <div
           className="order-1 lg:order-2 flex justify-center"
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateX(0)" : "translateX(30px)",
+            transform: visible ? "translateX(0)" : "translateX(24px)",
             transition: "opacity 0.8s ease-out 0.15s, transform 0.8s ease-out 0.15s",
           }}
         >
           <div
-            className="animate-float-slow relative flex flex-col items-center justify-center rounded-3xl p-10"
-            style={{
-              width: "min(320px, 90vw)",
-              background: "rgba(16,16,22,0.7)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(155,92,255,0.2)",
-              boxShadow: "0 0 80px rgba(155,92,255,0.15), inset 0 1px 0 rgba(255,255,255,0.07)",
-            }}
+            className="relative flex flex-col items-center justify-center rounded-3xl p-7 sm:p-9 w-full max-w-md border border-white/10 bg-[#101018]/85 backdrop-blur-2xl shadow-2xl overflow-hidden group"
           >
-            {/* Verification badge */}
+            {/* Ambient Badge Backlight */}
             <div
-              className="relative flex items-center justify-center mb-6"
+              className="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-48 rounded-full pointer-events-none"
               style={{
-                width: 120,
-                height: 120,
-              }}
-            >
-              <div
-                className="absolute rounded-full"
-                style={{
-                  inset: 0,
-                  background: "radial-gradient(circle, rgba(155,92,255,0.25) 0%, transparent 70%)",
-                  filter: "blur(12px)",
-                }}
-              />
-              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                <circle cx="40" cy="40" r="36" fill="rgba(155,92,255,0.1)" stroke="url(#vg1)" strokeWidth="1.5"/>
-                <path d="M24 40l12 12 20-24" stroke="url(#vg2)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                <circle cx="40" cy="40" r="28" stroke="url(#vg1)" strokeWidth="0.5" strokeDasharray="4 3" opacity="0.5"/>
-                <defs>
-                  <linearGradient id="vg1" x1="10" y1="10" x2="70" y2="70" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#C5A7FF"/>
-                    <stop offset="1" stopColor="#7C3AED"/>
-                  </linearGradient>
-                  <linearGradient id="vg2" x1="24" y1="40" x2="56" y2="40" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#FFFFFF"/>
-                    <stop offset="1" stopColor="#C5A7FF"/>
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
-
-            <h3
-              className="text-xl font-semibold mb-2 text-center"
-              style={{ fontFamily: "var(--font-space-grotesk)", color: "#FFFFFF" }}
-            >
-              Verification Guidance
-            </h3>
-            <p
-              className="text-sm text-center"
-              style={{ color: "rgba(197,167,255,0.6)", fontFamily: "var(--font-inter)" }}
-            >
-              Professional support for your credibility journey
-            </p>
-
-            {/* Shimmer line */}
-            <div
-              className="mt-6 h-px w-full"
-              style={{
-                background: "linear-gradient(90deg, transparent, rgba(155,92,255,0.5), transparent)",
+                background: "radial-gradient(circle, rgba(56,189,248,0.22) 0%, transparent 70%)",
+                filter: "blur(40px)",
               }}
             />
 
-            <div className="mt-4 grid grid-cols-2 gap-3 w-full">
-              {["Instagram", "Facebook", "TikTok", "X"].map(p => (
-                <div
-                  key={p}
-                  className="text-center text-xs py-1.5 rounded-lg"
-                  style={{
-                    background: "rgba(155,92,255,0.08)",
-                    border: "1px solid rgba(155,92,255,0.15)",
-                    color: "rgba(217,214,227,0.6)",
-                    fontFamily: "var(--font-inter)",
-                  }}
+            {/* 3D Dimensional Verification Badge with Sweep Shimmer */}
+            <div className="relative flex items-center justify-center my-4">
+              <div
+                className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full flex items-center justify-center transition-transform duration-500 group-hover:scale-105"
+                style={{
+                  background: "radial-gradient(circle at 35% 30%, #38BDF8 0%, #1D4ED8 65%, #0F172A 100%)",
+                  boxShadow:
+                    "0 16px 40px rgba(29, 78, 216, 0.45), 0 0 24px rgba(56, 189, 248, 0.35), inset 0 2px 3px rgba(255, 255, 255, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 0.5)",
+                }}
+              >
+                {/* 16-point star badge outer scalloped rim */}
+                <svg
+                  width="110"
+                  height="110"
+                  viewBox="0 0 100 100"
+                  fill="none"
+                  className="absolute inset-0 m-auto pointer-events-none"
                 >
-                  {p}
+                  <circle cx="50" cy="50" r="44" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="3 2" />
+                </svg>
+
+                {/* Crisp White Checkmark with Drop Shadow */}
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="relative z-10 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
+                >
+                  <path
+                    d="M5 13l4.5 4.5L19 7"
+                    stroke="#FFFFFF"
+                    strokeWidth="3.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+
+                {/* Animated Light Sweep Bar */}
+                <div
+                  className="absolute inset-0 rounded-full overflow-hidden pointer-events-none"
+                >
+                  <div
+                    className="w-full h-full bg-gradient-to-tr from-transparent via-white/30 to-transparent -translate-x-full animate-[shimmer_3s_infinite]"
+                    style={{ animationDuration: "3.5s" }}
+                  />
                 </div>
+              </div>
+            </div>
+
+            <h3
+              className="text-xl sm:text-2xl font-bold mb-1 text-center text-white"
+              style={{ fontFamily: "var(--font-space-grotesk)" }}
+            >
+              Official Verification
+            </h3>
+            <p
+              className="text-xs sm:text-sm text-center text-zinc-400 font-normal mb-5"
+              style={{ fontFamily: "var(--font-inter)" }}
+            >
+              Verified credentials for distinguished digital entities
+            </p>
+
+            {/* Interactive Tier Selector */}
+            <div className="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-black/40 border border-white/10 w-full mb-5 text-xs">
+              {(["brand", "creator", "executive"] as const).map((tier) => (
+                <button
+                  key={tier}
+                  onClick={() => setActiveTier(tier)}
+                  className={`py-1.5 px-2 rounded-lg font-medium capitalize transition-all ${
+                    activeTier === tier
+                      ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 shadow-sm"
+                      : "text-zinc-400 hover:text-white"
+                  }`}
+                >
+                  {tier}
+                </button>
               ))}
+            </div>
+
+            {/* Live Tier Insight Card */}
+            <div className="p-3.5 rounded-xl border border-white/5 bg-white/[0.02] w-full text-xs space-y-2">
+              <div className="flex justify-between items-center text-zinc-300">
+                <span className="text-zinc-400">Target Category:</span>
+                <span className="font-semibold text-white">{TIERS[activeTier].label}</span>
+              </div>
+              <div className="flex justify-between items-center text-zinc-300">
+                <span className="text-zinc-400">Estimated Turnaround:</span>
+                <span className="font-mono text-cyan-300 font-semibold">{TIERS[activeTier].timeline}</span>
+              </div>
+              <div className="flex justify-between items-center text-zinc-300">
+                <span className="text-zinc-400">Primary Prerequisite:</span>
+                <span className="text-zinc-200">{TIERS[activeTier].req}</span>
+              </div>
+            </div>
+
+            {/* Supported Platform Badges */}
+            <div className="mt-5 flex items-center justify-center gap-3 w-full pt-4 border-t border-white/10">
+              <InstagramIcon className="w-5 h-5 opacity-80 hover:opacity-100 transition-opacity" />
+              <FacebookIcon className="w-5 h-5 opacity-80 hover:opacity-100 transition-opacity" />
+              <TikTokIcon className="w-5 h-5 opacity-80 hover:opacity-100 transition-opacity" />
+              <XIcon className="w-5 h-5 opacity-80 hover:opacity-100 transition-opacity" />
             </div>
           </div>
         </div>

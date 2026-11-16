@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 
 export default function LoadingScreen({
   onComplete,
@@ -10,7 +9,11 @@ export default function LoadingScreen({
 }) {
   const [phase, setPhase] = useState<"glow" | "logo" | "bar" | "done">("glow");
   const onCompleteRef = useRef(onComplete);
-  onCompleteRef.current = onComplete;
+
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
   const startedRef = useRef(false);
 
   useEffect(() => {

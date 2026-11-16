@@ -1,143 +1,162 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { InstagramIcon, FacebookIcon, TikTokIcon, WhatsAppIcon, XIcon } from "@/components/icons/PlatformIcons";
 
 export default function AccountAssistance() {
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
+  const [activeStage, setActiveStage] = useState<0 | 1 | 2>(1);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
       { threshold: 0.15 }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
 
+  const STAGES = [
+    {
+      title: "Suspension / Lockout",
+      badge: "Incident Flagged",
+      color: "#EF4444",
+      desc: "Account disabled for alleged TOC, 180-day appeal lockout, or 2FA takeover.",
+      metrics: "Access: 0% · Status: Disabled",
+    },
+    {
+      title: "Direct Network Escalation",
+      badge: "In Protocol",
+      color: "#38BDF8",
+      desc: "Submitting verified case file via dedicated representative portals without passwords.",
+      metrics: "Audit: Passed · Turnaround: 24-48h",
+    },
+    {
+      title: "Restoration & Fortification",
+      badge: "Resolved",
+      color: "#10B981",
+      desc: "Full administrative access recovered, security keys refreshed, and profile safeguarded.",
+      metrics: "Access: 100% · Status: Active",
+    },
+  ];
+
   return (
     <section
       id="account-assistance"
       ref={ref}
-      className="relative z-10 py-24 px-4 md:px-8"
+      className="relative z-10 py-24 px-4 md:px-8 overflow-hidden"
       aria-labelledby="account-heading"
     >
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      {/* Background Soft Blue/Indigo Glow */}
+      <div
+        className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[55vw] max-w-[800px] h-[500px] pointer-events-none rounded-full"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, rgba(37, 99, 235, 0.08) 0%, rgba(99, 102, 241, 0.05) 50%, transparent 70%)",
+          filter: "blur(90px)",
+        }}
+      />
 
-        {/* Left — Visual */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        {/* Left — 3D Interactive Restoration Interface */}
         <div
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateX(0)" : "translateX(-30px)",
+            transform: visible ? "translateX(0)" : "translateX(-24px)",
             transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
           }}
         >
-          <div
-            className="relative rounded-2xl overflow-hidden"
-            style={{
-              background: "rgba(16,16,22,0.7)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              boxShadow: "0 0 60px rgba(74,22,168,0.2), inset 0 1px 0 rgba(255,255,255,0.06)",
-            }}
-          >
-            {/* Mock browser frame */}
-            <div
-              className="flex items-center gap-2 px-4 py-3"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
-            >
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#FF5F57" }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#FFBD2E" }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#28CA42" }} />
-              <div
-                className="ml-3 flex-1 rounded-md px-3 py-1 text-xs"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                  color: "rgba(197,167,255,0.4)",
-                  fontFamily: "var(--font-inter)",
-                }}
-              >
-                Account Recovery · SocialAssist
+          <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-[#101018]/85 backdrop-blur-2xl shadow-2xl">
+            {/* Window Chrome Header */}
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/10 bg-white/[0.02]">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
+                <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
+                <div className="w-2.5 h-2.5 rounded-full bg-[#28CA42]" />
+              </div>
+              <div className="text-[11px] font-mono text-zinc-400 bg-white/5 px-3 py-1 rounded-md border border-white/5">
+                SocialAssist · Case Recovery Engine v2.0
               </div>
             </div>
 
-            {/* Illustrated problem→solution visual */}
-            <div className="p-8">
-              {/* Problem state */}
-              <div
-                className="rounded-xl p-5 mb-4"
-                style={{
-                  background: "rgba(255,80,80,0.06)",
-                  border: "1px solid rgba(255,80,80,0.15)",
-                }}
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: "rgba(255,80,80,0.15)" }}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M8 2v6M8 11v1" stroke="#FF5050" strokeWidth="2" strokeLinecap="round"/>
-                      <circle cx="8" cy="8" r="6.5" stroke="#FF5050" strokeWidth="1.5"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium" style={{ color: "#FF7070", fontFamily: "var(--font-inter)" }}>Account Disabled</p>
-                    <p className="text-xs mt-0.5" style={{ color: "rgba(255,112,112,0.6)", fontFamily: "var(--font-inter)" }}>Access restricted by platform</p>
-                  </div>
-                </div>
-                <div className="space-y-1.5">
-                  {["Suspended profile", "No login access", "Content unavailable"].map(item => (
-                    <div key={item} className="flex items-center gap-2 text-xs" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-inter)" }}>
-                      <span style={{ color: "#FF5050" }}>×</span> {item}
-                    </div>
-                  ))}
-                </div>
+            <div className="p-6 sm:p-8 space-y-6">
+              {/* Problem to Solution Stage Selector */}
+              <div className="flex items-center justify-between text-xs text-zinc-400 font-mono">
+                <span>Recovery Progression:</span>
+                <span className="text-cyan-400 font-bold">Stage 0{activeStage + 1} of 03</span>
               </div>
 
-              {/* Arrow */}
-              <div className="flex items-center justify-center my-2">
-                <div
-                  className="flex flex-col items-center gap-1"
-                  style={{ color: "#9B5CFF" }}
-                >
-                  <div className="w-px h-5" style={{ background: "linear-gradient(to bottom, rgba(155,92,255,0.3), rgba(155,92,255,0.8))" }} />
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path d="M6 2v8M2 8l4 4 4-4" stroke="#9B5CFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  <span className="text-[10px] font-medium tracking-wider uppercase" style={{ color: "#9B5CFF", fontFamily: "var(--font-inter)" }}>SocialAssist</span>
-                  <div className="w-px h-5" style={{ background: "linear-gradient(to bottom, rgba(155,92,255,0.8), rgba(155,92,255,0.3))" }} />
-                </div>
+              <div className="grid grid-cols-3 gap-2">
+                {STAGES.map((s, idx) => (
+                  <button
+                    key={s.title}
+                    onClick={() => setActiveStage(idx as 0 | 1 | 2)}
+                    className={`p-2.5 rounded-xl border text-left transition-all ${
+                      activeStage === idx
+                        ? "bg-white/10 border-white/30 shadow-md"
+                        : "bg-white/[0.02] border-white/5 text-zinc-500 hover:text-zinc-300 hover:border-white/15"
+                    }`}
+                  >
+                    <div className="text-[10px] font-mono text-zinc-400">Step 0{idx + 1}</div>
+                    <div className="text-xs font-semibold text-white mt-0.5 truncate">{s.title}</div>
+                  </button>
+                ))}
               </div>
 
-              {/* Solution state */}
+              {/* Active Stage Simulation Card */}
               <div
-                className="rounded-xl p-5"
+                className="p-5 rounded-2xl border transition-all duration-300 relative overflow-hidden"
                 style={{
-                  background: "rgba(155,92,255,0.06)",
-                  border: "1px solid rgba(124,58,237,0.2)",
+                  background:
+                    activeStage === 0
+                      ? "rgba(239, 68, 68, 0.06)"
+                      : activeStage === 1
+                      ? "rgba(56, 189, 248, 0.08)"
+                      : "rgba(16, 185, 129, 0.08)",
+                  borderColor:
+                    activeStage === 0
+                      ? "rgba(239, 68, 68, 0.25)"
+                      : activeStage === 1
+                      ? "rgba(56, 189, 248, 0.3)"
+                      : "rgba(16, 185, 129, 0.3)",
                 }}
               >
-                <div className="flex items-center gap-3 mb-3">
-                  <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: "rgba(124,58,237,0.2)" }}
+                <div className="flex items-center justify-between mb-3">
+                  <span
+                    className="text-xs px-2.5 py-0.5 rounded-full font-mono font-semibold"
+                    style={{
+                      background: `${STAGES[activeStage].color}20`,
+                      color: STAGES[activeStage].color,
+                      border: `1px solid ${STAGES[activeStage].color}40`,
+                    }}
                   >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M3 8l4 4 6-7" stroke="#C5A7FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium" style={{ color: "#C5A7FF", fontFamily: "var(--font-inter)" }}>Access Restored</p>
-                    <p className="text-xs mt-0.5" style={{ color: "rgba(197,167,255,0.6)", fontFamily: "var(--font-inter)" }}>Account successfully recovered</p>
-                  </div>
+                    {STAGES[activeStage].badge}
+                  </span>
+                  <span className="text-xs font-mono text-zinc-400">
+                    {STAGES[activeStage].metrics}
+                  </span>
                 </div>
-                <div className="space-y-1.5">
-                  {["Profile restored", "Content accessible", "Account secured"].map(item => (
-                    <div key={item} className="flex items-center gap-2 text-xs" style={{ color: "rgba(255,255,255,0.6)", fontFamily: "var(--font-inter)" }}>
-                      <span style={{ color: "#9B5CFF" }}>✓</span> {item}
-                    </div>
-                  ))}
+
+                <h4 className="text-base font-bold text-white mb-1.5" style={{ fontFamily: "var(--font-space-grotesk)" }}>
+                  {STAGES[activeStage].title}
+                </h4>
+                <p className="text-xs text-zinc-300 leading-relaxed font-normal" style={{ fontFamily: "var(--font-inter)" }}>
+                  {STAGES[activeStage].desc}
+                </p>
+              </div>
+
+              {/* Supported Platforms Strip */}
+              <div className="pt-2 border-t border-white/10 flex items-center justify-between">
+                <span className="text-[11px] text-zinc-400 font-mono">Covered Channels:</span>
+                <div className="flex items-center gap-2.5">
+                  <InstagramIcon className="w-4 h-4 opacity-75" />
+                  <FacebookIcon className="w-4 h-4 opacity-75" />
+                  <TikTokIcon className="w-4 h-4 opacity-75" />
+                  <WhatsAppIcon className="w-4 h-4 opacity-75" />
+                  <XIcon className="w-4 h-4 opacity-75" />
                 </div>
               </div>
             </div>
@@ -148,80 +167,73 @@ export default function AccountAssistance() {
         <div
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateX(0)" : "translateX(30px)",
+            transform: visible ? "translateX(0)" : "translateX(24px)",
             transition: "opacity 0.8s ease-out 0.15s, transform 0.8s ease-out 0.15s",
           }}
         >
           <span
-            className="text-xs font-medium tracking-widest uppercase mb-4 block"
-            style={{ color: "#9B5CFF", fontFamily: "var(--font-inter)" }}
+            className="text-xs font-semibold tracking-widest uppercase mb-4 block text-cyan-400 font-mono"
+            style={{ fontFamily: "var(--font-inter)" }}
           >
-            Account Assistance
+            ✦ Rapid Account Restoration Protocol ✦
           </span>
           <h2
             id="account-heading"
-            className="text-3xl md:text-4xl font-bold mb-5 leading-tight"
-            style={{ fontFamily: "var(--font-space-grotesk)", color: "#FFFFFF" }}
+            className="text-3xl md:text-5xl font-black mb-5 leading-tight tracking-tight text-white"
+            style={{ fontFamily: "var(--font-space-grotesk)" }}
           >
             When Access Stops,{" "}
             <span
               style={{
-                background: "linear-gradient(135deg, #C5A7FF, #9B5CFF)",
+                background: "linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
               }}
             >
               Assistance Starts.
             </span>
           </h2>
           <p
-            className="text-base leading-relaxed mb-5"
-            style={{ color: "rgba(217,214,227,0.65)", fontFamily: "var(--font-inter)" }}
+            className="text-base sm:text-lg leading-relaxed mb-4 text-zinc-300 font-normal"
+            style={{ fontFamily: "var(--font-inter)" }}
           >
-            SocialAssist provides specialized support for users facing account
-            restrictions, suspensions, disabled profiles, and other
-            platform-related access issues across Instagram, Facebook, TikTok,
-            WhatsApp, and more.
+            SocialAssist provides specialized escalation for creators, brands, and public figures facing
+            account restrictions, unfair suspensions, disabled profiles, and compromised access across
+            Instagram, Facebook, TikTok, WhatsApp, and X.
           </p>
           <p
-            className="text-base leading-relaxed mb-8"
-            style={{ color: "rgba(217,214,227,0.5)", fontFamily: "var(--font-inter)" }}
+            className="text-sm leading-relaxed mb-8 text-zinc-400 font-normal"
+            style={{ fontFamily: "var(--font-inter)" }}
           >
-            Whether your account has been compromised, incorrectly flagged, or
-            locked out — our network provides a structured path toward
-            resolution.
+            Whether your account has been breached by malicious actors, disabled through automated bot false-positives,
+            or locked in a 180-day appeal loop — our internal rep channels navigate the direct appeals process.
           </p>
 
           {/* Feature list */}
-          {[
-            "Disabled & restricted accounts",
-            "Compromised account recovery",
-            "Suspension & ban support",
-            "Impersonation & identity issues",
-          ].map((feat) => (
-            <div key={feat} className="flex items-center gap-3 mb-3">
-              <div
-                className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{ background: "rgba(124,58,237,0.2)", border: "1px solid rgba(124,58,237,0.3)" }}
-              >
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                  <path d="M2 5l2 2 4-4" stroke="#C5A7FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+            {[
+              "Disabled & restricted account appeals",
+              "Hacked & compromised profile recovery",
+              "Permanent 180-day suspension relief",
+              "2FA device lockout resolution",
+            ].map((feat) => (
+              <div key={feat} className="flex items-center gap-3 p-3 rounded-xl border border-white/5 bg-white/[0.02]">
+                <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 bg-cyan-500/15 border border-cyan-400/30">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                    <path d="M2 5l2 2 4-4" stroke="#38BDF8" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <span className="text-xs sm:text-sm text-zinc-300 font-medium">{feat}</span>
               </div>
-              <span className="text-sm" style={{ color: "rgba(217,214,227,0.75)", fontFamily: "var(--font-inter)" }}>{feat}</span>
-            </div>
-          ))}
+            ))}
+          </div>
 
           <button
             onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-            className="mt-8 px-7 py-3.5 rounded-full text-sm font-semibold text-white transition-all duration-300 hover:scale-105"
-            style={{
-              background: "linear-gradient(135deg, #4A16A8, #7C3AED, #9B5CFF)",
-              boxShadow: "0 0 24px rgba(124,58,237,0.3)",
-            }}
+            className="px-8 py-3.5 rounded-full text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.03] flex items-center gap-2 border border-cyan-500/30 bg-cyan-950/30 hover:bg-cyan-900/40 shadow-lg shadow-cyan-950/40"
           >
-            Get Assistance →
+            <span>Request Account Assistance</span>
+            <span>→</span>
           </button>
         </div>
       </div>

@@ -15,7 +15,6 @@ import CryptoExchange from "@/components/sections/CryptoExchange";
 import AutomatedAds from "@/components/sections/AutomatedAds";
 import AboutSection from "@/components/sections/AboutSection";
 import ChannelShowcase from "@/components/sections/ChannelShowcase";
-import TelegramInquiry from "@/components/sections/TelegramInquiry";
 import FinalCTA from "@/components/sections/FinalCTA";
 import Footer from "@/components/sections/Footer";
 
