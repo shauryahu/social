@@ -290,20 +290,24 @@ export default function AnimatedStatistics() {
           Morphs smoothly on click with Louis Studios glow, Steffen curve, peak dot, and period selector
         */}
         <div className="flex flex-col items-center">
-          {/* Outer White Container with Mathematically Equal Spacing on all 4 Sides */}
+          {/* Outer White Container with Mathematically Equal Spacing and Concentric Pillowy Rounded Corners */}
           <div
             data-stat-chart-card=""
-            className={`relative rounded-3xl border backdrop-blur-2xl flex items-center justify-center overflow-hidden p-4 sm:p-5 ${
+            className={`relative border backdrop-blur-2xl flex items-center justify-center overflow-hidden p-4 sm:p-5 rounded-[48px] sm:rounded-[58px] md:rounded-[60px] ${
               isLight
                 ? "border-slate-200/90 bg-white/95 shadow-2xl shadow-slate-200/80"
                 : "border-white/10 bg-[#070B14]/90 shadow-2xl shadow-black/80"
             }`}
-            style={{ boxSizing: "border-box" }}
+            style={{
+              boxSizing: "border-box",
+              borderRadius: `${Math.round((56 * chartWidth) / 540 + (chartWidth <= 320 ? 16 : 20))}px`,
+            }}
           >
-            {/* Subtle Dynamic Ambient Glow — Centered at 50% 50% for True Vertical/Horizontal Symmetry */}
+            {/* Subtle Dynamic Ambient Glow — Centered with matching inherited radius */}
             <div
-              className="absolute inset-0 pointer-events-none rounded-3xl transition-all duration-700"
+              className="absolute inset-0 pointer-events-none transition-all duration-700"
               style={{
+                borderRadius: "inherit",
                 background: `radial-gradient(circle at 50% 50%, ${activeStat.accent}18 0%, transparent 70%)`,
               }}
             />
