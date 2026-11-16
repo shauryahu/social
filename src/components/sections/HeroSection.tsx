@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CinematicLaptop from "@/components/3d/CinematicLaptop";
+import Hero3DBackground from "@/components/3d/Hero3DBackground";
 
 export default function HeroSection() {
   const [visible, setVisible] = useState(false);
@@ -24,6 +25,9 @@ export default function HeroSection() {
       className="relative min-h-screen flex flex-col items-center justify-start pt-32 sm:pt-36 pb-20 px-4 md:px-8 overflow-hidden"
       aria-labelledby="hero-heading"
     >
+      {/* ── Large Immersive 3D Background Elements ── */}
+      <Hero3DBackground />
+
       {/* Background Cinematic Atmosphere: Soft Metallic Blue & Midnight Glow */}
       <div
         className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85vw] max-w-[1200px] h-[500px] pointer-events-none rounded-full"

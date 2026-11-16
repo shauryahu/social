@@ -13,6 +13,7 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "SocialAssist-Original-Backup/**",
+    "SocialAssist-2.0-Backup/**",
   ]),
 ]);
 

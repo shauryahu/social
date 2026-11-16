@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { InstagramIcon, FacebookIcon, TikTokIcon, XIcon } from "@/components/icons/PlatformIcons";
 
 export default function VerificationSection() {
@@ -46,21 +47,49 @@ export default function VerificationSection() {
       />
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-        {/* Left Column: Content */}
+        {/* Left Column: Content with AUTHORITATIVE OFFICIAL VERIFICATION LOGO */}
         <div
-          className="order-2 lg:order-1"
+          className="order-2 lg:order-1 flex flex-col items-center lg:items-start text-center lg:text-left"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateX(0)" : "translateX(-24px)",
             transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
           }}
         >
+          {/* 
+            OFFICIAL VERIFICATION LOGO
+            Placed directly and centrally above 'Official Verification in'
+            Using exact user-provided authoritative 3D PNG asset
+          */}
+          <div className="flex items-center justify-center lg:justify-start mb-5">
+            <div className="relative inline-block">
+              {/* Subtle Ambient Glow */}
+              <div
+                className="absolute inset-0 rounded-full pointer-events-none"
+                style={{
+                  background: "radial-gradient(circle, rgba(56, 189, 248, 0.4) 0%, rgba(37, 99, 235, 0.15) 50%, transparent 75%)",
+                  filter: "blur(24px)",
+                }}
+              />
+              <Image
+                src="/images/official-verification-badge.png"
+                alt="Official Verification Badge"
+                width={120}
+                height={120}
+                priority
+                className="relative z-10 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 object-contain drop-shadow-[0_16px_32px_rgba(29,78,216,0.45)] transition-transform duration-500 hover:scale-105"
+              />
+            </div>
+          </div>
+
+          {/* Mandatory Exact Headings: "Official Verification in" followed by "Build Credibility. Strengthen Presence." */}
           <span
-            className="text-xs font-semibold tracking-widest uppercase mb-4 block text-cyan-400 font-mono"
+            className="text-xs sm:text-sm font-semibold tracking-widest uppercase mb-3 block text-cyan-400 font-mono"
             style={{ fontFamily: "var(--font-inter)" }}
           >
-            ✦ Credibility & Authenticity Architecture ✦
+            Official Verification in
           </span>
+
           <h2
             id="verification-heading"
             className="text-3xl md:text-5xl font-black mb-5 leading-tight tracking-tight text-white"
@@ -77,23 +106,25 @@ export default function VerificationSection() {
               Strengthen Presence.
             </span>
           </h2>
+
           <p
-            className="text-base sm:text-lg leading-relaxed mb-4 text-zinc-300 font-normal"
+            className="text-base sm:text-lg leading-relaxed mb-4 text-zinc-300 font-normal max-w-xl"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             SocialAssist provides strategic advisory and documentation navigation for official platform
             verification. We help public figures, corporations, and digital entities meet stringent
             notability guidelines across Meta, X, TikTok, and global directories.
           </p>
+
           <p
-            className="text-xs leading-relaxed mb-8 text-zinc-500 font-normal"
+            className="text-xs leading-relaxed mb-8 text-zinc-500 font-normal max-w-xl"
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Compliance Note: Official badge approval is granted at platform discretion. SocialAssist provides
             verified portal representation, PR portfolio preparation, and end-to-end procedural support.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8 w-full max-w-xl text-left">
             {[
               "Official portal submission pathways",
               "Notability press & media syndication",
@@ -120,7 +151,7 @@ export default function VerificationSection() {
           </button>
         </div>
 
-        {/* Right Column: 3D Verification Badge Display with Light Sweep */}
+        {/* Right Column: 3D Interactive Credibility Showcase with Authoritative Badge */}
         <div
           className="order-1 lg:order-2 flex justify-center"
           style={{
@@ -141,53 +172,16 @@ export default function VerificationSection() {
               }}
             />
 
-            {/* 3D Dimensional Verification Badge with Sweep Shimmer */}
+            {/* Central Badge Presentation using Official PNG */}
             <div className="relative flex items-center justify-center my-4">
-              <div
-                className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full flex items-center justify-center transition-transform duration-500 group-hover:scale-105"
-                style={{
-                  background: "radial-gradient(circle at 35% 30%, #38BDF8 0%, #1D4ED8 65%, #0F172A 100%)",
-                  boxShadow:
-                    "0 16px 40px rgba(29, 78, 216, 0.45), 0 0 24px rgba(56, 189, 248, 0.35), inset 0 2px 3px rgba(255, 255, 255, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 0.5)",
-                }}
-              >
-                {/* 16-point star badge outer scalloped rim */}
-                <svg
-                  width="110"
-                  height="110"
-                  viewBox="0 0 100 100"
-                  fill="none"
-                  className="absolute inset-0 m-auto pointer-events-none"
-                >
-                  <circle cx="50" cy="50" r="44" stroke="rgba(255,255,255,0.3)" strokeWidth="1" strokeDasharray="3 2" />
-                </svg>
-
-                {/* Crisp White Checkmark with Drop Shadow */}
-                <svg
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="relative z-10 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
-                >
-                  <path
-                    d="M5 13l4.5 4.5L19 7"
-                    stroke="#FFFFFF"
-                    strokeWidth="3.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-
-                {/* Animated Light Sweep Bar */}
-                <div
-                  className="absolute inset-0 rounded-full overflow-hidden pointer-events-none"
-                >
-                  <div
-                    className="w-full h-full bg-gradient-to-tr from-transparent via-white/30 to-transparent -translate-x-full animate-[shimmer_3s_infinite]"
-                    style={{ animationDuration: "3.5s" }}
-                  />
-                </div>
+              <div className="relative w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+                <Image
+                  src="/images/official-verification-badge.png"
+                  alt="SocialAssist Official Verification"
+                  width={140}
+                  height={140}
+                  className="w-full h-full object-contain drop-shadow-[0_12px_28px_rgba(37,99,235,0.5)]"
+                />
               </div>
             </div>
 
@@ -195,13 +189,13 @@ export default function VerificationSection() {
               className="text-xl sm:text-2xl font-bold mb-1 text-center text-white"
               style={{ fontFamily: "var(--font-space-grotesk)" }}
             >
-              Official Verification
+              Authoritative Verification
             </h3>
             <p
               className="text-xs sm:text-sm text-center text-zinc-400 font-normal mb-5"
               style={{ fontFamily: "var(--font-inter)" }}
             >
-              Verified credentials for distinguished digital entities
+              Certified presence across Meta, X, TikTok and global platforms
             </p>
 
             {/* Interactive Tier Selector */}
