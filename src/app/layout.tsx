@@ -109,8 +109,29 @@ export default function RootLayout({
             }),
           }}
         />
+        {/* Google Translate Integration for Real-Time Multi-Language Support */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              function googleTranslateElementInit() {
+                if (window.google && window.google.translate) {
+                  new window.google.translate.TranslateElement({
+                    pageLanguage: 'en',
+                    includedLanguages: 'en,zh-CN,zh-TW,ja,es,fr,pt,ko,ru,tr,id,de,fa',
+                    autoDisplay: false
+                  }, 'google_translate_element');
+                }
+              }
+            `,
+          }}
+        />
+        <script
+          src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+          async
+        />
       </head>
       <body className="min-h-screen antialiased overflow-x-hidden transition-colors duration-300">
+        <div id="google_translate_element" style={{ display: "none" }} />
         <ThemeProvider>
           {children}
         </ThemeProvider>

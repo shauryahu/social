@@ -17,6 +17,7 @@ import AboutSection from "@/components/sections/AboutSection";
 import ChannelShowcase from "@/components/sections/ChannelShowcase";
 import FinalCTA from "@/components/sections/FinalCTA";
 import Footer from "@/components/sections/Footer";
+import LanguageSelectorDropdown from "@/components/ui/language-selector-dropdown";
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
@@ -50,6 +51,11 @@ export default function Home() {
         </main>
 
         <Footer />
+      </div>
+
+      {/* Floating Bottom-Left Language Selector Dropdown */}
+      <div className="fixed bottom-4 sm:bottom-6 left-4 sm:left-6 z-40">
+        <LanguageSelectorDropdown menuDirection="up" />
       </div>
     </>
   );
