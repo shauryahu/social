@@ -408,7 +408,7 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
 
       const p = progressRef.current;
 
-      // ── 2. Seamless Milestone Content Layer Updates (NO clipping lines, NO excessive blur) ──
+      // ── 2. Seamless Milestone Content Layer Updates with Cinematic Motion Blur ──
       for (let i = 0; i < 4; i++) {
         const layer = milestoneLayersRef.current[i];
         if (!layer) continue;
@@ -421,18 +421,22 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
           layer.style.opacity = "0";
           layer.style.visibility = "hidden";
           layer.style.pointerEvents = "none";
+          layer.style.filter = "none";
         } else {
-          // Smooth depth movement and progressive opacity (Apple style)
+          // Smooth depth movement, progressive opacity, and cinematic blur-to-sharp transition
           layer.style.visibility = "visible";
           layer.style.pointerEvents = absDelta < 0.5 ? "auto" : "none";
 
-          const translateY = -delta * 38; // smooth 38px travel
-          const scale = 1.0 - absDelta * 0.035; // gentle 0.965 to 1.0 depth
-          const opacity = Math.max(0, 1.0 - absDelta);
+          const translateY = -delta * 44; // smooth 44px travel
+          const scale = 1.0 - absDelta * 0.04; // subtle 0.96 to 1.0 depth
+          const opacity = Math.max(0, 1.0 - absDelta * 1.05);
+
+          // Motion blur: exactly 0px when settled, progressively blurred up to 5.5px during transit
+          const blurAmount = absDelta * 5.5;
 
           layer.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`;
           layer.style.opacity = opacity.toFixed(3);
-          layer.style.filter = "none"; // Clean crisp text, zero blur clipping artifacts
+          layer.style.filter = blurAmount > 0.08 ? `blur(${blurAmount.toFixed(2)}px)` : "none";
         }
       }
 
@@ -778,6 +782,12 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
                   opacity: idx === 0 ? 1 : 0,
                   transform: "none",
                   pointerEvents: idx === 0 ? "auto" : "none",
+                  padding: "24px 0",
+                  margin: "-24px 0",
+                  background: "transparent",
+                  border: "none",
+                  outline: "none",
+                  boxShadow: "none",
                 }}
               >
                 <MilestoneCardContent item={item} isLight={isLight} />
