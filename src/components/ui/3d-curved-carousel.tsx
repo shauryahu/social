@@ -101,9 +101,20 @@ const FRAG =
   "c=mix(vec3(.08,.08,.10),c,uReady);" +
   "c*=1.-.35*min(1.,vX*vX);" +
   "float mid=smoothstep(.40,0.,abs(vX));" +
+  "if(mid>0.001){" +
+  "vec3 cWhite=vec3(1.,1.,1.);" +
+  "vec3 cLavender=vec3(.929,.898,1.);" +
+  "vec3 cViolet=vec3(.788,.710,1.);" +
+  "float dist=length((vUv-vec2(.5,.42))*vec2(1.,1.1));" +
+  "vec3 studioLight=mix(cLavender,cViolet,clamp(dist*.7,0.,1.));" +
+  "c=1.-(1.-c)*(1.-studioLight*(.18*mid));" +
+  "float lum=dot(c,vec3(.299,.587,.114));" +
+  "vec3 bloomLight=mix(cLavender,cWhite,lum);" +
+  "c+=bloomLight*(.05+.09*lum)*mid;" +
+  "}" +
   "float d=box((vUv-.5)*uSize,uSize*.5,18.);" +
   "float rim=smoothstep(-2.5,0.,d);" +
-  "c+=rim*.14*mix(vec3(.88,.90,.98),vec3(1.),mid);" +
+  "c+=rim*.12*mix(vec3(.88,.90,.98),vec3(1.),mid);" +
   "float al=smoothstep(.75,-.75,d)*uIntro;" +
   "gl_FragColor=vec4(c*al,al);}"
 
