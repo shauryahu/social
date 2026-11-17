@@ -62,7 +62,7 @@ export function springStep(pos: number, vel: number, target: number, dt: number,
 
 /** Card size in px for a stage of w × h: portrait cards, smaller share of a wide stage. */
 export function cardSize(w: number, h: number): [number, number] {
-  const cw = Math.min(w < 640 ? w * 0.52 : w * 0.20, h * 0.32)
+  const cw = Math.min(w < 640 ? w * 0.46 : w * 0.20, h * 0.32)
   return [Math.round(cw), Math.round(cw * 1.25)]
 }
 
@@ -96,27 +96,15 @@ const FRAG =
   "float a=uSize.x/uSize.y;vec2 uv=vUv;" +
   "if(uAspect>a)uv.x=(vUv.x-.5)*(a/uAspect)+.5;else uv.y=(vUv.y-.5)*(uAspect/a)+.5;" +
   "uv.x+=uShift;" +
-  "float ca=(.0035*vX*vX)*(1.+abs(uVel)*1.2);" +
-  "vec3 c=vec3(texture2D(uTex,uv+vec2(ca,0.)).r,texture2D(uTex,uv).g,texture2D(uTex,uv-vec2(ca,0.)).b);" +
-  "c=mix(vec3(.08,.08,.10),c,uReady);" +
-  "c*=1.-.35*min(1.,vX*vX);" +
-  "float mid=smoothstep(.40,0.,abs(vX));" +
-  "if(mid>0.001){" +
-  "vec3 cWhite=vec3(1.,1.,1.);" +
-  "vec3 cLavender=vec3(.929,.898,1.);" +
-  "vec3 cViolet=vec3(.788,.710,1.);" +
-  "float dist=length((vUv-vec2(.5,.42))*vec2(1.,1.1));" +
-  "vec3 studioLight=mix(cLavender,cViolet,clamp(dist*.7,0.,1.));" +
-  "c=1.-(1.-c)*(1.-studioLight*(.18*mid));" +
-  "float lum=dot(c,vec3(.299,.587,.114));" +
-  "vec3 bloomLight=mix(cLavender,cWhite,lum);" +
-  "c+=bloomLight*(.05+.09*lum)*mid;" +
-  "}" +
+  "vec3 c=vec3(texture2D(uTex,uv).rgb);" +
+  "c=mix(vec3(1.),c,uReady);" +
+  "c*=1.-.08*min(1.,vX*vX);" +
   "float d=box((vUv-.5)*uSize,uSize*.5,18.);" +
-  "float rim=smoothstep(-2.5,0.,d);" +
-  "c+=rim*.12*mix(vec3(.88,.90,.98),vec3(1.),mid);" +
+  "float border=smoothstep(.5,-.5,d)-smoothstep(-1.5,-2.5,d);" +
+  "vec3 borderColor=vec3(37./255.);" +
+  "c=mix(c,borderColor,clamp(border,0.,1.));" +
   "float al=smoothstep(.75,-.75,d)*uIntro;" +
-  "gl_FragColor=vec4(c*al,al);}"
+  "gl_FragColor=vec4(c*al,al);}";
 
 const FONT =
   "@font-face{font-family:CLC Serif;font-style:normal;font-weight:400;font-display:swap;" +
@@ -124,36 +112,36 @@ const FONT =
 
 const CSS =
   FONT +
-  ".clc-root{position:relative;width:100%;overflow:hidden;isolation:isolate;outline:none;user-select:none;-webkit-user-select:none;font-family:ui-sans-serif,system-ui,sans-serif}" +
-  ".clc-root:focus-visible{box-shadow:inset 0 0 0 2px var(--clc-ink)}" +
-  ".clc-glow{position:absolute;inset:-15%;background:radial-gradient(46% 40% at 50% 36%,rgba(188,165,255,.22) 0%,rgba(217,203,255,.15) 32%,rgba(238,232,255,.08) 58%,transparent 76%);filter:blur(50px);-webkit-filter:blur(50px);pointer-events:none}" +
+  ".clc-root{position:relative;width:100%;overflow:hidden;isolation:isolate;outline:none;user-select:none;-webkit-user-select:none;font-family:ui-sans-serif,system-ui,sans-serif;background:#DDE0E4}" +
+  ".clc-root:focus-visible{box-shadow:inset 0 0 0 2px #000000}" +
   ".clc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;touch-action:pan-y}" +
   ".clc-canvas:active{cursor:grabbing}" +
-  ".clc-top{position:absolute;left:clamp(20px,4vw,48px);right:clamp(20px,4vw,48px);top:clamp(18px,3.4vw,36px);display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--clc-ink);opacity:.68;pointer-events:none}" +
-  ".clc-top b{font-weight:600;letter-spacing:.14em}" +
-  ".clc-copy{position:absolute;left:clamp(20px,4vw,48px);bottom:clamp(20px,3.5vw,36px);max-width:min(520px,68%);color:var(--clc-ink);pointer-events:none}" +
-  ".clc-kicker{display:block;font-size:11px;letter-spacing:.24em;text-transform:uppercase;opacity:.65;margin-bottom:6px;font-weight:700}" +
-  ".clc-title{font-family:var(--clc-font);font-weight:700;font-size:clamp(22px,3.2vw,38px);line-height:1.15;letter-spacing:-.02em;margin:0;display:block}" +
-  ".clc-ch{display:inline-block;transform:translateY(105%) rotate(6deg);opacity:0;transition:transform .9s cubic-bezier(.2,.9,.1,1),opacity .6s ease}" +
+  ".clc-top{position:absolute;left:clamp(20px,4vw,48px);right:clamp(20px,4vw,48px);top:clamp(18px,3.4vw,36px);display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#000000;pointer-events:none}" +
+  ".clc-top b{font-weight:700;letter-spacing:.16em;color:#000000}" +
+  ".clc-top span{font-weight:600;letter-spacing:.2em;color:#000000;opacity:.85}" +
+  ".clc-copy{position:absolute;left:clamp(20px,4vw,48px);bottom:clamp(20px,3.5vw,36px);max-width:min(520px,68%);color:#000000;pointer-events:none}" +
+  ".clc-kicker{display:block;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#000000;opacity:.75;margin-bottom:6px;font-weight:700}" +
+  ".clc-title{font-family:var(--clc-font);font-weight:800;font-size:clamp(22px,3.2vw,38px);line-height:1.15;letter-spacing:-.02em;margin:0;display:block;color:#000000}" +
+  ".clc-ch{display:inline-block;transform:translateY(105%) rotate(6deg);opacity:0;transition:transform .9s cubic-bezier(.2,.9,.1,1),opacity .6s ease;color:#000000}" +
   ".clc-line{display:block;overflow:hidden;padding-bottom:.06em}" +
   ".clc-in .clc-ch{transform:none;opacity:1}" +
-  ".clc-cap{display:block;margin-top:10px;font-size:13.5px;line-height:1.55;opacity:0;transform:translateY(10px);transition:opacity .7s ease .25s,transform .7s cubic-bezier(.2,.9,.1,1) .25s;max-width:40ch}" +
-  ".clc-in .clc-cap{opacity:.75;transform:none}" +
-  ".clc-ctl{position:absolute;right:clamp(20px,4vw,48px);bottom:clamp(20px,3.5vw,36px);display:flex;flex-direction:column;align-items:flex-end;gap:16px;color:var(--clc-ink)}" +
-  ".clc-count{font-size:12px;letter-spacing:.18em;font-variant-numeric:tabular-nums;opacity:.8;font-weight:600}" +
-  ".clc-count i{font-style:normal;opacity:.45}" +
-  ".clc-bar{width:132px;height:2px;border-radius:2px;background:color-mix(in srgb,var(--clc-ink) 16%,transparent);overflow:hidden}" +
-  ".clc-bar>span{display:block;height:100%;width:100%;background:var(--clc-ink);transform-origin:0 50%;transition:transform .7s cubic-bezier(.2,.9,.1,1)}" +
+  ".clc-cap{display:block;margin-top:10px;font-size:13.5px;line-height:1.55;opacity:0;transform:translateY(10px);transition:opacity .7s ease .25s,transform .7s cubic-bezier(.2,.9,.1,1) .25s;max-width:40ch;color:#000000}" +
+  ".clc-in .clc-cap{opacity:.85;transform:none}" +
+  ".clc-ctl{position:absolute;right:clamp(20px,4vw,48px);bottom:clamp(20px,3.5vw,36px);display:flex;flex-direction:column;align-items:flex-end;gap:16px;color:#000000}" +
+  ".clc-count{font-size:12px;letter-spacing:.18em;font-variant-numeric:tabular-nums;opacity:.9;font-weight:700;color:#000000}" +
+  ".clc-count i{font-style:normal;opacity:.5;color:#000000}" +
+  ".clc-bar{width:132px;height:2px;border-radius:2px;background:rgba(0,0,0,.15);overflow:hidden}" +
+  ".clc-bar>span{display:block;height:100%;width:100%;background:#000000;transform-origin:0 50%;transition:transform .7s cubic-bezier(.2,.9,.1,1)}" +
   ".clc-btns{display:flex;gap:10px}" +
-  ".clc-btn{width:46px;height:46px;border-radius:999px;display:grid;place-items:center;color:var(--clc-ink);cursor:pointer;" +
-  "background:color-mix(in srgb,var(--clc-ink) 6%,transparent);border:1px solid color-mix(in srgb,var(--clc-ink) 14%,transparent);" +
-  "box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 8px 24px -8px color-mix(in srgb,var(--clc-ink) 25%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);" +
-  "transition:transform .35s cubic-bezier(.3,1.6,.5,1),background .3s ease,border-color .3s ease}" +
-  ".clc-btn:hover{transform:translateY(-2px) scale(1.06);background:color-mix(in srgb,var(--clc-ink) 12%,transparent);border-color:color-mix(in srgb,var(--clc-ink) 26%,transparent)}" +
+  ".clc-btn{width:46px;height:46px;border-radius:999px;display:grid;place-items:center;color:#000000;cursor:pointer;" +
+  "background:#FFFFFF;border:1px solid #252525;" +
+  "box-shadow:0 2px 8px rgba(0,0,0,.08);" +
+  "transition:transform .35s cubic-bezier(.3,1.6,.5,1),background .2s ease,border-color .2s ease,box-shadow .2s ease}" +
+  ".clc-btn:hover{transform:translateY(-2px) scale(1.06);background:#FFFFFF;border-color:#000000;box-shadow:0 4px 14px rgba(0,0,0,.14)}" +
   ".clc-btn:active{transform:scale(.94)}" +
-  ".clc-btn:focus-visible{outline:2px solid var(--clc-ink);outline-offset:3px}" +
-  ".clc-btn svg{width:18px;height:18px}" +
-  ".clc-fallback{position:absolute;left:50%;top:50%;width:min(62vw,360px);aspect-ratio:4/5;transform:translate(-50%,-50%);object-fit:cover;border-radius:14px;max-width:none}" +
+  ".clc-btn:focus-visible{outline:2px solid #000000;outline-offset:3px}" +
+  ".clc-btn svg{width:18px;height:18px;stroke:#000000}" +
+  ".clc-fallback{position:absolute;left:50%;top:50%;width:min(62vw,360px);aspect-ratio:4/5;transform:translate(-50%,-50%);object-fit:cover;border-radius:18px;border:2px solid #252525;background:#FFFFFF;max-width:none}" +
   ".clc-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}" +
   "@media (max-width:640px){.clc-copy{max-width:calc(100% - 40px);bottom:96px}.clc-ctl{flex-direction:row;align-items:center;left:20px;justify-content:space-between}.clc-bar{width:96px}}" +
   "@media (prefers-reduced-motion:reduce){.clc-ch,.clc-cap,.clc-bar>span,.clc-btn{transition:opacity .2s ease}.clc-ch{transform:none}.clc-cap{transform:none}}"
@@ -227,11 +215,11 @@ function Copy({ slide, shown }: { slide: LensSlide; shown: boolean }) {
 
 export default function CurvedLensCarousel({
   slides,
-  label = "Field Atlas",
+  label = "WHY SOCIALASSIST",
   bend = 0.55,
-  background = "#0e0e10",
-  ink = "#f3ede4",
-  height = "100svh",
+  background = "#DDE0E4",
+  ink = "#000000",
+  height = "580px",
   className,
   onChange,
 }: CurvedLensCarouselProps) {
@@ -284,7 +272,7 @@ export default function CurvedLensCarousel({
     const tex = slides.map((s) => {
       const t = gl.createTexture() as WebGLTexture
       gl.bindTexture(gl.TEXTURE_2D, t)
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([28, 28, 30, 255]))
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255, 255]))
       for (const [p, v] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]])
         gl.texParameteri(gl.TEXTURE_2D, p, v)
       const entry = { t, aspect: 0.8, ready: false }
@@ -330,7 +318,7 @@ export default function CurvedLensCarousel({
       gl.uniform2f(u.uSize, cw, ch)
       gl.uniform1f(u.uBend, bend)
       gl.uniform1f(u.uVel, reduced.matches ? 0 : Math.max(-1, Math.min(1, vel * 0.12)))
-      gl.uniform1f(u.uLift, W < 640 ? 0.38 : 0.28)
+      gl.uniform1f(u.uLift, W < 640 ? 0.20 : 0.24)
       const step = cw + gap
       for (let i = 0; i < n; i++) {
         const d = offsetOf(i, pos, n)
@@ -478,13 +466,12 @@ export default function CurvedLensCarousel({
       aria-label={typeof label === "string" ? label : "Photo carousel"}
     >
       <style>{CSS}</style>
-      <div className="clc-glow" aria-hidden="true" />
       <canvas ref={canvasRef} className="clc-canvas" aria-hidden="true" />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       {noGL ? <img className="clc-fallback" src={slide.image} alt={slide.alt ?? slide.title} /> : null}
       <div className="clc-top">
         <b>{label}</b>
-        <span>Drag to wander</span>
+        <span>DRAG TO WANDER</span>
       </div>
       <Copy key={index} slide={slide} shown={shown} />
       <div className="clc-ctl">
@@ -496,10 +483,10 @@ export default function CurvedLensCarousel({
         </span>
         <div className="clc-btns">
           <button type="button" className="clc-btn" aria-label="Previous slide" onClick={() => api.current.go(-1)}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M15 5l-7 7 7 7" /></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 5l-7 7 7 7" /></svg>
           </button>
           <button type="button" className="clc-btn" aria-label="Next slide" onClick={() => api.current.go(1)}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 5l7 7-7 7" /></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 5l7 7-7 7" /></svg>
           </button>
         </div>
       </div>

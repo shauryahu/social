@@ -253,28 +253,15 @@ export default function AboutSection() {
           }}
         >
           <h2
-            className={`text-2xl md:text-3xl font-black ${isLight ? "text-slate-950" : "text-white"}`}
+            className="text-2xl md:text-3xl font-black text-black"
             style={{ fontFamily: "var(--font-space-grotesk)" }}
           >
-            Why{" "}
-            <span
-              className={
-                isLight
-                  ? "inline-block bg-clip-text text-transparent bg-gradient-to-r from-purple-700 via-indigo-600 to-purple-800 font-black"
-                  : "inline-block bg-clip-text text-transparent bg-gradient-to-r from-purple-300 via-purple-400 to-purple-500 font-black"
-              }
-            >
-              SocialAssist
-            </span>
+            Why SocialAssist
           </h2>
         </div>
 
         <div
-          className={`w-full rounded-2xl sm:rounded-3xl overflow-hidden border ${
-            isLight
-              ? "border-slate-200/90 shadow-[0_12px_40px_-12px_rgba(70,90,140,0.12)] bg-gradient-to-b from-white/90 to-white/60"
-              : "border-white/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.6)] bg-gradient-to-b from-[#101016]/80 to-[#0c0c12]/60"
-          } backdrop-blur-xl`}
+          className="w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-[#DDE0E4] border border-[#DDE0E4] shadow-sm"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(20px)",
@@ -283,10 +270,10 @@ export default function AboutSection() {
         >
           <CurvedLensCarousel
             slides={WHY_SLIDES}
-            label="Why SocialAssist"
+            label="WHY SOCIALASSIST"
             bend={0.5}
-            background="transparent"
-            ink={isLight ? "#0f172a" : "#f8fafc"}
+            background="#DDE0E4"
+            ink="#000000"
             height="580px"
           />
         </div>

@@ -102,6 +102,16 @@ async function main() {
     await sendSession("Page.navigate", { url: "http://localhost:3000" });
     await sleep(4000);
 
+    // Ensure light theme initially
+    await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        localStorage.setItem("socialassist-theme", "light");
+        document.documentElement.classList.remove("dark");
+        document.documentElement.setAttribute("data-theme", "light");
+      })()`,
+    });
+    await sleep(500);
+
     // Scroll to Why SocialAssist carousel
     console.log("Scrolling to Why SocialAssist section...");
     await sendSession("Runtime.evaluate", {
@@ -110,7 +120,7 @@ async function main() {
         if (carousel) {
           const rect = carousel.getBoundingClientRect();
           window.scrollTo({
-            top: window.scrollY + rect.top - 120,
+            top: window.scrollY + rect.top - 180,
             behavior: "instant"
           });
         }
@@ -201,7 +211,7 @@ async function main() {
         if (carousel) {
           const rect = carousel.getBoundingClientRect();
           window.scrollTo({
-            top: window.scrollY + rect.top - 60,
+            top: window.scrollY + rect.top - 80,
             behavior: "instant"
           });
         }
