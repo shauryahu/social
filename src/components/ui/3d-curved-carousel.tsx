@@ -229,7 +229,6 @@ export default function CurvedLensCarousel({
   const [index, setIndex] = React.useState(0)
   const [shown, setShown] = React.useState(false)
   const [noGL, setNoGL] = React.useState(false)
-  const [dims, setDims] = React.useState<{ w: number; h: number } | null>(null)
   const api = React.useRef({ go: (_d: number) => { void _d } })
   const onChangeRef = React.useRef(onChange)
   onChangeRef.current = onChange
@@ -303,7 +302,6 @@ export default function CurvedLensCarousel({
     const resize = (w: number, h: number) => {
       W = Math.max(1, w)
       H = Math.max(1, h)
-      setDims((prev) => (prev?.w === W && prev?.h === H ? prev : { w: W, h: H }))
       dpr = Math.min(2, window.devicePixelRatio || 1)
       canvas.width = Math.round(W * dpr)
       canvas.height = Math.round(H * dpr)
@@ -457,31 +455,6 @@ export default function CurvedLensCarousel({
   if (!slide) return null
   const vars = { height, background, "--clc-ink": ink, "--clc-font": "var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif" } as React.CSSProperties
 
-  const W = dims?.w ?? 0
-  const H = dims?.h ?? 0
-  let topCurvePath = ""
-  let botCurvePath = ""
-  if (W > 0 && H > 0) {
-    const [cw, ch] = cardSize(W, H)
-    const lift = W < 640 ? 0.20 : 0.24
-    const getY = (X: number, isTop: boolean) => {
-      const norm_x = (X - W * 0.5) / (W * 0.5)
-      const factor = 1.0 + bend * norm_x * norm_x
-      const n_y = (isTop ? 1 : -1) * (ch / H) * factor + lift
-      return H * 0.5 * (1.0 - n_y)
-    }
-    const y0_top = getY(0, true)
-    const ymid_top = getY(W * 0.5, true)
-    const yc_top = 2 * ymid_top - y0_top
-
-    const y0_bot = getY(0, false)
-    const ymid_bot = getY(W * 0.5, false)
-    const yc_bot = 2 * ymid_bot - y0_bot
-
-    topCurvePath = `M 0,${y0_top.toFixed(2)} Q ${(W * 0.5).toFixed(2)},${yc_top.toFixed(2)} ${W.toFixed(2)},${y0_top.toFixed(2)}`
-    botCurvePath = `M 0,${y0_bot.toFixed(2)} Q ${(W * 0.5).toFixed(2)},${yc_bot.toFixed(2)} ${W.toFixed(2)},${y0_bot.toFixed(2)}`
-  }
-
   return (
     <div
       ref={rootRef}
@@ -493,35 +466,6 @@ export default function CurvedLensCarousel({
       aria-label={typeof label === "string" ? label : "Photo carousel"}
     >
       <style>{CSS}</style>
-      {topCurvePath && botCurvePath && (
-        <svg
-          className="clc-rails"
-          aria-hidden="true"
-          viewBox={`0 0 ${W} ${H}`}
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-          }}
-        >
-          <path
-            d={topCurvePath}
-            fill="none"
-            stroke="#C9CDD2"
-            strokeWidth="1"
-            strokeLinecap="round"
-          />
-          <path
-            d={botCurvePath}
-            fill="none"
-            stroke="#C9CDD2"
-            strokeWidth="1"
-            strokeLinecap="round"
-          />
-        </svg>
-      )}
       <canvas ref={canvasRef} className="clc-canvas" aria-hidden="true" />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       {noGL ? <img className="clc-fallback" src={slide.image} alt={slide.alt ?? slide.title} /> : null}
