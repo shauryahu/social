@@ -705,17 +705,93 @@ body {
   }
 }
 
-/* ── Journey Timeline Milestone Smooth Reveal ── */
-@keyframes milestone-reveal {
+/* ── macOS-Inspired Cinematic Journey Timeline Transitions ── */
+@keyframes milestone-exit-forward {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-55px) scale(0.96);
+    filter: blur(10px);
+  }
+}
+
+@keyframes milestone-enter-forward {
   0% {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(65px) scale(0.95);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes milestone-exit-backward {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(55px) scale(0.96);
+    filter: blur(10px);
+  }
+}
+
+@keyframes milestone-enter-backward {
+  0% {
+    opacity: 0;
+    transform: translateY(-65px) scale(0.95);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes milestone-chip-stagger {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
   }
   100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes milestone-exit-forward {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  @keyframes milestone-enter-forward {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes milestone-exit-backward {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  @keyframes milestone-enter-backward {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes milestone-chip-stagger {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+}
+
 
 
 

@@ -86,8 +86,8 @@ class MechanicalScrollAudio {
   public playClick(strength: number = 1.0) {
     if (this.isMuted || typeof window === "undefined") return;
     const now = performance.now();
-    // Throttle to prevent overlapping audio (minimum 90ms gap)
-    if (now - this.lastPlayTime < 90) return;
+    // Throttle to prevent overlapping audio (minimum 80ms gap)
+    if (now - this.lastPlayTime < 80) return;
     this.lastPlayTime = now;
 
     try {
@@ -135,6 +135,106 @@ class MechanicalScrollAudio {
 
 const audioEngine = new MechanicalScrollAudio();
 
+// ── Milestone Content Subcomponent ──
+interface MilestoneCardContentProps {
+  item: MilestoneItem;
+  isLight: boolean;
+  isEntering: boolean;
+}
+
+function MilestoneCardContent({ item, isLight, isEntering }: MilestoneCardContentProps) {
+  return (
+    <div className="flex flex-col justify-center">
+      {/* Year & Milestone Badge */}
+      <div className="flex flex-wrap items-center gap-3 mb-2">
+        <span
+          className={cn(
+            "text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight select-none",
+            isLight
+              ? "text-slate-950"
+              : "bg-clip-text text-transparent bg-gradient-to-r from-white via-zinc-100 to-purple-300"
+          )}
+          style={{ fontFamily: "var(--font-space-grotesk)" }}
+        >
+          {item.year}
+        </span>
+
+        <span
+          className={cn(
+            "px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase font-mono border select-none",
+            isLight
+              ? "bg-purple-100/70 text-purple-800 border-purple-200"
+              : "bg-purple-900/30 text-purple-300 border-purple-700/40"
+          )}
+        >
+          {item.badge}
+        </span>
+      </div>
+
+      {/* Title & Subtitle */}
+      <h4
+        className={cn(
+          "text-lg sm:text-xl font-bold tracking-tight mb-1",
+          isLight ? "text-slate-900" : "text-white"
+        )}
+        style={{ fontFamily: "var(--font-space-grotesk)" }}
+      >
+        {item.label}
+      </h4>
+      <p
+        className={cn(
+          "text-xs sm:text-[13px] font-semibold mb-3",
+          isLight ? "text-purple-700" : "text-purple-400"
+        )}
+        style={{ fontFamily: "var(--font-inter)" }}
+      >
+        {item.subtitle}
+      </p>
+
+      {/* Description */}
+      <p
+        className={cn(
+          "text-xs sm:text-sm leading-relaxed mb-4",
+          isLight ? "text-slate-600 font-medium" : "text-zinc-400"
+        )}
+        style={{ fontFamily: "var(--font-inter)" }}
+      >
+        {item.desc}
+      </p>
+
+      {/* 3 Pillars Chips with Staggered Cascading Animation */}
+      <div className="flex flex-wrap gap-2">
+        {item.pillars.map((pillar, idx) => {
+          const delayMs = isEntering ? 100 + idx * 70 : 0;
+          return (
+            <span
+              key={pillar}
+              className={cn(
+                "inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11.5px] font-semibold border transition-colors select-none",
+                isLight
+                  ? "bg-slate-100/90 text-slate-800 border-slate-200"
+                  : "bg-white/[0.04] text-zinc-300 border-white/10"
+              )}
+              style={{
+                animation: isEntering
+                  ? `milestone-chip-stagger 0.36s cubic-bezier(0.16, 1, 0.3, 1) ${delayMs}ms backwards`
+                  : "none",
+                willChange: "transform, opacity",
+              }}
+            >
+              <Check
+                className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 shrink-0"
+                strokeWidth={2.5}
+              />
+              <span>{pillar}</span>
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 interface JourneyScrollTimelineProps {
   isLight?: boolean;
 }
@@ -143,7 +243,12 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // Milestone transition state
   const [activeStep, setActiveStep] = useState(0);
+  const [exitingStep, setExitingStep] = useState<number | null>(null);
+  const [direction, setDirection] = useState<"forward" | "backward">("forward");
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
   const [isMuted, setIsMuted] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
@@ -152,9 +257,9 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
   const targetAngleRef = useRef(0);
   const lastDetentStepRef = useRef(0);
 
-  // Debounce accumulator for continuous trackpad / mouse-wheel ticks
+  // Debounce accumulator for mouse-wheel gestures
   const wheelAccumulatorRef = useRef(0);
-  const lastStepChangeTimeRef = useRef(0);
+  const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Touch gesture tracking state
   const touchStartYRef = useRef(0);
@@ -177,76 +282,97 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
     });
   }, []);
 
-  // Navigate to specific milestone step
-  const navigateToStep = useCallback((stepIndex: number) => {
-    const clamped = Math.max(0, Math.min(3, stepIndex));
-    setActiveStep(clamped);
-    targetAngleRef.current = clamped * 1.85;
-    audioEngine.playClick(1.0);
+  // ── Unified Step Transition Trigger ──
+  const triggerStepTransition = useCallback(
+    (targetStep: number) => {
+      if (targetStep === activeStep) return;
+      const clamped = Math.max(0, Math.min(3, targetStep));
+      if (clamped === activeStep) return;
+
+      const dir = clamped > activeStep ? "forward" : "backward";
+      setDirection(dir);
+      setExitingStep(activeStep);
+      setActiveStep(clamped);
+      setIsTransitioning(true);
+
+      // Rotate wheel towards the target position
+      targetAngleRef.current = clamped * 1.85;
+      audioEngine.playClick(1.0);
+
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+
+      transitionTimeoutRef.current = setTimeout(() => {
+        setIsTransitioning(false);
+        setExitingStep(null);
+      }, 460);
+    },
+    [activeStep]
+  );
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
+    };
   }, []);
 
-  // ── Intelligent Device-Specific Mouse Wheel Detection ──
+  // ── Real-Time Scroll Wheel Detection & Scope Isolation ──
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
     const onWheel = (e: WheelEvent) => {
-      const now = performance.now();
       const delta = e.deltaY;
 
-      // Rotate 3D wheel continuously in proportion to scroll delta
-      targetAngleRef.current += delta * 0.005;
+      // 1. Immediate real-time 3D wheel rotation (Zero lag!)
+      targetAngleRef.current += delta * 0.007;
 
-      // Accumulate scroll input to prevent erratic jumping
+      // 2. Accumulate delta for milestone progression
       wheelAccumulatorRef.current += delta;
 
-      const threshold = 65; // Scroll threshold required to trigger step transition
-      const cooldown = 280; // Minimum ms between milestone steps
+      // If currently mid-transition, absorb scroll so page doesn't stutter
+      if (isTransitioning) {
+        e.preventDefault();
+        return;
+      }
 
-      if (Math.abs(wheelAccumulatorRef.current) >= threshold) {
-        if (now - lastStepChangeTimeRef.current >= cooldown) {
-          if (wheelAccumulatorRef.current > 0) {
-            // Scrolling downward -> advance milestone
-            setActiveStep((curr) => {
-              if (curr < 3) {
-                // If not at the last milestone, intercept scroll to advance milestone
-                e.preventDefault();
-                const next = curr + 1;
-                targetAngleRef.current = next * 1.85;
-                audioEngine.playClick(1.0);
-                lastStepChangeTimeRef.current = now;
-                wheelAccumulatorRef.current = 0;
-                return next;
-              }
-              // If at milestone 4, do NOT preventDefault -> let normal page scroll down naturally!
-              return curr;
-            });
-          } else {
-            // Scrolling upward -> return to previous milestone
-            setActiveStep((curr) => {
-              if (curr > 0) {
-                // If not at the first milestone, intercept scroll to go back
-                e.preventDefault();
-                const prev = curr - 1;
-                targetAngleRef.current = prev * 1.85;
-                audioEngine.playClick(1.0);
-                lastStepChangeTimeRef.current = now;
-                wheelAccumulatorRef.current = 0;
-                return prev;
-              }
-              // If at milestone 1, do NOT preventDefault -> let normal page scroll up naturally!
-              return curr;
-            });
-          }
+      const threshold = 60; // Clean, natural detent threshold
+
+      if (wheelAccumulatorRef.current >= threshold) {
+        if (activeStep < 3) {
+          // Advance to next milestone and isolate page scroll
+          e.preventDefault();
+          wheelAccumulatorRef.current = 0;
+          triggerStepTransition(activeStep + 1);
+        } else {
+          // At milestone 4 (end): do NOT preventDefault! Let page scroll down naturally!
+          wheelAccumulatorRef.current = 0;
+        }
+      } else if (wheelAccumulatorRef.current <= -threshold) {
+        if (activeStep > 0) {
+          // Return to previous milestone and isolate page scroll
+          e.preventDefault();
+          wheelAccumulatorRef.current = 0;
+          triggerStepTransition(activeStep - 1);
+        } else {
+          // At milestone 1 (start): do NOT preventDefault! Let page scroll up naturally!
+          wheelAccumulatorRef.current = 0;
+        }
+      } else {
+        // While within Journey interaction area, prevent parent webpage scrolling
+        if ((delta > 0 && activeStep < 3) || (delta < 0 && activeStep > 0)) {
+          e.preventDefault();
         }
       }
     };
 
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
-  }, []);
+  }, [activeStep, isTransitioning, triggerStepTransition]);
 
-  // ── Intelligent Device-Specific Mobile & Tablet Touch Gestures ──
+  // ── Mobile & Tablet Natural Touch Gestures ──
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -264,44 +390,32 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
       const deltaY = touchLastYRef.current - currentY;
       touchLastYRef.current = currentY;
 
-      // Rotate wheel during touch gesture
-      targetAngleRef.current += deltaY * 0.015;
+      // Rotate wheel in real time with touch movement
+      targetAngleRef.current += deltaY * 0.016;
 
       const totalSwipe = touchStartYRef.current - currentY;
-      const swipeThreshold = 50;
-      const now = performance.now();
+      const swipeThreshold = 45;
 
-      if (Math.abs(totalSwipe) >= swipeThreshold) {
-        if (now - lastStepChangeTimeRef.current >= 320) {
-          if (totalSwipe > 0) {
-            // Swipe Up (scrolling downward)
-            setActiveStep((curr) => {
-              if (curr < 3) {
-                if (e.cancelable) e.preventDefault();
-                const next = curr + 1;
-                targetAngleRef.current = next * 1.85;
-                audioEngine.playClick(1.0);
-                lastStepChangeTimeRef.current = now;
-                touchStartYRef.current = currentY;
-                return next;
-              }
-              return curr;
-            });
-          } else {
-            // Swipe Down (scrolling upward)
-            setActiveStep((curr) => {
-              if (curr > 0) {
-                if (e.cancelable) e.preventDefault();
-                const prev = curr - 1;
-                targetAngleRef.current = prev * 1.85;
-                audioEngine.playClick(1.0);
-                lastStepChangeTimeRef.current = now;
-                touchStartYRef.current = currentY;
-                return prev;
-              }
-              return curr;
-            });
-          }
+      if (isTransitioning) {
+        if (e.cancelable) e.preventDefault();
+        return;
+      }
+
+      if (totalSwipe >= swipeThreshold) {
+        if (activeStep < 3) {
+          if (e.cancelable) e.preventDefault();
+          touchStartYRef.current = currentY;
+          triggerStepTransition(activeStep + 1);
+        }
+      } else if (totalSwipe <= -swipeThreshold) {
+        if (activeStep > 0) {
+          if (e.cancelable) e.preventDefault();
+          touchStartYRef.current = currentY;
+          triggerStepTransition(activeStep - 1);
+        }
+      } else {
+        if ((totalSwipe > 0 && activeStep < 3) || (totalSwipe < 0 && activeStep > 0)) {
+          if (e.cancelable) e.preventDefault();
         }
       }
     };
@@ -313,7 +427,7 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
       el.removeEventListener("touchstart", onTouchStart);
       el.removeEventListener("touchmove", onTouchMove);
     };
-  }, []);
+  }, [activeStep, isTransitioning, triggerStepTransition]);
 
   // ── 3D Canvas Wheel rendering loop with smooth physics interpolation ──
   useEffect(() => {
@@ -325,9 +439,9 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
     let animId: number;
 
     const render = () => {
-      // Smooth lerp towards target rotation angle
+      // Responsive physical spring lerp towards target rotation angle
       const diff = targetAngleRef.current - rotationAngleRef.current;
-      rotationAngleRef.current += diff * 0.12;
+      rotationAngleRef.current += diff * 0.20;
 
       // Audio detent check during continuous wheel rolling
       const currentAngle = rotationAngleRef.current;
@@ -542,7 +656,7 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
           <div>
             <span
               className={cn(
-                "text-[11px] sm:text-xs font-semibold tracking-widest uppercase block font-mono mb-1",
+                "text-[11px] sm:text-xs font-semibold tracking-widest uppercase block font-mono mb-1 select-none",
                 isLight ? "text-purple-700" : "text-purple-400"
               )}
             >
@@ -550,7 +664,7 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
             </span>
             <h3
               className={cn(
-                "text-xl sm:text-2xl font-black tracking-tight",
+                "text-xl sm:text-2xl font-black tracking-tight select-none",
                 isLight ? "text-slate-950" : "text-white"
               )}
               style={{ fontFamily: "var(--font-space-grotesk)" }}
@@ -563,7 +677,7 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
           <div className="flex items-center gap-2">
             <span
               className={cn(
-                "font-mono text-xs sm:text-sm font-bold px-3 py-1.5 rounded-full border",
+                "font-mono text-xs sm:text-sm font-bold px-3 py-1.5 rounded-full border select-none transition-colors",
                 isLight
                   ? "bg-purple-50 text-purple-900 border-purple-200"
                   : "bg-purple-950/40 text-purple-300 border-purple-800/40"
@@ -574,13 +688,13 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
           </div>
         </div>
 
-        {/* Main Stage: Physical 3D Wheel + Dynamic Milestone Content */}
+        {/* Main Stage: Physical 3D Wheel + Layered Cinematic Milestone Transition */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-center">
           {/* ── Left Column: Physical 3D Mouse Scroll Wheel ── */}
           <div className="md:col-span-4 flex flex-col items-center justify-center">
             <div
               className={cn(
-                "relative rounded-2xl p-4 flex flex-col items-center justify-center border transition-all",
+                "relative rounded-2xl p-4 flex flex-col items-center justify-center border transition-all select-none",
                 isLight
                   ? "bg-slate-50/80 border-slate-200/80 shadow-inner"
                   : "bg-[#07080B] border-white/10 shadow-inner"
@@ -637,92 +751,47 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
             </div>
           </div>
 
-          {/* ── Right Column: Dynamic Milestone Content (One Milestone at a Time) ── */}
-          <div className="md:col-span-8 flex flex-col justify-center min-h-[220px]">
+          {/* ── Right Column: Dynamic Milestone Content with Cinematic Layered Transition ── */}
+          <div className="md:col-span-8 relative min-h-[290px] flex flex-col justify-center overflow-hidden">
+            {/* Exiting Milestone Layer during transition */}
+            {isTransitioning && exitingStep !== null && (
+              <div
+                key={`exit-${exitingStep}`}
+                aria-hidden="true"
+                className="absolute inset-0 pointer-events-none flex flex-col justify-center"
+                style={{
+                  animation: `${
+                    direction === "forward" ? "milestone-exit-forward" : "milestone-exit-backward"
+                  } 0.44s cubic-bezier(0.16, 1, 0.3, 1) forwards`,
+                  willChange: "transform, opacity, filter",
+                }}
+              >
+                <MilestoneCardContent
+                  item={MILESTONES[exitingStep]}
+                  isLight={isLight}
+                  isEntering={false}
+                />
+              </div>
+            )}
+
+            {/* Active / Entering Milestone Layer */}
             <div
-              key={activeStep}
-              className="transition-all duration-300 ease-out"
+              key={`enter-${activeStep}`}
+              className="relative w-full flex flex-col justify-center"
               style={{
-                animation: "milestone-reveal 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                animation: isTransitioning
+                  ? `${
+                      direction === "forward" ? "milestone-enter-forward" : "milestone-enter-backward"
+                    } 0.46s cubic-bezier(0.16, 1, 0.3, 1) forwards`
+                  : "none",
+                willChange: "transform, opacity, filter",
               }}
             >
-              {/* Year & Milestone Badge */}
-              <div className="flex flex-wrap items-center gap-3 mb-2">
-                <span
-                  className={cn(
-                    "text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight transition-all duration-300",
-                    isLight
-                      ? "text-slate-950"
-                      : "bg-clip-text text-transparent bg-gradient-to-r from-white via-zinc-100 to-purple-300"
-                  )}
-                  style={{ fontFamily: "var(--font-space-grotesk)" }}
-                >
-                  {current.year}
-                </span>
-
-                <span
-                  className={cn(
-                    "px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase font-mono border",
-                    isLight
-                      ? "bg-purple-100/70 text-purple-800 border-purple-200"
-                      : "bg-purple-900/30 text-purple-300 border-purple-700/40"
-                  )}
-                >
-                  {current.badge}
-                </span>
-              </div>
-
-              {/* Title & Subtitle */}
-              <h4
-                className={cn(
-                  "text-lg sm:text-xl font-bold tracking-tight mb-1",
-                  isLight ? "text-slate-900" : "text-white"
-                )}
-                style={{ fontFamily: "var(--font-space-grotesk)" }}
-              >
-                {current.label}
-              </h4>
-              <p
-                className={cn(
-                  "text-xs sm:text-[13px] font-semibold mb-3",
-                  isLight ? "text-purple-700" : "text-purple-400"
-                )}
-                style={{ fontFamily: "var(--font-inter)" }}
-              >
-                {current.subtitle}
-              </p>
-
-              {/* Description */}
-              <p
-                className={cn(
-                  "text-xs sm:text-sm leading-relaxed mb-4",
-                  isLight ? "text-slate-600 font-medium" : "text-zinc-400"
-                )}
-                style={{ fontFamily: "var(--font-inter)" }}
-              >
-                {current.desc}
-              </p>
-
-              {/* 3 Pillars Chips */}
-              <div className="flex flex-wrap gap-2">
-                {current.pillars.map((pillar) => (
-                  <span
-                    key={pillar}
-                    className={cn(
-                      "inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11.5px] font-semibold border transition-colors",
-                      isLight
-                        ? "bg-slate-100/90 text-slate-800 border-slate-200"
-                        : "bg-white/[0.04] text-zinc-300 border-white/10"
-                    )}
-                  >
-                    <Check
-                      className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400 shrink-0"
-                      strokeWidth={2.5}
-                    />
-                    <span>{pillar}</span>
-                  </span>
-                ))}
-              </div>
+              <MilestoneCardContent
+                item={MILESTONES[activeStep]}
+                isLight={isLight}
+                isEntering={isTransitioning}
+              />
             </div>
           </div>
         </div>
@@ -732,7 +801,7 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
           {/* Continuous Progress Bar */}
           <div className="w-full h-1.5 rounded-full bg-slate-200 dark:bg-white/10 overflow-hidden mb-4">
             <div
-              className="h-full bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-500 rounded-full transition-all duration-300 ease-out"
+              className="h-full bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-500 rounded-full transition-all duration-400 ease-out"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -742,7 +811,7 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
             {/* Prev Button */}
             <button
               type="button"
-              onClick={() => navigateToStep(Math.max(0, activeStep - 1))}
+              onClick={() => triggerStepTransition(activeStep - 1)}
               disabled={activeStep === 0}
               aria-label="Previous Milestone"
               className={cn(
@@ -763,9 +832,9 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
                   <button
                     key={m.number}
                     type="button"
-                    onClick={() => navigateToStep(idx)}
+                    onClick={() => triggerStepTransition(idx)}
                     className={cn(
-                      "px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all duration-200 flex items-center gap-1.5 border",
+                      "px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all duration-200 flex items-center gap-1.5 border select-none",
                       isActive
                         ? isLight
                           ? "bg-purple-600 text-white border-purple-600 shadow-sm"
@@ -785,7 +854,7 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
             {/* Next Button */}
             <button
               type="button"
-              onClick={() => navigateToStep(Math.min(3, activeStep + 1))}
+              onClick={() => triggerStepTransition(activeStep + 1)}
               disabled={activeStep === 3}
               aria-label="Next Milestone"
               className={cn(
