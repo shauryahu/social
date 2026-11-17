@@ -2,61 +2,38 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/components/ThemeProvider";
+import CurvedLensCarousel, { type LensSlide } from "@/components/ui/3d-curved-carousel";
 
-const WHY_ITEMS = [
+const WHY_SLIDES: LensSlide[] = [
   {
+    kicker: "SINCE 2021",
     title: "Established Experience",
-    desc: "Operating since 2021 with proven expertise across digital platforms.",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <circle cx="10" cy="10" r="8" stroke="url(#wi1)" strokeWidth="1.2"/>
-        <path d="M10 6v4l3 2" stroke="url(#wi1)" strokeWidth="1.2" strokeLinecap="round"/>
-        <defs><linearGradient id="wi1" x1="2" y1="2" x2="18" y2="18" gradientUnits="userSpaceOnUse"><stop stopColor="#C5A7FF"/><stop offset="1" stopColor="#7C3AED"/></linearGradient></defs>
-      </svg>
-    ),
+    caption: "Operating since 2021 with proven expertise across digital platforms.",
+    image: "/images/why/established-experience.png",
   },
   {
+    kicker: "GLOBAL REACH",
     title: "Multi-Platform",
-    desc: "Support across Instagram, Facebook, WhatsApp, TikTok, X, and more.",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <circle cx="10" cy="10" r="3" fill="url(#wi2)" opacity="0.8"/>
-        <circle cx="10" cy="10" r="7" stroke="url(#wi2)" strokeWidth="1" strokeDasharray="3 2"/>
-        <defs><linearGradient id="wi2" x1="3" y1="3" x2="17" y2="17" gradientUnits="userSpaceOnUse"><stop stopColor="#C5A7FF"/><stop offset="1" stopColor="#9B5CFF"/></linearGradient></defs>
-      </svg>
-    ),
+    caption: "Support across Instagram, Facebook, WhatsApp, TikTok, X, and more.",
+    image: "/images/why/multi-platform.png",
   },
   {
+    kicker: "TAILORED SOLUTIONS",
     title: "Specialized Assistance",
-    desc: "Solutions purpose-built for specific digital problems.",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M4 10l5 5 7-8" stroke="url(#wi3)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        <defs><linearGradient id="wi3" x1="4" y1="10" x2="16" y2="10" gradientUnits="userSpaceOnUse"><stop stopColor="#FFFFFF"/><stop offset="1" stopColor="#C5A7FF"/></linearGradient></defs>
-      </svg>
-    ),
+    caption: "Solutions purpose-built for specific digital problems.",
+    image: "/images/why/specialized-assistance.png",
   },
   {
+    kicker: "ALL-IN-ONE ECOSYSTEM",
     title: "Integrated Network",
-    desc: "Account assistance, exchange, and advertising in one ecosystem.",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <rect x="2" y="2" width="7" height="7" rx="2" stroke="url(#wi4)" strokeWidth="1.2"/>
-        <rect x="11" y="2" width="7" height="7" rx="2" stroke="url(#wi4)" strokeWidth="1.2"/>
-        <rect x="6.5" y="11" width="7" height="7" rx="2" stroke="url(#wi4)" strokeWidth="1.2"/>
-        <defs><linearGradient id="wi4" x1="2" y1="2" x2="18" y2="18" gradientUnits="userSpaceOnUse"><stop stopColor="#C5A7FF"/><stop offset="1" stopColor="#7C3AED"/></linearGradient></defs>
-      </svg>
-    ),
+    caption: "Account assistance, exchange, and advertising in one ecosystem.",
+    image: "/images/why/integrated-network.png",
   },
   {
+    kicker: "NO INTERMEDIARIES",
     title: "Direct Communication",
-    desc: "Clear pathways for contacting the team without intermediaries.",
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M2 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6l-4 3V5z" stroke="url(#wi5)" strokeWidth="1.2" strokeLinejoin="round"/>
-        <defs><linearGradient id="wi5" x1="2" y1="3" x2="18" y2="18" gradientUnits="userSpaceOnUse"><stop stopColor="#C5A7FF"/><stop offset="1" stopColor="#9B5CFF"/></linearGradient></defs>
-      </svg>
-    ),
+    caption: "Clear pathways for contacting the team without intermediaries.",
+    image: "/images/why/direct-communication.png",
   },
 ];
 
@@ -269,7 +246,7 @@ export default function AboutSection() {
 
         {/* Why SocialAssist */}
         <div
-          className="text-center mb-10"
+          className="text-center mb-8"
           style={{
             opacity: visible ? 1 : 0,
             transition: "opacity 0.7s ease-out 0.2s",
@@ -292,37 +269,26 @@ export default function AboutSection() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-          {WHY_ITEMS.map((item, i) => (
-            <div
-              key={item.title}
-              className={`p-5 rounded-2xl ${
-                isLight
-                  ? "bg-white/95 border border-slate-200/90 shadow-md"
-                  : "bg-[#101016]/60 border border-white/10"
-              }`}
-              style={{
-                backdropFilter: "blur(16px)",
-                opacity: visible ? 1 : 0,
-                transform: visible ? "translateY(0)" : "translateY(20px)",
-                transition: `opacity 0.5s ease-out ${0.2 + i * 0.08}s, transform 0.5s ease-out ${0.2 + i * 0.08}s`,
-              }}
-            >
-              <div className="mb-3">{item.icon}</div>
-              <h3
-                className={`text-sm font-bold mb-1.5 ${isLight ? "text-slate-950" : "text-white"}`}
-                style={{ fontFamily: "var(--font-space-grotesk)" }}
-              >
-                {item.title}
-              </h3>
-              <p
-                className={`text-xs leading-relaxed ${isLight ? "text-slate-600 font-medium" : "text-zinc-400"}`}
-                style={{ fontFamily: "var(--font-inter)" }}
-              >
-                {item.desc}
-              </p>
-            </div>
-          ))}
+        <div
+          className={`w-full rounded-2xl sm:rounded-3xl overflow-hidden border ${
+            isLight
+              ? "border-slate-200/90 shadow-[0_12px_40px_-12px_rgba(70,90,140,0.12)] bg-gradient-to-b from-white/90 to-white/60"
+              : "border-white/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.6)] bg-gradient-to-b from-[#101016]/80 to-[#0c0c12]/60"
+          } backdrop-blur-xl`}
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(20px)",
+            transition: "opacity 0.6s ease-out 0.25s, transform 0.6s ease-out 0.25s",
+          }}
+        >
+          <CurvedLensCarousel
+            slides={WHY_SLIDES}
+            label="Why SocialAssist"
+            bend={0.5}
+            background="transparent"
+            ink={isLight ? "#0f172a" : "#f8fafc"}
+            height="580px"
+          />
         </div>
       </div>
     </section>
