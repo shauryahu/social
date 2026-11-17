@@ -1,12 +1,43 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useTheme } from "@/components/ThemeProvider";
+import { LayoutGrid } from "lucide-react";
 import TelegramInquiry from "./TelegramInquiry";
 
+// Symmetrical 4-point sparkle star for badge decoration
+function StarIcon({ className = "w-3 h-3" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      style={{ color: "#168DEB" }}
+      aria-hidden="true"
+    >
+      <path d="M12 0C12 6.627 6.627 12 0 12C6.627 12 12 17.373 12 24C12 17.373 17.373 12 24 12C17.373 12 12 6.627 12 0Z" />
+    </svg>
+  );
+}
+
+// Authentic Telegram paper-plane vector icon
+function TelegramPlaneIcon({ className = "w-[22px] h-[22px]" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M21.5 3.5L2.8 10.7C1.5 11.2 1.5 12 2.6 12.3L7.4 13.8L18.6 6.7C19.1 6.4 19.6 6.6 19.2 6.9L10.1 15.1H10.1L9.8 19.8C10.3 19.8 10.5 19.6 10.8 19.3L13.1 17.1L18 20.7C18.9 21.2 19.5 20.9 19.7 19.8L22.9 4.7C23.2 3.4 22.4 2.8 21.5 3.5Z"
+        fill="#FFFFFF"
+      />
+    </svg>
+  );
+}
+
 export default function FinalCTA() {
-  const { theme } = useTheme();
-  const isLight = theme === "light";
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -15,7 +46,7 @@ export default function FinalCTA() {
       ([entry]) => {
         if (entry.isIntersecting) setVisible(true);
       },
-      { threshold: 0.15 }
+      { threshold: 0.1 }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
@@ -29,136 +60,175 @@ export default function FinalCTA() {
     <section
       id="contact"
       ref={ref}
-      className="relative z-10 pt-24 pb-20 px-4 md:px-8 overflow-hidden"
+      className="relative z-10 pt-10 sm:pt-14 pb-20 px-4 md:px-8 overflow-hidden transition-colors duration-500"
       aria-labelledby="cta-heading"
+      style={{
+        backgroundColor: "#FAFAFD",
+      }}
     >
-      {/* Background Soft Glow */}
+      {/* ── 1. Subtle Square Grid (64px, rgba(80, 110, 170, 0.055), 1px) ── */}
       <div
-        className="absolute rounded-full pointer-events-none"
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none z-0"
         style={{
-          width: "80vw",
-          height: "80vw",
-          left: "50%",
-          top: "40%",
-          transform: "translate(-50%, -50%)",
-          background: isLight
-            ? "radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, rgba(124, 58, 237, 0.04) 40%, transparent 70%)"
-            : "radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, rgba(139, 92, 246, 0.05) 40%, transparent 70%)",
+          backgroundImage: `
+            linear-gradient(to right, rgba(80, 110, 170, 0.055) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(80, 110, 170, 0.055) 1px, transparent 1px)
+          `,
+          backgroundSize: "64px 64px",
+          backgroundPosition: "center top",
+        }}
+      />
+
+      {/* ── 2. Upper-Left Ambient Gradient Shape: Blue & Lavender Radial Glow ── */}
+      <div
+        aria-hidden="true"
+        className="absolute -top-[120px] -left-[120px] w-[560px] sm:w-[680px] h-[560px] sm:h-[680px] rounded-full pointer-events-none z-0"
+        style={{
+          background:
+            "radial-gradient(circle at 45% 45%, rgba(22, 141, 235, 0.09) 0%, rgba(238, 231, 255, 0.70) 32%, rgba(228, 238, 255, 0.50) 58%, transparent 75%)",
           filter: "blur(90px)",
         }}
       />
 
-      <div className="relative max-w-4xl mx-auto text-center">
-        {/* Label */}
+      {/* ── 3. Lower-Right Ambient Gradient Shape: Soft Lavender & Pale Blue ── */}
+      <div
+        aria-hidden="true"
+        className="absolute top-[220px] -right-[120px] sm:-right-[160px] w-[500px] sm:w-[640px] h-[500px] sm:h-[640px] rounded-full pointer-events-none z-0"
+        style={{
+          background:
+            "radial-gradient(circle at 55% 55%, rgba(160, 45, 245, 0.07) 0%, rgba(238, 231, 255, 0.65) 35%, rgba(228, 238, 255, 0.45) 60%, transparent 75%)",
+          filter: "blur(100px)",
+        }}
+      />
+
+      {/* ── 4. Main Content Container ── */}
+      <div className="relative z-10 max-w-4xl mx-auto text-center">
+        {/* Top Badge: ✦ DIRECT ESCALATION & RESOLUTION ✦ */}
         <div
-          className="mb-6"
+          className="inline-flex items-center gap-2.5 px-4 sm:px-4.5 py-1.5 rounded-full text-[12.5px] font-[600] tracking-[1.2px] uppercase select-none transition-all duration-700 mb-6"
           style={{
+            background: "rgba(255, 255, 255, 0.92)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            border: "1px solid #C7DFFF",
+            color: "#0879CE",
+            boxShadow:
+              "0 2px 14px rgba(22, 141, 235, 0.08), 0 1px 3px rgba(50, 107, 238, 0.04)",
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
+            transform: visible ? "translateY(0)" : "translateY(10px)",
+            fontFamily: "var(--font-inter), sans-serif",
           }}
         >
-          <span
-            className={`text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full font-mono ${
-              isLight
-                ? "text-sky-700 border border-sky-300 bg-sky-100/70 shadow-sm"
-                : "text-cyan-400 border border-cyan-400/30 bg-cyan-950/30"
-            }`}
-            style={{ fontFamily: "var(--font-inter)" }}
-          >
-            ✦ Direct Escalation & Resolution ✦
-          </span>
+          <StarIcon className="w-3 h-3 text-[#168DEB] shrink-0" />
+          <span style={{ color: "#0879CE" }}>DIRECT ESCALATION &amp; RESOLUTION</span>
+          <StarIcon className="w-3 h-3 text-[#168DEB] shrink-0" />
         </div>
 
-        {/* Headline */}
+        {/* Main Headline */}
         <h2
           id="cta-heading"
-          className={`mb-5 tracking-tight ${isLight ? "text-slate-950" : "text-white"}`}
+          className="font-[750] sm:font-[800] text-center tracking-[-0.03em] md:tracking-[-1.8px] leading-[1.12] text-[34px] sm:text-[42px] md:text-[50px] lg:text-[54px] max-w-4xl mx-auto transition-all duration-700 delay-100"
           style={{
-            fontSize: "clamp(2.2rem, 5.5vw, 4.2rem)",
-            fontFamily: "var(--font-space-grotesk)",
-            fontWeight: 800,
-            lineHeight: 1.1,
+            fontFamily:
+              "var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.7s ease-out 0.1s, transform 0.7s ease-out 0.1s",
+            transform: visible ? "translateY(0)" : "translateY(12px)",
           }}
         >
-          Your Digital Problem Deserves
-          <br />
           <span
-            className={
-              isLight
-                ? "inline-block bg-clip-text text-transparent bg-gradient-to-r from-sky-600 via-indigo-600 to-purple-600 font-extrabold"
-                : "inline-block bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-indigo-400 to-purple-400 font-extrabold"
-            }
+            className="block text-[#101522]"
+            style={{ color: "#101522" }}
+          >
+            Your Digital Problem Deserves
+          </span>
+          <span
+            className="block mt-1 sm:mt-1.5 bg-clip-text text-transparent"
+            style={{
+              backgroundImage:
+                "linear-gradient(90deg, #168DEB 0%, #326BEE 33%, #713CF6 67%, #A02DF5 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
           >
             a Smarter Solution.
           </span>
         </h2>
 
-        {/* Supporting line */}
+        {/* Subtitle */}
         <p
-          className={`mb-10 text-base sm:text-lg max-w-xl mx-auto font-normal ${
-            isLight ? "text-slate-600" : "text-zinc-300"
-          }`}
+          className="mt-5 text-[17.5px] sm:text-[18.5px] font-[450] leading-[1.6] text-center max-w-[850px] mx-auto px-4 transition-all duration-700 delay-200"
           style={{
-            fontFamily: "var(--font-inter)",
+            color: "#586780",
+            fontFamily: "var(--font-inter), sans-serif",
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.7s ease-out 0.2s, transform 0.7s ease-out 0.2s",
+            transform: visible ? "translateY(0)" : "translateY(12px)",
           }}
         >
           Connect with SocialAssist and find the direct, verified path forward.
         </p>
 
-        {/* Action Buttons */}
+        {/* Action Buttons Row */}
         <div
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-md sm:max-w-none mx-auto mb-12 sm:mb-16"
+          className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-5 w-full sm:w-auto transition-all duration-700 delay-300"
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.7s ease-out 0.3s, transform 0.7s ease-out 0.3s",
+            transform: visible ? "translateY(0)" : "translateY(12px)",
           }}
         >
+          {/* Primary CTA — Open Telegram Channel */}
           <a
             href="https://t.me/socialassist"
             target="_blank"
             rel="noopener noreferrer"
-            className={`group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-sm sm:text-base transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] ${
-              isLight
-                ? "btn-light-purple text-slate-950 font-bold shadow-md hover:shadow-lg"
-                : "text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-lg shadow-indigo-950/50"
-            }`}
-            style={{ fontFamily: "var(--font-inter)" }}
+            className="keep-white group relative h-[66px] px-8 sm:px-9 rounded-full flex items-center justify-center gap-3 text-white text-[17px] font-[650] tracking-[-0.01em] transition-all duration-250 ease-out hover:-translate-y-0.5 active:translate-y-0 select-none w-full sm:w-auto"
+            style={{
+              background:
+                "linear-gradient(110deg, #42A5F5 0%, #326BEE 48%, #913CF4 100%)",
+              boxShadow:
+                "0 10px 28px -4px rgba(50, 107, 238, 0.35), 0 4px 12px -2px rgba(145, 60, 244, 0.25)",
+              color: "#FFFFFF",
+              fontFamily: "var(--font-inter), sans-serif",
+            }}
           >
-            <span>Open Telegram Channel</span>
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 16 16"
-              fill="none"
-              className="transition-transform duration-300 group-hover:translate-x-1"
+            <TelegramPlaneIcon className="w-[22px] h-[22px] shrink-0" />
+            <span className="keep-white" style={{ color: "#FFFFFF" }}>
+              Open Telegram Channel
+            </span>
+            <span
+              className="keep-white text-lg leading-none transition-transform duration-250 ease-out group-hover:translate-x-1 inline-block"
+              style={{ color: "#FFFFFF" }}
             >
-              <path d="M1 8h14M9 3l6 5-6 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+              →
+            </span>
           </a>
 
+          {/* Secondary CTA — Explore Services */}
           <button
+            type="button"
             onClick={() => scrollTo("services")}
-            className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-semibold text-sm sm:text-base transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] ${
-              isLight
-                ? "bg-white/90 text-slate-900 border border-slate-300/80 shadow-sm hover:bg-white"
-                : "border border-white/15 bg-white/5 hover:bg-white/10 hover:border-white/30 text-zinc-200 backdrop-blur-xl"
-            }`}
-            style={{ fontFamily: "var(--font-inter)" }}
+            className="group relative h-[66px] px-8 sm:px-9 rounded-full flex items-center justify-center gap-3 bg-white text-[17px] font-[600] tracking-[-0.01em] border border-[#E3E8F2] hover:border-[#D3DDF0] transition-all duration-250 ease-out hover:-translate-y-0.5 active:translate-y-0 select-none w-full sm:w-auto"
+            style={{
+              backgroundColor: "#FFFFFF",
+              color: "#101522",
+              borderColor: "#E3E8F2",
+              boxShadow:
+                "0 4px 16px rgba(16, 21, 34, 0.05), 0 1px 3px rgba(16, 21, 34, 0.03)",
+              fontFamily: "var(--font-inter), sans-serif",
+            }}
           >
-            Explore Services
+            <LayoutGrid
+              size={22}
+              strokeWidth={1.8}
+              style={{ color: "#101522" }}
+              className="shrink-0"
+            />
+            <span style={{ color: "#101522" }}>Explore Services</span>
           </button>
         </div>
 
         {/* Embedded Telegram Inquiry Form */}
-        <div className="mt-8 text-left">
+        <div className="mt-12 sm:mt-16 text-left">
           <TelegramInquiry />
         </div>
       </div>

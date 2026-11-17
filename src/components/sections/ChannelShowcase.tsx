@@ -55,7 +55,7 @@ export default function ChannelShowcase() {
     <section
       id="channel"
       ref={ref}
-      className="relative z-10 py-24 px-4 md:px-8"
+      className="relative z-10 pt-20 sm:pt-24 pb-12 sm:pb-14 px-4 md:px-8"
       aria-labelledby="channel-heading"
     >
       {/* Large violet glow */}
