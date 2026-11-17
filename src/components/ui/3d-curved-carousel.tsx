@@ -93,20 +93,17 @@ const FRAG =
   "varying vec2 vUv;varying float vX;" +
   "float box(vec2 q,vec2 b,float r){vec2 d=abs(q)-b+r;return length(max(d,0.))+min(max(d.x,d.y),0.)-r;}" +
   "void main(){" +
-  "float a=uSize.x/uSize.y;vec2 uv=vUv-.5;" +
-  "if(uAspect>a)uv.x*=a/uAspect;else uv.y*=uAspect/a;" +
-  "uv=uv/1.12+.5;uv.x+=uShift;" +
-  "float ca=(.0012+.0045*vX*vX)*(1.+abs(uVel)*1.2);" +
+  "float a=uSize.x/uSize.y;vec2 uv=vUv;" +
+  "if(uAspect>a)uv.x=(vUv.x-.5)*(a/uAspect)+.5;else uv.y=(vUv.y-.5)*(uAspect/a)+.5;" +
+  "uv.x+=uShift;" +
+  "float ca=(.0035*vX*vX)*(1.+abs(uVel)*1.2);" +
   "vec3 c=vec3(texture2D(uTex,uv+vec2(ca,0.)).r,texture2D(uTex,uv).g,texture2D(uTex,uv-vec2(ca,0.)).b);" +
-  "c=mix(vec3(.11,.11,.12),c,uReady);" +
-  "c*=1.-.42*min(1.,vX*vX);" +
-  "float mid=smoothstep(.45,0.,abs(vX));" +
-  "vec3 dreamGlow=vec3(.64,.54,1.);" +
-  "c+=dreamGlow*(mid*.16+pow(mid,2.2)*.14);" +
-  "float d=box((vUv-.5)*uSize,uSize*.5,14.);" +
-  "float rim=smoothstep(-5.,0.,d);" +
-  "c+=rim*(.10+.42*mid)*mix(vec3(1.),vec3(.88,.82,1.),mid);" +
-  "c+=.08*smoothstep(.45,1.,vUv.y)*mid*vec3(.76,.66,1.);" +
+  "c=mix(vec3(.08,.08,.10),c,uReady);" +
+  "c*=1.-.35*min(1.,vX*vX);" +
+  "float mid=smoothstep(.40,0.,abs(vX));" +
+  "float d=box((vUv-.5)*uSize,uSize*.5,18.);" +
+  "float rim=smoothstep(-2.5,0.,d);" +
+  "c+=rim*.14*mix(vec3(.88,.90,.98),vec3(1.),mid);" +
   "float al=smoothstep(.75,-.75,d)*uIntro;" +
   "gl_FragColor=vec4(c*al,al);}"
 
@@ -118,9 +115,7 @@ const CSS =
   FONT +
   ".clc-root{position:relative;width:100%;overflow:hidden;isolation:isolate;outline:none;user-select:none;-webkit-user-select:none;font-family:ui-sans-serif,system-ui,sans-serif}" +
   ".clc-root:focus-visible{box-shadow:inset 0 0 0 2px var(--clc-ink)}" +
-  ".clc-glow{position:absolute;inset:-15%;background:radial-gradient(42% 38% at 50% 36%,rgba(147,112,255,.32),rgba(99,102,241,.16) 42%,transparent 72%),radial-gradient(26% 24% at 50% 36%,rgba(216,180,254,.40),transparent 65%);filter:blur(24px);pointer-events:none;animation:clcDreamPulse 6s ease-in-out infinite alternate}" +
-  "@keyframes clcDreamPulse{0%{transform:scale(.96);opacity:.85}100%{transform:scale(1.04);opacity:1}}" +
-  ".clc-grain{position:absolute;inset:0;opacity:.07;mix-blend-mode:overlay;pointer-events:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")}" +
+  ".clc-glow{position:absolute;inset:-15%;background:radial-gradient(46% 40% at 50% 36%,rgba(188,165,255,.22) 0%,rgba(217,203,255,.15) 32%,rgba(238,232,255,.08) 58%,transparent 76%);filter:blur(50px);-webkit-filter:blur(50px);pointer-events:none}" +
   ".clc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;touch-action:pan-y}" +
   ".clc-canvas:active{cursor:grabbing}" +
   ".clc-top{position:absolute;left:clamp(20px,4vw,48px);right:clamp(20px,4vw,48px);top:clamp(18px,3.4vw,36px);display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--clc-ink);opacity:.68;pointer-events:none}" +
@@ -474,8 +469,8 @@ export default function CurvedLensCarousel({
       <style>{CSS}</style>
       <div className="clc-glow" aria-hidden="true" />
       <canvas ref={canvasRef} className="clc-canvas" aria-hidden="true" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       {noGL ? <img className="clc-fallback" src={slide.image} alt={slide.alt ?? slide.title} /> : null}
-      <div className="clc-grain" aria-hidden="true" />
       <div className="clc-top">
         <b>{label}</b>
         <span>Drag to wander</span>
