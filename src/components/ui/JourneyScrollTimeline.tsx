@@ -409,39 +409,76 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
       const p = progressRef.current;
 
       // ── 2. Seamless Milestone Content Layer Updates with Cinematic Motion Blur ──
+      const clampedP = Math.max(0, Math.min(3, p));
+      const k = Math.min(2, Math.floor(clampedP));
+      const t = clampedP - k; // float in [0.0, 1.0] between milestone k and k+1
+
+      const isSettled =
+        !isInteracting &&
+        ((t < 0.003 && Math.abs(velocityRef.current) < 0.003) ||
+          (t > 0.997 && Math.abs(velocityRef.current) < 0.003));
+
+      const settledIndex = t > 0.997 ? Math.min(3, k + 1) : k;
+
       for (let i = 0; i < 4; i++) {
         const layer = milestoneLayersRef.current[i];
         if (!layer) continue;
 
-        const delta = p - i; // distance from this milestone
-        const absDelta = Math.abs(delta);
-
-        if (absDelta >= 1.0) {
-          // Off-screen
-          layer.style.opacity = "0";
-          layer.style.visibility = "hidden";
-          layer.style.pointerEvents = "none";
-          layer.style.filter = "none";
+        if (isSettled) {
+          if (i === settledIndex) {
+            layer.style.visibility = "visible";
+            layer.style.opacity = "1";
+            layer.style.transform = "translate3d(0, 0, 0) scale(1)";
+            layer.style.filter = "none";
+            layer.style.zIndex = "5";
+            layer.style.pointerEvents = "auto";
+          } else {
+            layer.style.visibility = "hidden";
+            layer.style.opacity = "0";
+            layer.style.filter = "none";
+            layer.style.zIndex = "1";
+            layer.style.pointerEvents = "none";
+          }
         } else {
-          // Smooth depth movement, progressive opacity, and cinematic blur-to-sharp transition
-          layer.style.visibility = "visible";
-          layer.style.pointerEvents = absDelta < 0.5 ? "auto" : "none";
+          // Active transition strictly between k and k+1 (zero ghosting from other milestones)
+          if (i === k) {
+            // Milestone k: Outgoing as t increases (0 -> 1)
+            layer.style.visibility = "visible";
+            const yOut = -t * 35; // moves from 0 to -35px
+            const scaleOut = 1.0 - t * 0.04; // 1.0 -> 0.96
+            const blurOut = t * 10.0; // 0px -> 10px
+            const opacityOut = Math.max(0, 1.0 - Math.pow(t, 1.15) * 1.1);
 
-          const translateY = -delta * 44; // smooth 44px travel
-          const scale = 1.0 - absDelta * 0.04; // subtle 0.96 to 1.0 depth
-          const opacity = Math.max(0, 1.0 - absDelta * 1.05);
+            layer.style.transform = `translate3d(0, ${yOut.toFixed(2)}px, 0) scale(${scaleOut.toFixed(3)})`;
+            layer.style.opacity = opacityOut.toFixed(3);
+            layer.style.filter = blurOut > 0.1 ? `blur(${blurOut.toFixed(2)}px)` : "none";
+            layer.style.zIndex = t < 0.5 ? "5" : "2";
+            layer.style.pointerEvents = t < 0.5 ? "auto" : "none";
+          } else if (i === k + 1) {
+            // Milestone k+1: Incoming as t increases (0 -> 1)
+            layer.style.visibility = "visible";
+            const yIn = (1.0 - t) * 35; // enters from +35px to 0
+            const scaleIn = 0.96 + t * 0.04; // 0.96 -> 1.0
+            const blurIn = (1.0 - t) * 10.0; // 10px -> 0px
+            const opacityIn = Math.min(1.0, 0.15 + t * 0.85); // 0.15 -> 1.0
 
-          // Motion blur: exactly 0px when settled, progressively blurred up to 5.5px during transit
-          const blurAmount = absDelta * 5.5;
-
-          layer.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`;
-          layer.style.opacity = opacity.toFixed(3);
-          layer.style.filter = blurAmount > 0.08 ? `blur(${blurAmount.toFixed(2)}px)` : "none";
+            layer.style.transform = `translate3d(0, ${yIn.toFixed(2)}px, 0) scale(${scaleIn.toFixed(3)})`;
+            layer.style.opacity = opacityIn.toFixed(3);
+            layer.style.filter = blurIn > 0.1 ? `blur(${blurIn.toFixed(2)}px)` : "none";
+            layer.style.zIndex = t >= 0.5 ? "5" : "2";
+            layer.style.pointerEvents = t >= 0.5 ? "auto" : "none";
+          } else {
+            // All other milestones completely hidden (prevents duplicate ghost text)
+            layer.style.visibility = "hidden";
+            layer.style.opacity = "0";
+            layer.style.filter = "none";
+            layer.style.zIndex = "1";
+            layer.style.pointerEvents = "none";
+          }
         }
       }
 
       // ── 3. Synchronized Progress Bar & Counter ──
-      const clampedP = Math.max(0, Math.min(3, p));
       const roundedStep = Math.max(0, Math.min(3, Math.round(clampedP)));
 
       if (progressLineRef.current) {
@@ -782,8 +819,8 @@ export default function JourneyScrollTimeline({ isLight = true }: JourneyScrollT
                   opacity: idx === 0 ? 1 : 0,
                   transform: "none",
                   pointerEvents: idx === 0 ? "auto" : "none",
-                  padding: "24px 0",
-                  margin: "-24px 0",
+                  padding: "36px 0",
+                  margin: "-36px 0",
                   background: "transparent",
                   border: "none",
                   outline: "none",
