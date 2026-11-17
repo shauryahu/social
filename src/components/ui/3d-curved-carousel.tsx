@@ -100,8 +100,8 @@ const FRAG =
   "c=mix(vec3(1.),c,uReady);" +
   "c*=1.-.08*min(1.,vX*vX);" +
   "float d=box((vUv-.5)*uSize,uSize*.5,18.);" +
-  "float border=smoothstep(.5,-.5,d)-smoothstep(-1.5,-2.5,d);" +
-  "vec3 borderColor=vec3(37./255.);" +
+  "float border=smoothstep(.5,-.5,d)-smoothstep(-.5,-1.5,d);" +
+  "vec3 borderColor=vec3(201./255.,205./255.,210./255.);" +
   "c=mix(c,borderColor,clamp(border,0.,1.));" +
   "float al=smoothstep(.75,-.75,d)*uIntro;" +
   "gl_FragColor=vec4(c*al,al);}";
@@ -134,14 +134,14 @@ const CSS =
   ".clc-bar>span{display:block;height:100%;width:100%;background:#000000;transform-origin:0 50%;transition:transform .7s cubic-bezier(.2,.9,.1,1)}" +
   ".clc-btns{display:flex;gap:10px}" +
   ".clc-btn{width:46px;height:46px;border-radius:999px;display:grid;place-items:center;color:#000000;cursor:pointer;" +
-  "background:#FFFFFF;border:1px solid #252525;" +
+  "background:#FFFFFF;border:1px solid #C9CDD2;" +
   "box-shadow:0 2px 8px rgba(0,0,0,.08);" +
   "transition:transform .35s cubic-bezier(.3,1.6,.5,1),background .2s ease,border-color .2s ease,box-shadow .2s ease}" +
   ".clc-btn:hover{transform:translateY(-2px) scale(1.06);background:#FFFFFF;border-color:#000000;box-shadow:0 4px 14px rgba(0,0,0,.14)}" +
   ".clc-btn:active{transform:scale(.94)}" +
   ".clc-btn:focus-visible{outline:2px solid #000000;outline-offset:3px}" +
   ".clc-btn svg{width:18px;height:18px;stroke:#000000}" +
-  ".clc-fallback{position:absolute;left:50%;top:50%;width:min(62vw,360px);aspect-ratio:4/5;transform:translate(-50%,-50%);object-fit:cover;border-radius:18px;border:2px solid #252525;background:#FFFFFF;max-width:none}" +
+  ".clc-fallback{position:absolute;left:50%;top:50%;width:min(62vw,360px);aspect-ratio:4/5;transform:translate(-50%,-50%);object-fit:cover;border-radius:18px;border:1px solid #C9CDD2;background:#FFFFFF;max-width:none}" +
   ".clc-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}" +
   "@media (max-width:640px){.clc-copy{max-width:calc(100% - 40px);bottom:96px}.clc-ctl{flex-direction:row;align-items:center;left:20px;justify-content:space-between}.clc-bar{width:96px}}" +
   "@media (prefers-reduced-motion:reduce){.clc-ch,.clc-cap,.clc-bar>span,.clc-btn{transition:opacity .2s ease}.clc-ch{transform:none}.clc-cap{transform:none}}"
@@ -229,6 +229,7 @@ export default function CurvedLensCarousel({
   const [index, setIndex] = React.useState(0)
   const [shown, setShown] = React.useState(false)
   const [noGL, setNoGL] = React.useState(false)
+  const [dims, setDims] = React.useState<{ w: number; h: number } | null>(null)
   const api = React.useRef({ go: (_d: number) => { void _d } })
   const onChangeRef = React.useRef(onChange)
   onChangeRef.current = onChange
@@ -302,6 +303,7 @@ export default function CurvedLensCarousel({
     const resize = (w: number, h: number) => {
       W = Math.max(1, w)
       H = Math.max(1, h)
+      setDims((prev) => (prev?.w === W && prev?.h === H ? prev : { w: W, h: H }))
       dpr = Math.min(2, window.devicePixelRatio || 1)
       canvas.width = Math.round(W * dpr)
       canvas.height = Math.round(H * dpr)
@@ -455,6 +457,31 @@ export default function CurvedLensCarousel({
   if (!slide) return null
   const vars = { height, background, "--clc-ink": ink, "--clc-font": "var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif" } as React.CSSProperties
 
+  const W = dims?.w ?? 0
+  const H = dims?.h ?? 0
+  let topCurvePath = ""
+  let botCurvePath = ""
+  if (W > 0 && H > 0) {
+    const [cw, ch] = cardSize(W, H)
+    const lift = W < 640 ? 0.20 : 0.24
+    const getY = (X: number, isTop: boolean) => {
+      const norm_x = (X - W * 0.5) / (W * 0.5)
+      const factor = 1.0 + bend * norm_x * norm_x
+      const n_y = (isTop ? 1 : -1) * (ch / H) * factor + lift
+      return H * 0.5 * (1.0 - n_y)
+    }
+    const y0_top = getY(0, true)
+    const ymid_top = getY(W * 0.5, true)
+    const yc_top = 2 * ymid_top - y0_top
+
+    const y0_bot = getY(0, false)
+    const ymid_bot = getY(W * 0.5, false)
+    const yc_bot = 2 * ymid_bot - y0_bot
+
+    topCurvePath = `M 0,${y0_top.toFixed(2)} Q ${(W * 0.5).toFixed(2)},${yc_top.toFixed(2)} ${W.toFixed(2)},${y0_top.toFixed(2)}`
+    botCurvePath = `M 0,${y0_bot.toFixed(2)} Q ${(W * 0.5).toFixed(2)},${yc_bot.toFixed(2)} ${W.toFixed(2)},${y0_bot.toFixed(2)}`
+  }
+
   return (
     <div
       ref={rootRef}
@@ -466,6 +493,35 @@ export default function CurvedLensCarousel({
       aria-label={typeof label === "string" ? label : "Photo carousel"}
     >
       <style>{CSS}</style>
+      {topCurvePath && botCurvePath && (
+        <svg
+          className="clc-rails"
+          aria-hidden="true"
+          viewBox={`0 0 ${W} ${H}`}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
+          }}
+        >
+          <path
+            d={topCurvePath}
+            fill="none"
+            stroke="#C9CDD2"
+            strokeWidth="1"
+            strokeLinecap="round"
+          />
+          <path
+            d={botCurvePath}
+            fill="none"
+            stroke="#C9CDD2"
+            strokeWidth="1"
+            strokeLinecap="round"
+          />
+        </svg>
+      )}
       <canvas ref={canvasRef} className="clc-canvas" aria-hidden="true" />
       {/* eslint-disable-next-line @next/next/no-img-element */}
       {noGL ? <img className="clc-fallback" src={slide.image} alt={slide.alt ?? slide.title} /> : null}
