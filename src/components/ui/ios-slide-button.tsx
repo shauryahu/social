@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { Check, ChevronRight } from "lucide-react";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Official Telegram paper-plane SVG
-function TelegramPlaneIcon({ className = "w-5 h-5" }: { className?: string }) {
+// Authentic Telegram paper-plane vector icon
+function TelegramPlaneIcon({ className = "w-[22px] h-[22px]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -34,7 +34,7 @@ export function IosSlideButton({
   onUnlock,
   targetUrl = "https://t.me/socialassist",
   text = "Slide to open Telegram",
-  completedText = "Opening Channel...",
+  completedText = "Opening Telegram Channel...",
   className,
 }: IosSlideButtonProps) {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -47,7 +47,7 @@ export function IosSlideButton({
   const initialDragRef = useRef(0);
   const hasMovedRef = useRef(false);
 
-  // Recalculate max drag distance based on track and knob width
+  // Recalculate max drag distance based on track and handle width
   const updateMaxDrag = useCallback(() => {
     if (trackRef.current) {
       const trackWidth = trackRef.current.clientWidth;
@@ -82,7 +82,7 @@ export function IosSlideButton({
     }, 1800);
   }, [maxDrag, onUnlock, targetUrl]);
 
-  // Smooth auto-slide on click if user doesn't drag
+  // Smooth auto-slide on click/tap if user doesn't drag
   const handleAutoSlide = useCallback(() => {
     if (isCompleted || isDragging) return;
     setIsDragging(true);
@@ -143,7 +143,7 @@ export function IosSlideButton({
       return;
     }
 
-    // Dragged past 75% of track -> unlock!
+    // Dragged past 72% of track -> unlock!
     if (dragX >= maxDrag * 0.72) {
       triggerComplete();
     } else {
@@ -187,7 +187,7 @@ export function IosSlideButton({
     >
       {/* ── Shimmering iOS Text Track ── */}
       <div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-200"
+        className="absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-200 z-10"
         style={{
           paddingLeft: "58px",
           paddingRight: "20px",
@@ -212,27 +212,27 @@ export function IosSlideButton({
 
       {/* Completed State Text */}
       {isCompleted && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white font-[650] text-[16.5px] tracking-wide animate-fade-in">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white font-[650] text-[16.5px] tracking-wide animate-fade-in z-10">
           {completedText}
         </div>
       )}
 
-      {/* ── Slide Completion Glow Bar ── */}
+      {/* ── Slide Progress Shading Bar ── */}
       <div
-        className="absolute left-0 top-0 bottom-0 pointer-events-none transition-all"
+        className="absolute left-0 top-0 bottom-0 pointer-events-none transition-all z-10"
         style={{
-          width: `${dragX + 26}px`,
+          width: `${dragX + 33}px`,
           background: "linear-gradient(90deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06))",
         }}
       />
 
-      {/* ── Authentic iOS Slider Knob (Draggable Pod) ── */}
+      {/* ── Circular White Draggable Slider Handle with Perfectly Centered Telegram Icon ── */}
       <div
-        className="absolute top-[7px] w-[52px] h-[52px] rounded-full flex items-center justify-center transition-transform"
+        className="absolute top-1/2 left-[7px] w-[52px] h-[52px] rounded-full flex items-center justify-center z-20 pointer-events-none select-none"
         style={{
-          transform: `translate3d(${dragX}px, 0, 0)`,
+          transform: `translate3d(${dragX}px, -50%, 0)`,
           transition: isDragging ? "none" : "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-          background: isCompleted ? "#10B981" : "#FFFFFF",
+          backgroundColor: isCompleted ? "#10B981" : "#FFFFFF",
           boxShadow: "0 4px 16px rgba(0, 0, 0, 0.22), 0 1px 4px rgba(0, 0, 0, 0.12)",
           color: isCompleted ? "#FFFFFF" : "#326BEE",
         }}
@@ -240,22 +240,7 @@ export function IosSlideButton({
         {isCompleted ? (
           <Check className="w-6 h-6 text-white stroke-[2.5]" />
         ) : (
-          <div className="relative flex items-center justify-center w-full h-full">
-            {/* Telegram Plane Icon */}
-            <TelegramPlaneIcon
-              className={cn(
-                "w-[22px] h-[22px] transition-transform duration-300",
-                progress > 0.4 && "translate-x-0.5 -rotate-6"
-              )}
-            />
-            {/* Subtle iOS arrow hint */}
-            <ChevronRight
-              className={cn(
-                "absolute -right-1 w-3.5 h-3.5 text-sky-400/80 transition-opacity duration-200 stroke-[2.5]",
-                progress > 0.3 ? "opacity-0" : "opacity-100"
-              )}
-            />
-          </div>
+          <TelegramPlaneIcon className="w-[22px] h-[22px] text-[#326BEE] shrink-0" />
         )}
       </div>
 
