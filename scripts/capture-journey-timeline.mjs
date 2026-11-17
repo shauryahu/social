@@ -16,7 +16,7 @@ const chromeProc = spawn(
   CHROME_PATH,
   [
     "--headless=new",
-    "--remote-debugging-port=9227",
+    "--remote-debugging-port=9228",
     `--user-data-dir=${USER_DATA}`,
     "--window-size=1440,1100",
     "--hide-scrollbars",
@@ -35,7 +35,7 @@ function sleep(ms) {
 async function getDebuggerUrl() {
   for (let i = 0; i < 20; i++) {
     try {
-      const res = await fetch("http://127.0.0.1:9227/json/version");
+      const res = await fetch("http://127.0.0.1:9228/json/version");
       if (res.ok) {
         const data = await res.json();
         return data.webSocketDebuggerUrl;
@@ -115,30 +115,40 @@ async function main() {
     });
     await sleep(1500);
 
-    // 1. Capture Milestone 01 (2021)
-    console.log("Capturing Milestone 01 (2021 Foundation)...");
+    // 1. Capture Settled Milestone 01 (Screenshot 2 equivalent)
+    console.log("Capturing Settled Milestone 01 (2021 Foundation)...");
     const shot01 = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "journey_timeline_01.png"), Buffer.from(shot01.data, "base64"));
     fs.writeFileSync(path.join(BRAIN_DIR, "journey_timeline_01.png"), Buffer.from(shot01.data, "base64"));
     console.log("Saved journey_timeline_01.png!");
 
-    // 2. Click Milestone 02 (2022 Expansion)
-    console.log("Navigating to Milestone 02 (2022 Expansion)...");
+    // 2. Simulate Mid-Transition state (wheel scroll delta dispatch inside container)
+    console.log("Simulating real-time wheel scroll mid-transition...");
     await sendSession("Runtime.evaluate", {
       expression: `(() => {
-        const buttons = Array.from(document.querySelectorAll('[data-testid="journey-scroll-timeline-container"] button'));
-        const btn = buttons.find(b => b.innerText.includes("02") || b.innerText.includes("Expansion"));
-        if (btn) btn.click();
+        const container = document.querySelector('[data-testid="journey-scroll-timeline-container"]');
+        if (container) {
+          container.dispatchEvent(new WheelEvent("wheel", { deltaY: 140, bubbles: true, cancelable: true }));
+        }
       })()`,
     });
-    await sleep(1000);
+    await sleep(60); // catch frame during active transition
+    const shotTransition = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "journey_timeline_transition.png"), Buffer.from(shotTransition.data, "base64"));
+    fs.writeFileSync(path.join(BRAIN_DIR, "journey_timeline_transition.png"), Buffer.from(shotTransition.data, "base64"));
+    console.log("Saved journey_timeline_transition.png!");
+
+    await sleep(800); // let it settle on Milestone 02
+
+    // 3. Capture Settled Milestone 02
+    console.log("Capturing Settled Milestone 02 (2022 Expansion)...");
     const shot02 = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "journey_timeline_02.png"), Buffer.from(shot02.data, "base64"));
     fs.writeFileSync(path.join(BRAIN_DIR, "journey_timeline_02.png"), Buffer.from(shot02.data, "base64"));
     console.log("Saved journey_timeline_02.png!");
 
-    // 3. Click Milestone 03 (2023 Evolution)
-    console.log("Navigating to Milestone 03 (2023 Evolution)...");
+    // 4. Click Milestone 03
+    console.log("Navigating to Milestone 03...");
     await sendSession("Runtime.evaluate", {
       expression: `(() => {
         const buttons = Array.from(document.querySelectorAll('[data-testid="journey-scroll-timeline-container"] button'));
@@ -146,14 +156,14 @@ async function main() {
         if (btn) btn.click();
       })()`,
     });
-    await sleep(1000);
+    await sleep(900);
     const shot03 = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "journey_timeline_03.png"), Buffer.from(shot03.data, "base64"));
     fs.writeFileSync(path.join(BRAIN_DIR, "journey_timeline_03.png"), Buffer.from(shot03.data, "base64"));
     console.log("Saved journey_timeline_03.png!");
 
-    // 4. Click Milestone 04 (2024+ Network)
-    console.log("Navigating to Milestone 04 (2024+ Network)...");
+    // 5. Click Milestone 04
+    console.log("Navigating to Milestone 04...");
     await sendSession("Runtime.evaluate", {
       expression: `(() => {
         const buttons = Array.from(document.querySelectorAll('[data-testid="journey-scroll-timeline-container"] button'));
@@ -161,13 +171,13 @@ async function main() {
         if (btn) btn.click();
       })()`,
     });
-    await sleep(1000);
+    await sleep(900);
     const shot04 = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "journey_timeline_04.png"), Buffer.from(shot04.data, "base64"));
     fs.writeFileSync(path.join(BRAIN_DIR, "journey_timeline_04.png"), Buffer.from(shot04.data, "base64"));
     console.log("Saved journey_timeline_04.png!");
 
-    // 5. Switch to Dark Mode Desktop
+    // 6. Switch to Dark Mode Desktop
     console.log("Switching to Dark Mode...");
     await sendSession("Runtime.evaluate", {
       expression: `(() => {
@@ -177,13 +187,13 @@ async function main() {
         window.dispatchEvent(new Event("socialassist-theme-change"));
       })()`,
     });
-    await sleep(1200);
-    const darkShot = await sendSession("Page.captureScreenshot", { format: "png" });
-    fs.writeFileSync(path.join(PREVIEWS_DIR, "journey_timeline_dark.png"), Buffer.from(darkShot.data, "base64"));
-    fs.writeFileSync(path.join(BRAIN_DIR, "journey_timeline_dark.png"), Buffer.from(darkShot.data, "base64"));
+    await sleep(1000);
+    const shotDark = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "journey_timeline_dark.png"), Buffer.from(shotDark.data, "base64"));
+    fs.writeFileSync(path.join(BRAIN_DIR, "journey_timeline_dark.png"), Buffer.from(shotDark.data, "base64"));
     console.log("Saved journey_timeline_dark.png!");
 
-    // 6. Mobile Viewport (390x1000)
+    // 7. Mobile Viewport (390x1000)
     console.log("Switching to mobile viewport (390x1000)...");
     await sendSession("Emulation.setDeviceMetricsOverride", {
       width: 390,
@@ -191,35 +201,19 @@ async function main() {
       deviceScaleFactor: 2,
       mobile: true,
     });
-    await sendSession("Runtime.evaluate", {
-      expression: `(() => {
-        localStorage.setItem("socialassist-theme", "light");
-        document.documentElement.setAttribute("data-theme", "light");
-        document.documentElement.classList.remove("dark");
-        window.dispatchEvent(new Event("socialassist-theme-change"));
-        const el = document.querySelector('[data-testid="journey-scroll-timeline-container"]');
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          window.scrollTo(0, window.scrollY + rect.top - 80);
-        }
-      })()`,
-    });
-    await sleep(1500);
-    const mobileShot = await sendSession("Page.captureScreenshot", { format: "png" });
-    fs.writeFileSync(path.join(PREVIEWS_DIR, "journey_timeline_mobile.png"), Buffer.from(mobileShot.data, "base64"));
-    fs.writeFileSync(path.join(BRAIN_DIR, "journey_timeline_mobile.png"), Buffer.from(mobileShot.data, "base64"));
+    await sleep(1000);
+    const shotMobile = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "journey_timeline_mobile.png"), Buffer.from(shotMobile.data, "base64"));
+    fs.writeFileSync(path.join(BRAIN_DIR, "journey_timeline_mobile.png"), Buffer.from(shotMobile.data, "base64"));
     console.log("Saved journey_timeline_mobile.png!");
 
     ws.close();
+    chromeProc.kill();
+    console.log("All journey timeline captures completed successfully!");
   } catch (err) {
-    console.error("Capture error:", err);
-  } finally {
-    try {
-      chromeProc.kill("SIGKILL");
-    } catch {}
-    try {
-      fs.rmSync(USER_DATA, { recursive: true, force: true });
-    } catch {}
+    console.error("Capture failed:", err);
+    chromeProc.kill();
+    process.exit(1);
   }
 }
 
