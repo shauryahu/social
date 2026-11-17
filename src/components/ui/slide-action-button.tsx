@@ -134,29 +134,30 @@ export function SlideActionButton({
     <div
       ref={trackRef}
       className={cn(
-        "relative h-16 w-72 overflow-hidden rounded-[22px] bg-primary/10 p-1",
-        "ring-1 ring-primary/10",
+        "relative h-16 w-72 overflow-hidden rounded-[22px]",
         // The track only carries the label — the slide starts on the thumb,
         // which suppresses selection for the whole gesture on its own.
         TOUCH_GESTURE_CONTENT_CLASS,
         disabled && "opacity-60 pointer-events-none",
-        className,
+        className || "bg-primary/10 p-1 ring-1 ring-primary/10",
       )}
       {...rest}
     >
-      <motion.span
-        aria-hidden="true"
-        style={{ scaleX: fillProgress }}
-        className={cn(
-          "absolute inset-0 origin-left bg-primary will-change-transform",
-          fillClassName,
-        )}
-      />
+      {fillClassName && (
+        <motion.span
+          aria-hidden="true"
+          style={{ scaleX: fillProgress }}
+          className={cn(
+            "absolute inset-0 origin-left will-change-transform pointer-events-none",
+            fillClassName,
+          )}
+        />
+      )}
 
       <motion.span
         aria-hidden="true"
         style={{ opacity: labelOpacity }}
-        className="pointer-events-none absolute inset-0 grid place-items-center pl-10 text-sm font-medium text-foreground"
+        className="pointer-events-none absolute inset-0 grid place-items-center pl-10 text-sm font-medium"
       >
         {children}
       </motion.span>
@@ -165,7 +166,7 @@ export function SlideActionButton({
         aria-live="polite"
         animate={{ opacity: completed ? 1 : 0 }}
         transition={{ duration: reduce ? 0 : 0.15, ease: EASE_OUT }}
-        className="pointer-events-none absolute inset-0 grid place-items-center text-sm font-medium text-primary-foreground"
+        className="pointer-events-none absolute inset-0 grid place-items-center text-sm font-medium"
       >
         {completed ? completeLabel : null}
       </motion.span>
@@ -188,12 +189,12 @@ export function SlideActionButton({
         whileTap={reduce || completed || disabled ? undefined : { scale: 0.94 }}
         transition={SPRING_PRESS}
         className={cn(
-          "relative z-10 grid size-14 touch-none cursor-grab place-items-center rounded-[18px] bg-primary text-primary-foreground shadow-sm",
+          "relative z-10 grid size-14 touch-none cursor-grab place-items-center rounded-[18px]",
           TOUCH_GESTURE_CLASS,
           "outline-none active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           completed && "cursor-default bg-background text-foreground",
           disabled && "cursor-not-allowed opacity-60",
-          thumbClassName,
+          thumbClassName || "bg-primary text-primary-foreground shadow-sm",
         )}
       >
         <motion.svg viewBox="0 0 24 24" aria-hidden="true" className="size-5">
@@ -203,7 +204,7 @@ export function SlideActionButton({
             stroke="currentColor"
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeWidth="2"
+            strokeWidth="2.4"
           />
         </motion.svg>
       </motion.button>

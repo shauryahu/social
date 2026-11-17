@@ -373,35 +373,43 @@ export default function TelegramInquiry() {
                 resetDelay={2200}
                 onComplete={handleSubmit}
                 className={cn(
-                  "w-full max-w-md h-16 rounded-[22px] transition-all duration-300 p-1.5",
+                  "w-full max-w-md h-16 rounded-[22px] transition-colors duration-200 p-1.5",
                   isLight
-                    ? "bg-[#F0F4FF] border border-[#C7DFFF] text-[#101522] shadow-[0_4px_20px_rgba(22,141,235,0.08)] ring-0"
-                    : "bg-white/[0.04] border border-white/15 text-white shadow-[0_4px_20px_rgba(0,0,0,0.4)] ring-0"
+                    ? "bg-[#F4F5F8] border border-[#DCE2EB] text-[#0F172A] shadow-none ring-0"
+                    : "bg-[#131620] border border-white/10 text-white shadow-none ring-0"
                 )}
-                fillClassName="bg-gradient-to-r from-[#168DEB] via-[#4F46E5] to-[#713CF6]"
                 thumbClassName={cn(
-                  "h-full aspect-square rounded-[18px] text-white shadow-md transition-colors",
-                  isLight
-                    ? "bg-gradient-to-br from-[#168DEB] to-[#713CF6]"
-                    : "bg-gradient-to-br from-[#326BEE] to-[#8060F5]"
+                  "h-full aspect-square rounded-[18px] text-white apple-handle-breathe cursor-grab active:cursor-grabbing transition-transform",
+                  "bg-gradient-to-br from-[#168DEB] via-[#3B55E6] to-[#713CF6]"
                 )}
                 completeLabel={
                   status === "loading" ? (
-                    <span className="flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider font-mono text-white">
-                      <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                    <span
+                      className="flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-wider font-mono"
+                      style={{ color: isLight ? "#0F172A" : "#FFFFFF" }}
+                    >
+                      <span className="w-3.5 h-3.5 border-2 border-[#168DEB] border-t-transparent rounded-full animate-spin" />
                       Transmitting Case...
                     </span>
                   ) : (
-                    <span className="flex items-center gap-1.5 text-xs sm:text-sm font-bold uppercase tracking-wider font-mono text-white">
-                      <Check className="w-4 h-4 text-emerald-300" strokeWidth={2.5} />
+                    <span className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold uppercase tracking-wider font-mono text-emerald-700 dark:text-emerald-400">
+                      <Check className="w-4 h-4 text-emerald-700 dark:text-emerald-400" strokeWidth={2.5} />
                       Case Transmitted
                     </span>
                   )
                 }
               >
-                <span className="flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider font-mono text-[#101522] dark:text-white">
+                <span
+                  className="flex items-center gap-2 text-xs sm:text-sm font-[650] uppercase tracking-[0.12em] font-mono select-none"
+                  style={{ color: isLight ? "#0F172A" : "#FFFFFF" }}
+                >
                   <span>Slide to Submit Case</span>
-                  <span className="text-[#168DEB] dark:text-blue-400 font-black">→</span>
+                  <span
+                    className="font-black"
+                    style={{ color: isLight ? "rgba(15, 23, 42, 0.65)" : "rgba(255, 255, 255, 0.7)" }}
+                  >
+                    →
+                  </span>
                 </span>
               </SlideActionButton>
             </div>

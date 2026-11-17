@@ -159,12 +159,13 @@ async function main() {
     });
     await sendSession("Runtime.evaluate", {
       expression: `(() => {
-        localStorage.setItem("socialassist_theme", "dark");
+        localStorage.setItem("socialassist-theme", "dark");
+        document.documentElement.setAttribute("data-theme", "dark");
         document.documentElement.classList.add("dark");
+        window.dispatchEvent(new Event("socialassist-theme-change"));
       })()`,
     });
-    await sendSession("Page.reload");
-    await sleep(3500);
+    await sleep(1500);
 
     await sendSession("Runtime.evaluate", {
       expression: `(() => {
