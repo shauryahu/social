@@ -1,4 +1,9 @@
-import { LiquidNavbar, NimbusIcons } from "@/components/ui/liquid-glass-navbar"
+import ButtonWithIconDemo from "@/components/ui/button-witn-icon";
+import { LiquidNavbar, NimbusIcons } from "@/components/ui/liquid-glass-navbar";
+
+export function DemoOne() {
+  return <ButtonWithIconDemo />;
+}
 
 export default function Demo() {
   return (
@@ -27,6 +32,9 @@ export default function Demo() {
           { label: "Profile", icon: NimbusIcons.user, fx: "wave" },
         ]}
       />
+      <div className="pt-4">
+        <DemoOne />
+      </div>
       <span
         style={{
           font: "500 12px/1 ui-sans-serif, -apple-system, 'Segoe UI', system-ui, sans-serif",
@@ -34,10 +42,15 @@ export default function Demo() {
         }}
       >
         by{" "}
-        <a href="https://guglielmogiannattasio.it" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(11,19,43,.7)" }}>
+        <a
+          href="https://guglielmogiannattasio.it"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "rgba(11,19,43,.7)" }}
+        >
           guglielmogiannattasio.it
         </a>
       </span>
     </div>
-  )
+  );
 }

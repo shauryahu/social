@@ -176,12 +176,12 @@ export default function FinalCTA() {
             transform: visible ? "translateY(0)" : "translateY(12px)",
           }}
         >
-          {/* Primary CTA — Open Telegram Channel */}
+          {/* Primary CTA — Open Telegram Channel with sliding icon animation */}
           <a
             href="https://t.me/socialassist"
             target="_blank"
             rel="noopener noreferrer"
-            className="keep-white group relative h-[66px] px-8 sm:px-9 rounded-full flex items-center justify-center gap-3 text-white text-[17px] font-[650] tracking-[-0.01em] transition-all duration-250 ease-out hover:-translate-y-0.5 active:translate-y-0 select-none w-full sm:w-auto"
+            className="keep-white group relative h-[66px] ps-8 pe-[74px] hover:ps-[74px] hover:pe-8 rounded-full flex items-center justify-center text-white text-[17px] font-[650] tracking-[-0.01em] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 active:translate-y-0 select-none w-full sm:w-auto overflow-hidden cursor-pointer"
             style={{
               background:
                 "linear-gradient(110deg, #42A5F5 0%, #326BEE 48%, #913CF4 100%)",
@@ -191,16 +191,25 @@ export default function FinalCTA() {
               fontFamily: "var(--font-inter), sans-serif",
             }}
           >
-            <TelegramPlaneIcon className="w-[22px] h-[22px] shrink-0" />
-            <span className="keep-white" style={{ color: "#FFFFFF" }}>
-              Open Telegram Channel
-            </span>
             <span
-              className="keep-white text-lg leading-none transition-transform duration-250 ease-out group-hover:translate-x-1 inline-block"
+              className="keep-white relative z-10 transition-all duration-500 whitespace-nowrap"
               style={{ color: "#FFFFFF" }}
             >
-              →
+              Open Telegram Channel
             </span>
+            <div
+              className="absolute right-[7px] w-[52px] h-[52px] rounded-full flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:right-[calc(100%-59px)] group-hover:rotate-45"
+              style={{
+                background: "rgba(255, 255, 255, 0.22)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                border: "1px solid rgba(255, 255, 255, 0.35)",
+                boxShadow:
+                  "0 4px 12px rgba(0, 0, 0, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.4)",
+              }}
+            >
+              <TelegramPlaneIcon className="w-[22px] h-[22px] text-white shrink-0" />
+            </div>
           </a>
 
           {/* Secondary CTA — Explore Services */}
