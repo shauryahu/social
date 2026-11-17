@@ -149,25 +149,52 @@ async function main() {
     fs.writeFileSync(path.join(BRAIN_DIR, "why_carousel_multi_platform_light.png"), Buffer.from(multiPlatformLight.data, "base64"));
     console.log("Saved why_carousel_multi_platform_light.png!");
 
-    // Navigate backwards to Slide 5: Direct Communication
-    console.log("Clicking Previous slide twice to go to Direct Communication...");
+    // Navigate to Slide 3: Specialized Assistance
+    console.log("Clicking Next slide (Specialized Assistance)...");
     await sendSession("Runtime.evaluate", {
       expression: `(() => {
-        const prevBtn = document.querySelector('button[aria-label="Previous slide"]');
-        if (prevBtn) {
-          prevBtn.click();
-          setTimeout(() => prevBtn.click(), 400);
-        }
+        const nextBtn = document.querySelector('button[aria-label="Next slide"]');
+        if (nextBtn) nextBtn.click();
       })()`,
     });
-    await sleep(1800);
+    await sleep(1500);
+
+    const specializedLight = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "why_carousel_specialized_light.png"), Buffer.from(specializedLight.data, "base64"));
+    fs.writeFileSync(path.join(BRAIN_DIR, "why_carousel_specialized_light.png"), Buffer.from(specializedLight.data, "base64"));
+    console.log("Saved why_carousel_specialized_light.png!");
+
+    // Navigate to Slide 4: Integrated Network
+    console.log("Clicking Next slide (Integrated Network)...");
+    await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        const nextBtn = document.querySelector('button[aria-label="Next slide"]');
+        if (nextBtn) nextBtn.click();
+      })()`,
+    });
+    await sleep(1500);
+
+    const integratedLight = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "why_carousel_integrated_light.png"), Buffer.from(integratedLight.data, "base64"));
+    fs.writeFileSync(path.join(BRAIN_DIR, "why_carousel_integrated_light.png"), Buffer.from(integratedLight.data, "base64"));
+    console.log("Saved why_carousel_integrated_light.png!");
+
+    // Navigate to Slide 5: Direct Communication
+    console.log("Clicking Next slide (Direct Communication)...");
+    await sendSession("Runtime.evaluate", {
+      expression: `(() => {
+        const nextBtn = document.querySelector('button[aria-label="Next slide"]');
+        if (nextBtn) nextBtn.click();
+      })()`,
+    });
+    await sleep(1500);
 
     const directCommLight = await sendSession("Page.captureScreenshot", { format: "png" });
     fs.writeFileSync(path.join(PREVIEWS_DIR, "why_carousel_direct_comm_light.png"), Buffer.from(directCommLight.data, "base64"));
     fs.writeFileSync(path.join(BRAIN_DIR, "why_carousel_direct_comm_light.png"), Buffer.from(directCommLight.data, "base64"));
     console.log("Saved why_carousel_direct_comm_light.png!");
 
-    // Return to Established Experience
+    // Return to Established Experience (Slide 1)
     console.log("Clicking Next to return to Established Experience...");
     await sendSession("Runtime.evaluate", {
       expression: `(() => {
@@ -175,7 +202,7 @@ async function main() {
         if (nextBtn) nextBtn.click();
       })()`,
     });
-    await sleep(1200);
+    await sleep(1500);
 
     // Switch to Dark Mode for Established Experience
     console.log("Toggling Dark Mode via localStorage & event...");
