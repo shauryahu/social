@@ -100,10 +100,13 @@ const FRAG =
   "vec3 c=vec3(texture2D(uTex,uv+vec2(ca,0.)).r,texture2D(uTex,uv).g,texture2D(uTex,uv-vec2(ca,0.)).b);" +
   "c=mix(vec3(.11,.11,.12),c,uReady);" +
   "c*=1.-.42*min(1.,vX*vX);" +
+  "float mid=smoothstep(.45,0.,abs(vX));" +
+  "vec3 dreamGlow=vec3(.64,.54,1.);" +
+  "c+=dreamGlow*(mid*.16+pow(mid,2.2)*.14);" +
   "float d=box((vUv-.5)*uSize,uSize*.5,14.);" +
   "float rim=smoothstep(-5.,0.,d);" +
-  "c+=rim*.10;" +
-  "c+=.07*smoothstep(.55,1.,vUv.y)*(1.-abs(vX));" +
+  "c+=rim*(.10+.42*mid)*mix(vec3(1.),vec3(.88,.82,1.),mid);" +
+  "c+=.08*smoothstep(.45,1.,vUv.y)*mid*vec3(.76,.66,1.);" +
   "float al=smoothstep(.75,-.75,d)*uIntro;" +
   "gl_FragColor=vec4(c*al,al);}"
 
@@ -115,7 +118,8 @@ const CSS =
   FONT +
   ".clc-root{position:relative;width:100%;overflow:hidden;isolation:isolate;outline:none;user-select:none;-webkit-user-select:none;font-family:ui-sans-serif,system-ui,sans-serif}" +
   ".clc-root:focus-visible{box-shadow:inset 0 0 0 2px var(--clc-ink)}" +
-  ".clc-glow{position:absolute;inset:-20%;background:radial-gradient(50% 40% at 50% 46%,rgba(255,240,220,.07),transparent 70%);pointer-events:none}" +
+  ".clc-glow{position:absolute;inset:-15%;background:radial-gradient(42% 38% at 50% 36%,rgba(147,112,255,.32),rgba(99,102,241,.16) 42%,transparent 72%),radial-gradient(26% 24% at 50% 36%,rgba(216,180,254,.40),transparent 65%);filter:blur(24px);pointer-events:none;animation:clcDreamPulse 6s ease-in-out infinite alternate}" +
+  "@keyframes clcDreamPulse{0%{transform:scale(.96);opacity:.85}100%{transform:scale(1.04);opacity:1}}" +
   ".clc-grain{position:absolute;inset:0;opacity:.07;mix-blend-mode:overlay;pointer-events:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")}" +
   ".clc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab;touch-action:pan-y}" +
   ".clc-canvas:active{cursor:grabbing}" +
