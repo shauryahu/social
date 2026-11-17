@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/components/ThemeProvider";
+import SlideActionButton from "@/components/ui/slide-action-button";
+import { cn } from "@/lib/utils";
 import {
   ShieldCheck,
   Lock,
@@ -58,8 +60,8 @@ export default function TelegramInquiry() {
     );
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!telegramUsername.trim()) {
       setStatus("error");
       setStatusMessage("Please enter your Telegram @username.");
@@ -360,29 +362,48 @@ export default function TelegramInquiry() {
               </div>
             )}
 
-            {/* 5. Slide-to-Submit Button — Dedicated Reserved Area */}
+            {/* 5. Slide-to-Submit Button — Integrated SlideActionButton */}
             <div
-              className="relative w-full pt-2 pb-1 flex flex-col items-center justify-center min-h-[72px] sm:min-h-[80px]"
-              data-testid="reserved-slide-button-slot"
+              className="relative w-full pt-3 pb-1 flex flex-col items-center justify-center min-h-[72px] sm:min-h-[80px]"
+              data-testid="slide-submit-container"
             >
-              {/* Dedicated reservation zone preserving form proportions & balanced spacing */}
-              <div
-                className={`w-full max-w-md h-14 sm:h-16 rounded-[22px] border border-dashed flex items-center justify-center px-4 transition-all duration-300 ${
+              <SlideActionButton
+                disabled={status === "loading"}
+                threshold={0.78}
+                resetDelay={2200}
+                onComplete={handleSubmit}
+                className={cn(
+                  "w-full max-w-md h-16 rounded-[22px] transition-all duration-300 p-1.5",
                   isLight
-                    ? "border-[#C7DFFF] bg-[#F5F6FF]/60 text-[#7D899F]"
-                    : "border-white/15 bg-white/[0.02] text-zinc-400"
-                }`}
+                    ? "bg-[#F0F4FF] border border-[#C7DFFF] text-[#101522] shadow-[0_4px_20px_rgba(22,141,235,0.08)] ring-0"
+                    : "bg-white/[0.04] border border-white/15 text-white shadow-[0_4px_20px_rgba(0,0,0,0.4)] ring-0"
+                )}
+                fillClassName="bg-gradient-to-r from-[#168DEB] via-[#4F46E5] to-[#713CF6]"
+                thumbClassName={cn(
+                  "h-full aspect-square rounded-[18px] text-white shadow-md transition-colors",
+                  isLight
+                    ? "bg-gradient-to-br from-[#168DEB] to-[#713CF6]"
+                    : "bg-gradient-to-br from-[#326BEE] to-[#8060F5]"
+                )}
+                completeLabel={
+                  status === "loading" ? (
+                    <span className="flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider font-mono text-white">
+                      <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                      Transmitting Case...
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1.5 text-xs sm:text-sm font-bold uppercase tracking-wider font-mono text-white">
+                      <Check className="w-4 h-4 text-emerald-300" strokeWidth={2.5} />
+                      Case Transmitted
+                    </span>
+                  )
+                }
               >
-                <div className="flex items-center gap-2.5">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#168DEB] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#168DEB]" />
-                  </span>
-                  <span className="font-mono text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-[#586780] dark:text-zinc-400">
-                    Reserved for Slide-to-Submit Action
-                  </span>
-                </div>
-              </div>
+                <span className="flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider font-mono text-[#101522] dark:text-white">
+                  <span>Slide to Submit Case</span>
+                  <span className="text-[#168DEB] dark:text-blue-400 font-black">→</span>
+                </span>
+              </SlideActionButton>
             </div>
           </form>
 

@@ -39,6 +39,7 @@ export interface SlideActionButtonProps extends Omit<
   onComplete?: () => void;
   thumbClassName?: string;
   fillClassName?: string;
+  disabled?: boolean;
 }
 
 export function SlideActionButton({
@@ -49,6 +50,7 @@ export function SlideActionButton({
   onComplete,
   thumbClassName,
   fillClassName,
+  disabled = false,
   className,
   ...rest
 }: SlideActionButtonProps) {
@@ -137,6 +139,7 @@ export function SlideActionButton({
         // The track only carries the label — the slide starts on the thumb,
         // which suppresses selection for the whole gesture on its own.
         TOUCH_GESTURE_CONTENT_CLASS,
+        disabled && "opacity-60 pointer-events-none",
         className,
       )}
       {...rest}
@@ -170,8 +173,9 @@ export function SlideActionButton({
       <motion.button
         ref={thumbRef}
         type="button"
+        disabled={disabled}
         aria-label={typeof children === "string" ? children : "Slide action"}
-        drag={completed ? false : "x"}
+        drag={completed || disabled ? false : "x"}
         dragConstraints={{ left: 0, right: maxDistance }}
         dragElastic={0}
         dragMomentum={false}
@@ -181,13 +185,14 @@ export function SlideActionButton({
           else moveTo(0);
         }}
         onKeyDown={handleKeyDown}
-        whileTap={reduce || completed ? undefined : { scale: 0.94 }}
+        whileTap={reduce || completed || disabled ? undefined : { scale: 0.94 }}
         transition={SPRING_PRESS}
         className={cn(
           "relative z-10 grid size-14 touch-none cursor-grab place-items-center rounded-[18px] bg-primary text-primary-foreground shadow-sm",
           TOUCH_GESTURE_CLASS,
           "outline-none active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           completed && "cursor-default bg-background text-foreground",
+          disabled && "cursor-not-allowed opacity-60",
           thumbClassName,
         )}
       >
