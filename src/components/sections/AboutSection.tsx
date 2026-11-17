@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "@/components/ThemeProvider";
 import CurvedLensCarousel, { type LensSlide } from "@/components/ui/3d-curved-carousel";
+import JourneyScrollTimeline from "@/components/ui/JourneyScrollTimeline";
 
 const WHY_SLIDES: LensSlide[] = [
   {
@@ -60,13 +61,14 @@ export default function AboutSection() {
       aria-labelledby="about-heading"
     >
       <div className="max-w-6xl mx-auto">
-        {/* About + Story */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-20">
-          {/* Brand story */}
+        {/* About + Story + Interactive 3D Journey Timeline */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-20 items-start">
+          {/* Brand story (Sticky on Desktop) */}
           <div
+            className="lg:col-span-5 lg:sticky lg:top-28 self-start"
             style={{
               opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(24px)",
+              transform: visible ? "none" : "translateY(24px)",
               transition: "opacity 0.7s ease-out, transform 0.7s ease-out",
             }}
           >
@@ -166,81 +168,16 @@ export default function AboutSection() {
             </div>
           </div>
 
-          {/* Timeline / stat visual */}
+          {/* Interactive 3D Scroll Timeline (Sticky Runway on Desktop) */}
           <div
+            className="lg:col-span-7"
             style={{
               opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(24px)",
+              transform: visible ? "none" : "translateY(24px)",
               transition: "opacity 0.7s ease-out 0.15s, transform 0.7s ease-out 0.15s",
             }}
           >
-            <div
-              className={`rounded-3xl p-8 h-full ${
-                isLight
-                  ? "bg-white/95 border border-slate-200/90 shadow-xl"
-                  : "bg-[#101016]/55 border border-white/10 shadow-2xl"
-              }`}
-              style={{
-                backdropFilter: "blur(20px)",
-              }}
-            >
-              <h3
-                className={`text-lg font-bold mb-6 ${isLight ? "text-slate-950" : "text-white"}`}
-                style={{ fontFamily: "var(--font-space-grotesk)" }}
-              >
-                The Journey
-              </h3>
-
-              {[
-                { year: "2021", label: "Foundation", desc: "SocialAssist established. Focus on account recovery." },
-                { year: "2022", label: "Expansion", desc: "Verification support and brand protection added." },
-                { year: "2023", label: "Evolution", desc: "Crypto exchange services and automation introduced." },
-                { year: "2024+", label: "Network", desc: "Full integrated digital assistance ecosystem." },
-              ].map((item, i) => (
-                <div key={item.year} className="flex gap-4 mb-6 last:mb-0">
-                  <div className="flex flex-col items-center">
-                    <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                        isLight
-                          ? "bg-purple-100 text-purple-800 border border-purple-300"
-                          : "bg-purple-900/40 text-purple-200 border border-purple-500/30"
-                      }`}
-                      style={{ fontFamily: "var(--font-inter)" }}
-                    >
-                      {i + 1}
-                    </div>
-                    {i < 3 && (
-                      <div
-                        className={`w-px flex-1 mt-1 ${isLight ? "bg-purple-200" : "bg-purple-500/20"}`}
-                        style={{ minHeight: 20 }}
-                      />
-                    )}
-                  </div>
-                  <div className="pb-2">
-                    <div className="flex items-baseline gap-2">
-                      <span
-                        className={`text-xs font-bold ${isLight ? "text-purple-700" : "text-purple-400"}`}
-                        style={{ fontFamily: "var(--font-inter)" }}
-                      >
-                        {item.year}
-                      </span>
-                      <span
-                        className={`text-sm font-bold ${isLight ? "text-slate-950" : "text-white"}`}
-                        style={{ fontFamily: "var(--font-space-grotesk)" }}
-                      >
-                        {item.label}
-                      </span>
-                    </div>
-                    <p
-                      className={`text-xs mt-1 ${isLight ? "text-slate-600 font-medium" : "text-zinc-400"}`}
-                      style={{ fontFamily: "var(--font-inter)" }}
-                    >
-                      {item.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <JourneyScrollTimeline isLight={isLight} />
           </div>
         </div>
 
