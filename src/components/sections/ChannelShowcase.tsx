@@ -1,19 +1,33 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import { useTheme } from "@/components/ThemeProvider";
+import {
+  Sparkles,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  Maximize2,
+  ArrowRight,
+} from "lucide-react";
 
-// Channel URL — configure here
+// Channel URL — official SocialAssist VIP Desk
 const CHANNEL_URL = "https://t.me/socialassist";
 
 export default function ChannelShowcase() {
   const { theme } = useTheme();
   const isLight = theme === "light";
   const ref = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   const [visible, setVisible] = useState(false);
   const [muted, setMuted] = useState(true);
   const [playing, setPlaying] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -22,17 +36,21 @@ export default function ChannelShowcase() {
           setVisible(true);
           // Lazy play when visible
           if (videoRef.current) {
-            videoRef.current.play().then(() => setPlaying(true)).catch(() => {});
+            videoRef.current
+              .play()
+              .then(() => setPlaying(true))
+              .catch(() => {});
           }
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.18 }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
 
-  const toggleMute = () => {
+  const toggleMute = (e?: ReactMouseEvent) => {
+    if (e) e.stopPropagation();
     if (videoRef.current) {
       videoRef.current.muted = !videoRef.current.muted;
       setMuted(videoRef.current.muted);
@@ -42,8 +60,7 @@ export default function ChannelShowcase() {
   const togglePlay = () => {
     if (videoRef.current) {
       if (videoRef.current.paused) {
-        videoRef.current.play();
-        setPlaying(true);
+        videoRef.current.play().then(() => setPlaying(true)).catch(() => {});
       } else {
         videoRef.current.pause();
         setPlaying(false);
@@ -51,234 +68,322 @@ export default function ChannelShowcase() {
     }
   };
 
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      const cur = videoRef.current.currentTime;
+      const dur = videoRef.current.duration || 1;
+      setCurrentTime(cur);
+      setDuration(dur);
+      setProgress((cur / dur) * 100);
+    }
+  };
+
+  const handleSeek = (e: ReactMouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    if (videoRef.current) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const seekRatio = Math.max(0, Math.min(1, clickX / rect.width));
+      const targetTime = seekRatio * (videoRef.current.duration || 1);
+      videoRef.current.currentTime = targetTime;
+      setProgress(seekRatio * 100);
+    }
+  };
+
+  const toggleFullscreen = (e: ReactMouseEvent) => {
+    e.stopPropagation();
+    if (containerRef.current) {
+      if (!document.fullscreenElement) {
+        containerRef.current.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+  };
+
+  const formatTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
+  };
+
   return (
     <section
       id="channel"
       ref={ref}
-      className="relative z-10 pt-20 sm:pt-24 pb-12 sm:pb-14 px-4 md:px-8"
+      className={`relative z-10 pt-20 sm:pt-28 pb-16 sm:pb-20 px-4 md:px-8 transition-colors duration-500 ${
+        isLight ? "bg-[#FAFAFD]" : "bg-[#07070A]"
+      }`}
       aria-labelledby="channel-heading"
     >
-      {/* Large violet glow */}
+      {/* ── 1. Subtle Square Grid Pattern ── */}
       <div
-        className="absolute rounded-full pointer-events-none"
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          width: "70vw",
-          height: "70vw",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          background: "radial-gradient(circle, rgba(74,22,168,0.18) 0%, transparent 65%)",
-          filter: "blur(80px)",
+          backgroundImage:
+            "linear-gradient(to right, rgba(80, 110, 170, 0.055) 1px, transparent 1px), linear-gradient(to bottom, rgba(80, 110, 170, 0.055) 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
         }}
       />
 
-      <div className="relative max-w-5xl mx-auto">
-        {/* Heading */}
+      {/* ── 2. Cinematic Ambient Glows ── */}
+      {/* Upper-left soft blue glow */}
+      <div
+        aria-hidden="true"
+        className="absolute -top-24 -left-24 sm:-top-32 sm:-left-32 w-[500px] sm:w-[750px] h-[500px] sm:h-[750px] rounded-full pointer-events-none blur-[90px] sm:blur-[120px] transition-opacity duration-700 -z-10"
+        style={{
+          background: isLight
+            ? "radial-gradient(circle, rgba(229, 238, 255, 0.85) 0%, rgba(229, 238, 255, 0.3) 50%, transparent 70%)"
+            : "radial-gradient(circle, rgba(22, 141, 235, 0.12) 0%, transparent 70%)",
+        }}
+      />
+
+      {/* Lower-right soft lavender glow */}
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-24 -right-24 sm:-bottom-32 sm:-right-32 w-[500px] sm:w-[750px] h-[500px] sm:h-[750px] rounded-full pointer-events-none blur-[90px] sm:blur-[120px] transition-opacity duration-700 -z-10"
+        style={{
+          background: isLight
+            ? "radial-gradient(circle, rgba(238, 232, 255, 0.85) 0%, rgba(238, 232, 255, 0.3) 50%, transparent 70%)"
+            : "radial-gradient(circle, rgba(135, 61, 245, 0.12) 0%, transparent 70%)",
+        }}
+      />
+
+      <div className="relative max-w-5xl mx-auto z-10">
+        {/* ── 3. Heading Section ── */}
         <div
-          className="text-center mb-12"
+          className="text-center"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(20px)",
             transition: "opacity 0.7s ease-out, transform 0.7s ease-out",
           }}
         >
-          <span
-            className="text-xs font-semibold tracking-widest uppercase mb-3 block font-mono"
-            style={{ color: isLight ? "#7C3AED" : "#9B5CFF", fontFamily: "var(--font-inter)" }}
-          >
-            ✦ Channel Experience ✦
-          </span>
+          {/* Badge: CHANNEL EXPERIENCE */}
+          <div className="flex justify-center mb-5 sm:mb-6">
+            <span
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase font-mono shadow-xs transition-colors ${
+                isLight
+                  ? "bg-[#EFF6FF] text-[#168DEB] border border-[#C7DFFF] shadow-[0_2px_8px_rgba(22,141,235,0.08)]"
+                  : "bg-blue-950/40 text-blue-300 border border-blue-800/40"
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-[#168DEB]" strokeWidth={1.8} />
+              <span>Channel Experience</span>
+              <Sparkles className="w-3.5 h-3.5 text-[#873DF5]" strokeWidth={1.8} />
+            </span>
+          </div>
+
+          {/* Main Heading: Inside SocialAssist */}
           <h2
             id="channel-heading"
-            className={`text-3xl md:text-5xl font-bold mb-4 ${isLight ? "text-slate-950" : "text-white"}`}
+            className={`text-4xl sm:text-5xl md:text-[56px] lg:text-[60px] font-extrabold tracking-[-1.5px] leading-tight mb-4 sm:mb-5 ${
+              isLight ? "text-[#101522]" : "text-white"
+            }`}
             style={{ fontFamily: "var(--font-space-grotesk)" }}
           >
             Inside{" "}
-            <span
-              className={
-                isLight
-                  ? "inline-block bg-clip-text text-transparent bg-gradient-to-r from-purple-700 via-indigo-600 to-sky-600 font-extrabold"
-                  : "inline-block bg-clip-text text-transparent bg-gradient-to-r from-[#C5A7FF] to-[#9B5CFF] font-extrabold"
-              }
-            >
+            <span className="inline-block bg-clip-text text-transparent bg-gradient-to-r from-[#168DEB] via-[#326BEE] to-[#873DF5] font-extrabold">
               SocialAssist
             </span>
           </h2>
+
+          {/* Subtitle */}
           <p
-            className={`text-base max-w-xl mx-auto font-normal ${isLight ? "text-slate-600" : "text-zinc-300"}`}
+            className={`text-[17px] sm:text-[18px] md:text-[19px] max-w-xl mx-auto leading-relaxed mb-10 sm:mb-12 font-normal ${
+              isLight ? "text-[#586780]" : "text-zinc-300"
+            }`}
             style={{ fontFamily: "var(--font-inter)" }}
           >
             Explore the network, updates, services and community experience.
           </p>
         </div>
 
-        {/* Video frame */}
+        {/* ── 4. Video Showcase Outer Glass Frame ── */}
         <div
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0) scale(1)" : "translateY(30px) scale(0.97)",
+            transform: visible ? "translateY(0) scale(1)" : "translateY(28px) scale(0.98)",
             filter: visible ? "blur(0px)" : "blur(4px)",
             transition: "opacity 0.9s ease-out 0.15s, transform 0.9s ease-out 0.15s, filter 0.9s ease-out 0.15s",
           }}
+          className="relative"
         >
-          {/* Outer glow ring */}
+          {/* Soft blue-violet ambient glow around frame */}
           <div
-            className="rounded-3xl p-3"
+            aria-hidden="true"
+            className="absolute -inset-4 sm:-inset-6 rounded-[36px] sm:rounded-[44px] pointer-events-none -z-10 blur-[40px] sm:blur-[60px] opacity-75 transition-opacity duration-700"
             style={{
-              background: "rgba(16,16,22,0.6)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              boxShadow:
-                "0 0 80px rgba(74,22,168,0.3), 0 0 160px rgba(74,22,168,0.15), inset 0 1px 0 rgba(255,255,255,0.07)",
+              background: isLight
+                ? "radial-gradient(ellipse at 50% 50%, rgba(135, 61, 245, 0.16) 0%, rgba(22, 141, 235, 0.12) 40%, transparent 70%)"
+                : "radial-gradient(ellipse at 50% 50%, rgba(135, 61, 245, 0.3) 0%, rgba(22, 141, 235, 0.18) 40%, transparent 70%)",
             }}
+          />
+
+          {/* White/light glass surface container */}
+          <div
+            className={`relative rounded-[28px] sm:rounded-[36px] p-2.5 sm:p-4 md:p-5 border transition-all duration-700 ${
+              isLight
+                ? "bg-white/95 border-[#E3E8F2] shadow-[0_24px_70px_-15px_rgba(16,24,40,0.08),0_2px_8px_rgba(16,24,40,0.04)]"
+                : "bg-[#0d0f18]/95 border-white/10 shadow-[0_24px_70px_-15px_rgba(0,0,0,0.7),0_2px_8px_rgba(255,255,255,0.02)]"
+            } backdrop-blur-2xl`}
           >
-            {/* Device-inspired top bar */}
+            {/* ── Video Window Container ── */}
             <div
-              className="flex items-center justify-between px-4 py-2.5 rounded-t-2xl"
-              style={{
-                background: "rgba(8,8,12,0.8)",
-                borderBottom: "1px solid rgba(255,255,255,0.05)",
-              }}
+              ref={containerRef}
+              className="relative rounded-2xl sm:rounded-[24px] overflow-hidden bg-[#0d0f18] group"
+              style={{ aspectRatio: "16/9" }}
             >
-              {/* Dots */}
-              <div className="flex gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#FF5F57" }} />
-                <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#FFBD2E" }} />
-                <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#28CA42" }} />
-              </div>
-
-              {/* Title */}
+              {/* Device Header Bar */}
               <div
-                className="flex items-center gap-2 text-xs font-medium"
-                style={{ color: "rgba(197,167,255,0.6)", fontFamily: "var(--font-inter)" }}
+                className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-2.5 border-b border-white/[0.08] select-none"
+                style={{ background: "#191923" }}
               >
-                <div
-                  className="w-4 h-4 rounded flex items-center justify-center"
-                  style={{ background: "rgba(124,58,237,0.3)" }}
-                >
-                  <span style={{ fontSize: 8, color: "#C5A7FF" }}>SA</span>
+                {/* Window Dots */}
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#28CA42]" />
                 </div>
-                SocialAssist · Channel
+
+                {/* Center Title */}
+                <div className="flex items-center gap-2 text-xs font-medium text-[#B8B5C8] font-mono">
+                  <div className="w-4 h-4 rounded bg-[#713CF6]/30 flex items-center justify-center text-[9px] font-bold text-[#A78BFA]">
+                    SA
+                  </div>
+                  <span>SocialAssist · Channel</span>
+                </div>
+
+                {/* Right Live Indicator */}
+                <div className="flex items-center gap-1.5">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22C55E] opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22C55E]" />
+                  </span>
+                  <span className="text-xs font-mono text-[#B8B5C8]">Live</span>
+                </div>
               </div>
 
-              {/* Live indicator */}
-              <div className="flex items-center gap-1.5">
-                <div
-                  className="w-1.5 h-1.5 rounded-full"
-                  style={{ background: "#28CA42", boxShadow: "0 0 4px #28CA42" }}
-                />
-                <span className="text-xs" style={{ color: "rgba(217,214,227,0.4)", fontFamily: "var(--font-inter)" }}>Live</span>
-              </div>
-            </div>
-
-            {/* Video container */}
-            <div className="relative rounded-b-2xl overflow-hidden" style={{ aspectRatio: "16/9" }}>
+              {/* Video Player */}
               <video
                 ref={videoRef}
                 src="/videos/channel.mp4"
                 muted={muted}
                 loop
                 playsInline
-                preload="none"
-                className="w-full h-full object-cover"
+                preload="metadata"
+                onTimeUpdate={handleTimeUpdate}
+                onClick={togglePlay}
+                className="w-full h-full object-cover cursor-pointer"
                 aria-label="SocialAssist channel showcase video"
               />
 
-              {/* Bottom gradient */}
+              {/* Minimalist Gradient Overlay at Bottom */}
               <div
-                className="absolute inset-x-0 bottom-0 h-20 pointer-events-none"
-                style={{
-                  background: "linear-gradient(to top, rgba(8,8,12,0.6), transparent)",
-                }}
+                className="absolute inset-x-0 bottom-0 h-24 pointer-events-none bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-85 transition-opacity duration-300"
+                aria-hidden="true"
               />
 
-              {/* Controls */}
-              <div className="absolute bottom-4 right-4 flex items-center gap-2">
-                <button
+              {/* Play/Pause Large Center Watermark on Pause */}
+              {!playing && (
+                <div
                   onClick={togglePlay}
-                  className="flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 hover:scale-110"
-                  style={{
-                    background: "rgba(8,8,12,0.75)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                  }}
-                  aria-label={playing ? "Pause video" : "Play video"}
+                  className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-[2px] cursor-pointer transition-opacity"
                 >
-                  {playing ? (
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="#C5A7FF">
-                      <rect x="2" y="1" width="3" height="10" rx="1"/>
-                      <rect x="7" y="1" width="3" height="10" rx="1"/>
-                    </svg>
-                  ) : (
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="#C5A7FF">
-                      <path d="M3 2l7 4-7 4V2z"/>
-                    </svg>
-                  )}
-                </button>
-                <button
-                  onClick={toggleMute}
-                  className="flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 hover:scale-110"
-                  style={{
-                    background: muted ? "rgba(124,58,237,0.5)" : "rgba(8,8,12,0.75)",
-                    backdropFilter: "blur(10px)",
-                    border: muted ? "1px solid rgba(124,58,237,0.6)" : "1px solid rgba(255,255,255,0.1)",
-                  }}
-                  aria-label={muted ? "Unmute" : "Mute"}
+                  <div className="w-16 h-16 rounded-full bg-[#191923]/90 border border-white/20 text-white flex items-center justify-center shadow-xl hover:scale-105 transition-transform">
+                    <Play className="w-7 h-7 text-white fill-white ml-1" />
+                  </div>
+                </div>
+              )}
+
+              {/* ── Playback Controls Bar ── */}
+              <div className="absolute inset-x-3 sm:inset-x-5 bottom-3 sm:bottom-4 flex flex-col gap-2 z-20">
+                {/* Interactive Progress Scrubber */}
+                <div
+                  onClick={handleSeek}
+                  className="relative w-full h-1.5 sm:h-2 rounded-full bg-white/20 hover:bg-white/30 cursor-pointer overflow-hidden transition-all group/bar"
+                  role="progressbar"
+                  aria-valuenow={progress}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
                 >
-                  {muted ? (
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C5A7FF" strokeWidth="2" strokeLinecap="round">
-                      <path d="M11 5L6 9H2v6h4l5 4V5z"/>
-                      <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
-                    </svg>
-                  ) : (
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C5A7FF" strokeWidth="2" strokeLinecap="round">
-                      <path d="M11 5L6 9H2v6h4l5 4V5z"/>
-                      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-                    </svg>
-                  )}
-                </button>
+                  <div
+                    className="h-full bg-gradient-to-r from-[#168DEB] via-[#4F46E5] to-[#873DF5] rounded-full transition-all duration-100 will-change-[width]"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+
+                {/* Controls Row */}
+                <div className="flex items-center justify-between text-white text-xs">
+                  {/* Left Controls: Play/Pause & Timestamp */}
+                  <div className="flex items-center gap-2.5">
+                    <button
+                      type="button"
+                      onClick={togglePlay}
+                      className="w-8 h-8 rounded-full bg-[#191923]/80 hover:bg-[#191923] border border-white/10 flex items-center justify-center transition-all duration-200 hover:scale-105 cursor-pointer"
+                      aria-label={playing ? "Pause video" : "Play video"}
+                    >
+                      {playing ? (
+                        <Pause className="w-3.5 h-3.5 text-white fill-white" />
+                      ) : (
+                        <Play className="w-3.5 h-3.5 text-white fill-white ml-0.5" />
+                      )}
+                    </button>
+                    <span className="font-mono text-[11px] text-white/80 hidden sm:inline">
+                      {formatTime(currentTime)} / {formatTime(duration)}
+                    </span>
+                  </div>
+
+                  {/* Right Controls: Mute/Unmute & Fullscreen */}
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={toggleMute}
+                      className="w-8 h-8 rounded-full bg-[#191923]/80 hover:bg-[#191923] border border-white/10 flex items-center justify-center transition-all duration-200 hover:scale-105 cursor-pointer"
+                      aria-label={muted ? "Unmute video" : "Mute video"}
+                    >
+                      {muted ? (
+                        <VolumeX className="w-3.5 h-3.5 text-white" strokeWidth={1.8} />
+                      ) : (
+                        <Volume2 className="w-3.5 h-3.5 text-white" strokeWidth={1.8} />
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={toggleFullscreen}
+                      className="w-8 h-8 rounded-full bg-[#191923]/80 hover:bg-[#191923] border border-white/10 flex items-center justify-center transition-all duration-200 hover:scale-105 cursor-pointer"
+                      aria-label="Toggle Fullscreen"
+                    >
+                      <Maximize2 className="w-3.5 h-3.5 text-white" strokeWidth={1.8} />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* CTA below video */}
+        {/* ── 5. View Channel Button ── */}
         <div
-          className="mt-8 flex justify-center"
+          className="mt-7 sm:mt-8 flex justify-center"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(16px)",
-            transition: "opacity 0.7s ease-out 0.4s, transform 0.7s ease-out 0.4s",
+            transition: "opacity 0.7s ease-out 0.35s, transform 0.7s ease-out 0.35s",
           }}
         >
           <a
             href={CHANNEL_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className={`group inline-flex items-center gap-3 px-8 py-3.5 rounded-full font-bold text-sm transition-all duration-300 hover:scale-105 ${
-              isLight
-                ? "btn-light-purple text-slate-950 font-bold shadow-md hover:shadow-lg"
-                : "text-white"
-            }`}
-            style={
-              isLight
-                ? {}
-                : {
-                    background: "linear-gradient(135deg, #4A16A8, #7C3AED, #9B5CFF)",
-                    boxShadow: "0 0 32px rgba(124,58,237,0.35), inset 0 1px 0 rgba(255,255,255,0.15)",
-                  }
-            }
+            className="group inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full font-semibold text-sm transition-all duration-300 bg-[#F0EBFF] hover:bg-[#E8DEFF] text-[#101522] border border-[#DDD0FF] shadow-[0_4px_16px_rgba(113,60,246,0.12)] hover:shadow-[0_8px_24px_rgba(113,60,246,0.2)] hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
           >
-            View Channel
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              className="transition-transform duration-300 group-hover:translate-x-0.5"
-            >
-              <path d="M1 7h12M8 3l5 4-5 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <span>View Channel</span>
+            <ArrowRight
+              className="w-4 h-4 text-[#713CF6] transition-transform duration-300 group-hover:translate-x-1"
+              strokeWidth={2}
+            />
           </a>
         </div>
       </div>

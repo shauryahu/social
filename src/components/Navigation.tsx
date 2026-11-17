@@ -51,6 +51,16 @@ export default function Navigation() {
           if (rect.top <= 240) current = id;
         }
       }
+
+      // Keep "About" active while viewing the Channel Showcase
+      const channelEl = document.getElementById("channel");
+      if (channelEl) {
+        const cRect = channelEl.getBoundingClientRect();
+        if (cRect.top <= 240 && cRect.bottom >= 120) {
+          current = "about";
+        }
+      }
+
       setActiveSection((prev) => (prev !== current ? current : prev));
       ticking = false;
     };
