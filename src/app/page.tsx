@@ -18,9 +18,13 @@ import ChannelShowcase from "@/components/sections/ChannelShowcase";
 import FinalCTA from "@/components/sections/FinalCTA";
 import Footer from "@/components/sections/Footer";
 import LanguageSelectorDropdown from "@/components/ui/language-selector-dropdown";
+import { useTheme } from "@/components/ThemeProvider";
+import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
+  const { theme } = useTheme();
+  const isLight = theme === "light";
 
   return (
     <>
@@ -52,6 +56,15 @@ export default function Home() {
 
         <Footer />
       </div>
+
+      {/* Downside Progressive Blur */}
+      <ProgressiveBlur
+        position="bottom"
+        className="fixed bottom-0 left-0 right-0 z-30 pointer-events-none transition-colors duration-300"
+        height="120px"
+        blurAmount="8px"
+        backgroundColor={isLight ? "#FAFAFC" : "#07070A"}
+      />
 
       {/* Floating Bottom-Left Language Selector Dropdown */}
       <div className="fixed bottom-4 sm:bottom-6 left-4 sm:left-6 z-40">
