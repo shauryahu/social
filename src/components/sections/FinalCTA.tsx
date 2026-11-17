@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { LayoutGrid } from "lucide-react";
 import TelegramInquiry from "./TelegramInquiry";
+import IosSlideButton from "@/components/ui/ios-slide-button";
 
 // Symmetrical 4-point sparkle star for badge decoration
 function StarIcon({ className = "w-3 h-3" }: { className?: string }) {
@@ -15,24 +16,6 @@ function StarIcon({ className = "w-3 h-3" }: { className?: string }) {
       aria-hidden="true"
     >
       <path d="M12 0C12 6.627 6.627 12 0 12C6.627 12 12 17.373 12 24C12 17.373 17.373 12 24 12C17.373 12 12 6.627 12 0Z" />
-    </svg>
-  );
-}
-
-// Authentic Telegram paper-plane vector icon
-function TelegramPlaneIcon({ className = "w-[22px] h-[22px]" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      className={className}
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <path
-        d="M21.5 3.5L2.8 10.7C1.5 11.2 1.5 12 2.6 12.3L7.4 13.8L18.6 6.7C19.1 6.4 19.6 6.6 19.2 6.9L10.1 15.1H10.1L9.8 19.8C10.3 19.8 10.5 19.6 10.8 19.3L13.1 17.1L18 20.7C18.9 21.2 19.5 20.9 19.7 19.8L22.9 4.7C23.2 3.4 22.4 2.8 21.5 3.5Z"
-        fill="#FFFFFF"
-      />
     </svg>
   );
 }
@@ -176,41 +159,12 @@ export default function FinalCTA() {
             transform: visible ? "translateY(0)" : "translateY(12px)",
           }}
         >
-          {/* Primary CTA — Open Telegram Channel with sliding icon animation */}
-          <a
-            href="https://t.me/socialassist"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="keep-white group relative h-[66px] ps-8 pe-[74px] hover:ps-[74px] hover:pe-8 rounded-full flex items-center justify-center text-white text-[17px] font-[650] tracking-[-0.01em] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 active:translate-y-0 select-none w-full sm:w-auto overflow-hidden cursor-pointer"
-            style={{
-              background:
-                "linear-gradient(110deg, #42A5F5 0%, #326BEE 48%, #913CF4 100%)",
-              boxShadow:
-                "0 10px 28px -4px rgba(50, 107, 238, 0.35), 0 4px 12px -2px rgba(145, 60, 244, 0.25)",
-              color: "#FFFFFF",
-              fontFamily: "var(--font-inter), sans-serif",
-            }}
-          >
-            <span
-              className="keep-white relative z-10 transition-all duration-500 whitespace-nowrap"
-              style={{ color: "#FFFFFF" }}
-            >
-              Open Telegram Channel
-            </span>
-            <div
-              className="absolute right-[7px] w-[52px] h-[52px] rounded-full flex items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:right-[calc(100%-59px)] group-hover:rotate-45"
-              style={{
-                background: "rgba(255, 255, 255, 0.22)",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
-                border: "1px solid rgba(255, 255, 255, 0.35)",
-                boxShadow:
-                  "0 4px 12px rgba(0, 0, 0, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.4)",
-              }}
-            >
-              <TelegramPlaneIcon className="w-[22px] h-[22px] text-white shrink-0" />
-            </div>
-          </a>
+          {/* Primary CTA — Authentic iOS Slide-to-Open Slider Button */}
+          <IosSlideButton
+            targetUrl="https://t.me/socialassist"
+            text="Slide to open Telegram"
+            completedText="Opening Telegram Channel..."
+          />
 
           {/* Secondary CTA — Explore Services */}
           <button
