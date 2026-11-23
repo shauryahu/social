@@ -5,3 +5,6 @@ node_modules/
 SocialAssist-Original-Backup/
 SocialAssist-2.0-Backup/
 .chrome-profile*
+
+# Local browser profiles
+.chrome-profile*/
