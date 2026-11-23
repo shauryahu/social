@@ -62,8 +62,7 @@ html.theme-switching [class*="carousel"] * {
 }
 
 /* Isolate floating toggle button and fixed nav from snapshot flickering */
-button[data-slot="theme-toggle"],
-.fixed.bottom-4.sm\:bottom-6.right-4.sm\:right-6 {
+button[data-slot="theme-toggle"] {
   view-transition-name: theme-toggle;
 }
 ::view-transition-group(theme-toggle),
@@ -72,8 +71,7 @@ button[data-slot="theme-toggle"],
   animation: none;
 }
 
-html.theme-switching header,
-html.theme-switching nav.fixed {
+html.theme-switching header.sa-nav {
   view-transition-name: header-nav;
 }
 ::view-transition-group(header-nav),
@@ -82,8 +80,7 @@ html.theme-switching nav.fixed {
   animation: none;
 }
 
-#laptop-3d-container,
-#laptop-3d-canvas {
+#laptop-container {
   view-transition-name: laptop-canvas;
 }
 ::view-transition-group(laptop-canvas),

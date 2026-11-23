@@ -246,8 +246,9 @@
   }
 
   var isSwitching = false;
+  var activeTransition = null;
 
-  function triggerCircularSwitch(targetTheme, x, y) {
+  function triggerCircularSwitch(targetTheme, x, y, activeBtn) {
     if (isSwitching) return;
     isSwitching = true;
 
@@ -280,13 +281,38 @@
     de.classList.add("theme-switching");
     de.style.setProperty("--wave-x", x + "px " + y + "px");
 
+    // Ensure ONLY the active triggering button has view-transition-name: theme-toggle
+    // and clear it from any other elements to strictly prevent duplicate view-transition-name
+    var allToggles = document.querySelectorAll('button[data-slot="theme-toggle"], [style*="view-transition-name"]');
+    allToggles.forEach(function (el) {
+      if (el !== activeBtn) {
+        el.style.viewTransitionName = "none";
+      }
+    });
+    if (activeBtn) {
+      activeBtn.style.viewTransitionName = "theme-toggle";
+    }
+
+    function cleanup() {
+      de.classList.remove("theme-switching");
+      de.style.removeProperty("--wave-x");
+      if (activeBtn) {
+        activeBtn.style.removeProperty("view-transition-name");
+      }
+      allToggles.forEach(function (el) {
+        el.style.removeProperty("view-transition-name");
+      });
+      isSwitching = false;
+      activeTransition = null;
+    }
+
     try {
       // Synchronous DOM changes inside the callback
-      var transition = document.startViewTransition(function () {
+      activeTransition = document.startViewTransition(function () {
         applyTheme(targetTheme);
       });
 
-      transition.ready.then(function () {
+      activeTransition.ready.then(function () {
         var animated = false;
 
         // Try soft feather wave mask animation using @property --wave-r
@@ -336,26 +362,21 @@
           );
         }
       }).catch(function (err) {
-        console.warn("ViewTransition ready rejected:", err);
+        // Fallback safely if transition was aborted or snapshot failed
+        applyTheme(targetTheme);
+        cleanup();
       });
 
-      transition.finished.then(function () {
-        de.classList.remove("theme-switching");
-        de.style.removeProperty("--wave-x");
-        isSwitching = false;
+      activeTransition.finished.then(function () {
+        cleanup();
       }).catch(function (err) {
-        console.warn("ViewTransition finished with error:", err);
-        de.classList.remove("theme-switching");
-        de.style.removeProperty("--wave-x");
-        isSwitching = false;
+        applyTheme(targetTheme);
+        cleanup();
       });
 
     } catch (err) {
-      console.warn("ViewTransition error, falling back to direct apply:", err);
-      de.classList.remove("theme-switching");
-      de.style.removeProperty("--wave-x");
       applyTheme(targetTheme);
-      isSwitching = false;
+      cleanup();
     }
   }
 
@@ -369,7 +390,13 @@
       var btn = e.target.closest('button[data-slot="theme-toggle"]');
       if (!btn) return;
 
-      if (isSwitching) return;
+      // Handle rapid repeated clicks safely: block subsequent clicks while a transition is running
+      if (isSwitching) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        return;
+      }
 
       var current = getCurrentTheme();
       var next = current === "dark" ? "light" : "dark";
@@ -378,7 +405,7 @@
       var x = rect.left + rect.width / 2;
       var y = rect.top + rect.height / 2;
 
-      triggerCircularSwitch(next, x, y);
+      triggerCircularSwitch(next, x, y, btn);
     }, true);
 
     /* Initial shadow DOM sync */
