@@ -8,3 +8,5 @@ SocialAssist-2.0-Backup/
 
 # Local browser profiles
 .chrome-profile*/
+
+.chrome-profile/
