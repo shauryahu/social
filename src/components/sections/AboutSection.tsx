@@ -10,31 +10,31 @@ const WHY_SLIDES: LensSlide[] = [
     kicker: "SINCE 2021",
     title: "Established Experience",
     caption: "Operating since 2021 with proven expertise across digital platforms.",
-    image: "/images/why/established-experience.png",
+    image: "/images/why/established-experience.webp",
   },
   {
     kicker: "GLOBAL REACH",
     title: "Multi-Platform",
     caption: "Support across Instagram, Facebook, WhatsApp, TikTok, X, and more.",
-    image: "/images/why/multi-platform.png",
+    image: "/images/why/multi-platform.webp",
   },
   {
     kicker: "TAILORED SOLUTIONS",
     title: "Specialized Assistance",
     caption: "Solutions purpose-built for specific digital problems.",
-    image: "/images/why/specialized-assistance.png",
+    image: "/images/why/specialized-assistance.webp",
   },
   {
     kicker: "ALL-IN-ONE ECOSYSTEM",
     title: "Integrated Network",
     caption: "Account assistance, exchange, and advertising in one ecosystem.",
-    image: "/images/why/integrated-network.png",
+    image: "/images/why/integrated-network.webp",
   },
   {
     kicker: "NO INTERMEDIARIES",
     title: "Direct Communication",
     caption: "Clear pathways for contacting the team without intermediaries.",
-    image: "/images/why/direct-communication.png",
+    image: "/images/why/direct-communication.webp",
   },
 ];
 

@@ -45,7 +45,7 @@ export function WaveMesh({
 
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const coarse = !matchMedia("(hover: hover) and (pointer: fine)").matches;
-    const dpr = Math.min(devicePixelRatio, 2);
+    const dpr = Math.min(devicePixelRatio, coarse ? 1.5 : 2);
     const hex = (h: string) => {
       const n = parseInt(h.slice(1), 16);
       return `${(n >> 16) & 255},${(n >> 8) & 255},${n & 255}`;
@@ -145,7 +145,6 @@ export function WaveMesh({
       raf = requestAnimationFrame(loop);
       if (coarse && ms - last < 30) return;
       last = ms;
-      resize();
       frame(now());
     };
     const wake = () => {
@@ -188,8 +187,8 @@ export function WaveMesh({
     });
     io.observe(host);
     const ro = new ResizeObserver(() => {
+      resize();
       if (reduced) {
-        resize();
         frame(3);
       }
     });

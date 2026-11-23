@@ -41,7 +41,7 @@ export default function CinematicLaptop({ className = "" }: CinematicLaptopProps
     vid.muted = true;
     vid.loop = true;
     vid.playsInline = true;
-    vid.preload = "auto";
+    vid.preload = "metadata";
     vid.crossOrigin = "anonymous";
     videoRef.current = vid;
 
@@ -109,7 +109,12 @@ export default function CinematicLaptop({ className = "" }: CinematicLaptopProps
     R.outputColorSpace = THREE.SRGBColorSpace;
     R.toneMapping = THREE.ACESFilmicToneMapping;
     R.toneMappingExposure = 1.05;
-    const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2.5);
+    const isMobile =
+      typeof window !== "undefined" &&
+      (window.innerWidth < 768 || "ontouchstart" in window);
+    const dpr = isMobile
+      ? Math.min(window.devicePixelRatio || 1, 1.5)
+      : Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2.0);
     R.setPixelRatio(dpr);
 
     const AN = R.capabilities.getMaxAnisotropy();
@@ -798,10 +803,15 @@ export default function CinematicLaptop({ className = "" }: CinematicLaptopProps
     );
     io.observe(container);
 
+    let cachedBottom = 0;
+    let cachedVh = typeof window !== "undefined" ? window.innerHeight : 800;
+
     const updateScroll = () => {
       if (!container) return;
       const r = container.getBoundingClientRect();
       const vh = window.innerHeight;
+      cachedBottom = r.bottom;
+      cachedVh = vh;
 
       // Start lid opening as block scrolls into viewport (from bottom 92% to 32%)
       const startOpen = vh * 0.92;
@@ -832,9 +842,12 @@ export default function CinematicLaptop({ className = "" }: CinematicLaptopProps
       mx += (tmx - mx) * 0.06;
       my += (tmy - my) * 0.06;
 
-      const r = container.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const wantVideo = isVisible && s > 0.44 && targetS > 0.38 && r.bottom > vh * 0.35 && !document.hidden;
+      const wantVideo =
+        isVisible &&
+        s > 0.44 &&
+        targetS > 0.38 &&
+        cachedBottom > cachedVh * 0.35 &&
+        !document.hidden;
 
       if (wantVideo) {
         if (vid.paused) {

@@ -53,7 +53,8 @@ body {
 
 /* Section Containment for Performance & Smooth Frame Delivery */
 .section-contain {
-  content-visibility: visible;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 650px;
 }
 
 /* GPU hardware layer promotion */
@@ -962,6 +963,13 @@ body {
   backdrop-filter: blur(28px) saturate(180%);
 }
 
+html:not([data-theme="light"]) .sa-nav .bar,
+html.dark .sa-nav .bar {
+  background: rgba(20, 20, 26, 0.6);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
 .sa-nav .logo {
   display: grid;
   place-items: center;
@@ -1319,6 +1327,13 @@ body {
   transition: transform 200ms ease-out, opacity 200ms ease-out, visibility 0s 200ms;
 }
 
+html:not([data-theme="light"]) .sa-nav .panel,
+html.dark .sa-nav .panel {
+  background: rgba(20, 20, 26, 0.6);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
 .sa-nav .panel[data-open="true"] {
   opacity: 1;
   transform: translateY(0);
@@ -1376,6 +1391,59 @@ body {
 
 .sa-nav .row[aria-current="page"] {
   color: #0f1015;
+}
+
+/* ── Dark Mode Nav Theme Enhancements ── */
+html:not([data-theme="light"]) .sa-nav .pill,
+html.dark .sa-nav .pill {
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+html:not([data-theme="light"]) .sa-nav .it,
+html:not([data-theme="light"]) .sa-nav .row,
+html.dark .sa-nav .it,
+html.dark .sa-nav .row {
+  color: #94a3b8;
+}
+
+html:not([data-theme="light"]) .sa-nav .it:hover,
+html:not([data-theme="light"]) .sa-nav .it[aria-current="page"],
+html:not([data-theme="light"]) .sa-nav .row[aria-current="page"],
+html.dark .sa-nav .it:hover,
+html.dark .sa-nav .it[aria-current="page"],
+html.dark .sa-nav .row[aria-current="page"] {
+  color: #ffffff;
+}
+
+html:not([data-theme="light"]) .sa-nav .ind,
+html.dark .sa-nav .ind {
+  background: radial-gradient(120% 140% at 30% 0%, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06) 60%), rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), inset 0 -2px 6px rgba(139, 124, 246, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 8px 18px -8px rgba(0, 0, 0, 0.5);
+}
+
+html:not([data-theme="light"]) .sa-nav .vd,
+html.dark .sa-nav .vd {
+  background: radial-gradient(120% 140% at 30% 0%, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06) 60%), rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), inset 0 -2px 6px rgba(139, 124, 246, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 6px 14px -8px rgba(0, 0, 0, 0.5);
+}
+
+html:not([data-theme="light"]) .sa-nav .cta,
+html.dark .sa-nav .cta {
+  background: #ffffff;
+  color: #0f1015;
+}
+
+html:not([data-theme="light"]) .sa-nav .cta:hover,
+html.dark .sa-nav .cta:hover {
+  background: #e2e8f0;
+}
+
+html:not([data-theme="light"]) .sa-nav .burger,
+html.dark .sa-nav .burger {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 .sa-nav .burger:focus-visible,

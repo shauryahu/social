@@ -245,10 +245,14 @@ export default function Navbar() {
     mql.addEventListener("change", onMediaChange);
     isMobileRef.current = mql.matches;
 
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
     const onResize = () => {
-      place(false);
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        place(false);
+      }, 100);
     };
-    window.addEventListener("resize", onResize);
+    window.addEventListener("resize", onResize, { passive: true });
 
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => place(false));
@@ -257,6 +261,7 @@ export default function Navbar() {
     requestAnimationFrame(() => place(false));
 
     return () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
       mql.removeEventListener("change", onMediaChange);
       window.removeEventListener("resize", onResize);
     };

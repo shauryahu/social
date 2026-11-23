@@ -26,16 +26,25 @@ export default function BackgroundEffects() {
     let targetY = 0;
     let currentX = 0;
     let currentY = 0;
+    let isMoving = false;
 
     const updatePosition = () => {
       // Damped smooth spring interpolation for Apple-like fluid feel
-      currentX += (targetX - currentX) * 0.12;
-      currentY += (targetY - currentY) * 0.12;
+      const dx = targetX - currentX;
+      const dy = targetY - currentY;
+      currentX += dx * 0.12;
+      currentY += dy * 0.12;
 
       if (glow) {
         glow.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
       }
-      animationFrameRef.current = requestAnimationFrame(updatePosition);
+
+      if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
+        animationFrameRef.current = requestAnimationFrame(updatePosition);
+      } else {
+        isMoving = false;
+        animationFrameRef.current = null;
+      }
     };
 
     const onMove = (e: MouseEvent) => {
@@ -44,12 +53,20 @@ export default function BackgroundEffects() {
       if (glow && glow.style.opacity !== "1") {
         glow.style.opacity = "1";
       }
+      if (!isMoving) {
+        isMoving = true;
+        if (animationFrameRef.current) {
+          cancelAnimationFrame(animationFrameRef.current);
+        }
+        animationFrameRef.current = requestAnimationFrame(updatePosition);
+      }
     };
 
     const onLeave = () => {
       if (glow) glow.style.opacity = "0";
     };
 
+    isMoving = true;
     animationFrameRef.current = requestAnimationFrame(updatePosition);
     window.addEventListener("mousemove", onMove, { passive: true });
     document.addEventListener("mouseleave", onLeave, { passive: true });
