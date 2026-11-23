@@ -1,0 +1,113 @@
+{
+  "timestamp": "2026-11-23T04:25:27.834Z",
+  "desktop": {
+    "score": 80,
+    "fcp": "0.5 s",
+    "lcp": "0.5 s",
+    "tbt": "370 ms",
+    "cls": "0.02",
+    "si": "2.0 s",
+    "inp": "N/A"
+  },
+  "mobile": {
+    "score": 43,
+    "fcp": "2.2 s",
+    "lcp": "11.2 s",
+    "tbt": "4,020 ms",
+    "cls": "0.001",
+    "si": "2.3 s",
+    "inp": "N/A"
+  },
+  "trace": {
+    "longTasksCount": 0,
+    "longTasks": [],
+    "totalCLS": 0,
+    "scrollDurationMs": 2071,
+    "themeDurationMs": 812,
+    "menuDurationMs": 602,
+    "byType": {
+      "js": {
+        "size": 376703,
+        "count": 10
+      },
+      "css": {
+        "size": 947253,
+        "count": 19
+      },
+      "img": {
+        "size": 513809,
+        "count": 11
+      },
+      "media": {
+        "size": 1487223,
+        "count": 4
+      },
+      "other": {
+        "size": 692,
+        "count": 1
+      }
+    },
+    "slowestResources": [
+      {
+        "name": "rates",
+        "type": "other",
+        "sizeKB": 1,
+        "durationMs": 1033
+      },
+      {
+        "name": "element.js?cb=googleTranslateElementInit",
+        "type": "js",
+        "sizeKB": 0,
+        "durationMs": 591
+      },
+      {
+        "name": "intro.mp4",
+        "type": "media",
+        "sizeKB": 0,
+        "durationMs": 298
+      },
+      {
+        "name": "m=el_main",
+        "type": "js",
+        "sizeKB": 0,
+        "durationMs": 294
+      },
+      {
+        "name": "2n5appznju9jm.js",
+        "type": "js",
+        "sizeKB": 219,
+        "durationMs": 242
+      },
+      {
+        "name": "theme-switch.js",
+        "type": "js",
+        "sizeKB": 4,
+        "durationMs": 229
+      },
+      {
+        "name": "css2?family=Space+Grotesk:wght@500;600;7",
+        "type": "css",
+        "sizeKB": 1,
+        "durationMs": 226
+      },
+      {
+        "name": "m=el_main_css",
+        "type": "css",
+        "sizeKB": 0,
+        "durationMs": 160
+      },
+      {
+        "name": "css2?family=Inter:wght@400;500;600;700&f",
+        "type": "css",
+        "sizeKB": 1,
+        "durationMs": 156
+      },
+      {
+        "name": "css2?family=Inter:wght@400;500;600;700&f",
+        "type": "css",
+        "sizeKB": 1,
+        "durationMs": 133
+      }
+    ]
+  }
+}
