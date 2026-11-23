@@ -75,13 +75,13 @@ export default function Footer() {
   };
 
   const lightPalette = {
-    paper: "#f8fafc",
+    paper: "#e9ebf0",
     ink: "#0f172a",
     muted: "#64748b",
     line: "rgba(15, 23, 42, 0.08)",
     heart: "#9333ea",
     tones: [
-      "#f8fafc",
+      "#e9ebf0",
       "#e2e8f0",
       "#cbd5e1",
       "#94a3b8",

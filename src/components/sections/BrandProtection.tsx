@@ -1,233 +1,328 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useTheme } from "@/components/ThemeProvider";
+import { useEffect, useRef } from "react";
+
+const TEMPLATE = `
+<style>
+:host {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  background: transparent;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 56px 24px 64px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+  text-align: left;
+  color: #0a0a0a;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (min-width: 640px) {
+  .wrap {
+    padding: 72px 32px 80px;
+    gap: 48px;
+  }
+}
+
+@media (min-width: 820px) {
+  .wrap {
+    grid-template-columns: 1fr 1.1fr;
+    gap: clamp(36px, 5vw, 68px);
+    padding: 88px clamp(32px, 5vw, 60px) 96px;
+  }
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #6b6b6b;
+  margin-bottom: 18px;
+}
+
+.tag i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #0a0a0a;
+  flex: none;
+}
+
+h1 {
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -.035em;
+  font-weight: 600;
+  color: #0a0a0a;
+  margin: 0;
+}
+
+@media (min-width: 820px) {
+  h1 {
+    max-width: 12ch;
+  }
+}
+
+.lead {
+  margin-top: 20px;
+  color: #6b6b6b;
+  font-size: 16px;
+  line-height: 1.55;
+  max-width: 44ch;
+}
+
+@media (max-width: 819px) {
+  .lead {
+    max-width: none;
+  }
+}
+
+.cta {
+  margin-top: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: #0a0a0a;
+  color: #ffffff;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 12px 12px 24px;
+  font: 600 15px Inter, system-ui, sans-serif;
+  cursor: pointer;
+  outline: none;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+.cta span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #0a0a0a;
+  transition: transform .2s ease;
+  flex-shrink: 0;
+  box-shadow: none;
+}
+
+@media (hover: hover) {
+  .cta:hover span {
+    transform: translateX(3px);
+  }
+}
+
+.cta:focus-visible,
+.row:focus-visible {
+  outline: 2px solid #0a0a0a;
+  outline-offset: 3px;
+}
+
+.list {
+  background: #ffffff;
+  border: 1px solid #e2e2df;
+  border-radius: 20px;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 20px 22px;
+  border-top: 1px solid #e2e2df;
+  background: #ffffff;
+  color: #0a0a0a;
+  transition: background .2s ease, color .2s ease;
+  box-sizing: border-box;
+  box-shadow: none;
+}
+
+.row:first-child {
+  border-top: 0;
+}
+
+.ico {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #f2f2f0;
+  display: grid;
+  place-items: center;
+  color: #0a0a0a;
+  flex-shrink: 0;
+  transition: background .2s ease, color .2s ease;
+  box-shadow: none;
+}
+
+.ico svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  box-shadow: none;
+}
+
+.row .t {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  color: inherit;
+  line-height: 1.35;
+  box-shadow: none;
+}
+
+.row .d {
+  display: block;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #6b6b6b;
+  margin-top: 2px;
+  transition: color .2s ease;
+  box-shadow: none;
+}
+
+.row:focus-visible {
+  background: #0a0a0a;
+  color: #ffffff;
+}
+.row:focus-visible .d {
+  color: #a8a8a8;
+}
+.row:focus-visible .ico {
+  background: rgba(255, 255, 255, .16);
+  color: #ffffff;
+}
+
+@media (hover: hover) {
+  .row:hover {
+    background: #0a0a0a;
+    color: #ffffff;
+  }
+  .row:hover .d {
+    color: #a8a8a8;
+  }
+  .row:hover .ico {
+    background: rgba(255, 255, 255, .16);
+    color: #ffffff;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition: none !important;
+  }
+}
+</style>
+
+<div class="wrap">
+  <div>
+    <p class="tag"><i></i>Intellectual property and brand defense</p>
+    <h1>Your identity should belong to you.</h1>
+    <p class="lead">When bad actors hijack your name, likeness or intellectual property, they damage consumer trust and your valuation. SocialAssist files rapid legal takedown notices and uses platform-verified channels to remove them for good.</p>
+    <button class="cta" type="button">Start a brand protection review <span>→</span></button>
+  </div>
+  <div class="list">
+    <div class="row" tabindex="0">
+      <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg></div>
+      <div><span class="t">Executive and VIP impersonation</span><span class="d">Immediate takedown of fake clone accounts on Instagram, X and Telegram.</span></div>
+    </div>
+    <div class="row" tabindex="0">
+      <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 9l1.5-5h13L20 9M4 9v11h16V9M4 9h16M9 20v-6h6v6"/></svg></div>
+      <div><span class="t">Fraudulent commercial representation</span><span class="d">Removing scam stores, fake token projects and phishing landing pages.</span></div>
+    </div>
+    <div class="row" tabindex="0">
+      <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.5a3.5 3.5 0 100 5"/></svg></div>
+      <div><span class="t">Copyright and DMCA escalation</span><span class="d">Direct legal portal removal of stolen media, assets and trademarked materials.</span></div>
+    </div>
+    <div class="row" tabindex="0">
+      <div class="ico"><svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></div>
+      <div><span class="t">Proactive perimeter monitoring</span><span class="d">Ongoing surveillance to stop copycat profiles before they gain traction.</span></div>
+    </div>
+  </div>
+</div>
+`;
 
 export default function BrandProtection() {
-  const { theme } = useTheme();
-  const isLight = theme === "light";
-  const ref = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setVisible(true);
-      },
-      { threshold: 0.15 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+    if (typeof window === "undefined") return;
 
-  const threats = [
-    { label: "Executive Impersonation", status: "Instant Takedown" },
-    { label: "Fake Merchant Profiles", status: "Zero-Day Removal" },
-    { label: "Fraudulent Trademark Representation", status: "Legal Escalation" },
-    { label: "Targeted Reputation Attacks", status: "Continuous Defense" },
-  ];
+    if (!customElements.get("brand-defense")) {
+      class BrandDefense extends HTMLElement {
+        connectedCallback() {
+          let root = this.shadowRoot;
+          if (!root) {
+            root = this.attachShadow({ mode: "open" });
+          }
+          root.innerHTML = TEMPLATE;
+
+          const cta = root.querySelector(".cta");
+          if (cta) {
+            cta.addEventListener("click", () => {
+              document.getElementById("inquiry")?.scrollIntoView({ behavior: "smooth" });
+            });
+          }
+        }
+      }
+
+      customElements.define("brand-defense", BrandDefense);
+    }
+
+    if (containerRef.current) {
+      containerRef.current.innerHTML = "";
+      const el = document.createElement("brand-defense");
+      el.style.display = "block";
+      el.style.width = "100%";
+      el.style.boxSizing = "border-box";
+      el.style.background = "transparent";
+      containerRef.current.appendChild(el);
+    }
+  }, []);
 
   return (
     <section
       id="brand-protection"
-      ref={ref}
-      className="relative z-10 py-24 px-4 md:px-8 overflow-hidden"
-      aria-labelledby="brand-protection-heading"
-    >
-      {/* Background Soft Blue/Cyan Light Glow */}
-      <div
-        className="absolute top-1/2 left-0 -translate-y-1/2 w-[55vw] max-w-[800px] h-[500px] pointer-events-none rounded-full"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, rgba(37, 99, 235, 0.08) 0%, rgba(139, 92, 246, 0.05) 50%, transparent 70%)",
-          filter: "blur(90px)",
-        }}
-      />
-
-      <div className="relative max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-        {/* Shield Visual Presentation (3D Shield & Threat Radar) */}
-        <div
-          className="flex justify-center"
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(24px)",
-            transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
-          }}
-        >
-          <div className="relative w-full max-w-md">
-            {/* Ambient Shield Aura */}
-            <div
-              className="absolute inset-0 m-auto w-64 h-64 rounded-full pointer-events-none"
-              style={{
-                background: "radial-gradient(circle, rgba(56,189,248,0.18) 0%, transparent 70%)",
-                filter: "blur(50px)",
-              }}
-            />
-
-            {/* 3D Glass Shield Container */}
-            <div
-              className="relative rounded-3xl p-8 sm:p-10 flex flex-col items-center border border-white/10 dark-console-box backdrop-blur-2xl shadow-2xl overflow-hidden group hover:border-white/20 transition-all duration-500"
-            >
-              {/* Top Specular Shimmer */}
-              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
-
-              {/* 3D Realistic Layered Defense Shield */}
-              <div className="relative w-28 h-32 sm:w-32 sm:h-36 flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
-                {/* Back Shield Shadow & Glow */}
-                <svg
-                  width="120"
-                  height="136"
-                  viewBox="0 0 90 100"
-                  fill="none"
-                  className="drop-shadow-[0_12px_28px_rgba(37,99,235,0.45)]"
-                >
-                  {/* Outer Beveled Shield Border */}
-                  <path
-                    d="M45 4L8 18v27c0 24 15.5 45 37 51 21.5-6 37-27 37-51V18L45 4z"
-                    fill="url(#shield-grad-base)"
-                  />
-                  {/* Inner Metallic Bevel */}
-                  <path
-                    d="M45 8L12 20v24c0 21.5 14 40.5 33 46 19-5.5 33-24.5 33-46V20L45 8z"
-                    fill="url(#shield-grad-inner)"
-                    stroke="rgba(255,255,255,0.25)"
-                    strokeWidth="1"
-                  />
-                  {/* Defense Core Keyhole / Lock Vector */}
-                  <path
-                    d="M45 34a7 7 0 0 0-7 7c0 2.8 1.6 5.2 4 6.3V56a3 3 0 0 0 6 0v-8.7c2.4-1.1 4-3.5 4-6.3a7 7 0 0 0-7-7z"
-                    fill="#FFFFFF"
-                    className="drop-shadow-[0_0_12px_#38bdf8]"
-                  />
-                  <defs>
-                    <linearGradient id="shield-grad-base" x1="8" y1="4" x2="82" y2="96" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#1E293B" />
-                      <stop offset="0.5" stopColor="#0F172A" />
-                      <stop offset="1" stopColor="#0284C7" />
-                    </linearGradient>
-                    <linearGradient id="shield-grad-inner" x1="12" y1="8" x2="78" y2="90" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#0F172A" />
-                      <stop offset="0.5" stopColor="#1E3A8A" />
-                      <stop offset="1" stopColor="#0369A1" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-
-                {/* Concentric Defensive Radar Rings */}
-                <div className="absolute inset-0 rounded-full border border-cyan-500/20 animate-ping pointer-events-none opacity-30" />
-              </div>
-
-              <h3
-                className="mt-6 text-xl sm:text-2xl font-bold text-center text-white"
-                style={{ fontFamily: "var(--font-space-grotesk)" }}
-              >
-                Zero-Trust Brand Shield
-              </h3>
-              <p
-                className="text-xs sm:text-sm text-center mt-1 text-zinc-400 font-normal"
-                style={{ fontFamily: "var(--font-inter)" }}
-              >
-                Comprehensive protection against impersonators & unauthorized representation
-              </p>
-
-              {/* Threat Mitigation Status List */}
-              <div className="mt-6 w-full space-y-2">
-                {threats.map((t) => (
-                  <div
-                    key={t.label}
-                    className="flex items-center justify-between p-2.5 rounded-xl border border-white/5 bg-white/[0.02] text-xs"
-                  >
-                    <span className="text-zinc-300 font-medium">{t.label}</span>
-                    <span className="text-[11px] font-mono text-cyan-300 bg-cyan-950/50 px-2 py-0.5 rounded border border-cyan-800/40">
-                      {t.status}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column: Editorial Copy */}
-        <div
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateX(0)" : "translateX(24px)",
-            transition: "opacity 0.8s ease-out 0.15s, transform 0.8s ease-out 0.15s",
-          }}
-        >
-          <span
-            className="text-xs font-semibold tracking-widest uppercase mb-4 block text-cyan-400 font-mono"
-            style={{ fontFamily: "var(--font-inter)" }}
-          >
-            ✦ Intellectual Property & Brand Defense ✦
-          </span>
-          <h2
-            id="brand-protection-heading"
-            className="text-3xl md:text-5xl font-black mb-5 leading-tight tracking-tight text-white"
-            style={{ fontFamily: "var(--font-space-grotesk)" }}
-          >
-            Your Identity Should{" "}
-            <span
-              style={{
-                background: "linear-gradient(135deg, #38BDF8 0%, #818CF8 50%, #C084FC 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              Belong to You.
-            </span>
-          </h2>
-          <p
-            className="text-base sm:text-lg leading-relaxed mb-6 text-zinc-300 font-normal"
-            style={{ fontFamily: "var(--font-inter)" }}
-          >
-            When malicious actors hijack your name, likeness, or intellectual property without authorization,
-            it severely damages consumer trust and enterprise valuation. SocialAssist deploys rapid legal
-            takedown notices and platform-verified takedown channels to permanently dismantle bad actors.
-          </p>
-
-          <div className="space-y-3 mb-8">
-            {[
-              { label: "Executive & VIP Impersonation", desc: "Immediate takedown of deceptive clone accounts on Instagram, X & Telegram" },
-              { label: "Fraudulent Commercial Representation", desc: "Eliminating scam stores, fake token projects, and phishing landing pages" },
-              { label: "Copyright & DMCA Escalation", desc: "Direct legal portal removal of stolen media, assets, and trademarked materials" },
-              { label: "Proactive Digital Perimeter Monitoring", desc: "Ongoing surveillance to stop copycat profiles before they gain traction" },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className="flex gap-3.5 p-3.5 rounded-xl border border-white/5 bg-white/[0.02] hover:border-white/15 transition-all duration-200"
-              >
-                <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-cyan-500/15 border border-cyan-400/30">
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                    <path d="M2 5l2 2 4-4" stroke="#38BDF8" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-white" style={{ fontFamily: "var(--font-inter)" }}>
-                    {item.label}
-                  </p>
-                  <p className="text-xs text-zinc-400 mt-0.5" style={{ fontFamily: "var(--font-inter)" }}>
-                    {item.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <button
-            onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-            className={`px-8 py-3.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-[1.03] flex items-center gap-2 ${
-              isLight
-                ? "btn-light-cyan font-bold"
-                : "text-white border border-cyan-500/30 bg-cyan-950/30 hover:bg-cyan-900/40 shadow-lg shadow-cyan-950/40"
-            }`}
-          >
-            <span>Initiate Brand Protection Review</span>
-            <span>→</span>
-          </button>
-        </div>
-      </div>
-    </section>
+      ref={containerRef}
+      className="w-full relative z-10 max-w-full"
+      style={{
+        display: "block",
+        boxSizing: "border-box",
+        width: "100%",
+        background: "transparent",
+        padding: 0,
+        margin: 0,
+        marginBottom: "36px",
+      }}
+      aria-label="Intellectual Property and Brand Defense"
+    />
   );
 }

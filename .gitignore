@@ -4,3 +4,4 @@ node_modules/
 .env.local
 SocialAssist-Original-Backup/
 SocialAssist-2.0-Backup/
+.chrome-profile*

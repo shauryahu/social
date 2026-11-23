@@ -112,43 +112,47 @@ export default function ChannelShowcase() {
       id="channel"
       ref={ref}
       className={`relative z-10 pt-20 sm:pt-28 pb-16 sm:pb-20 px-4 md:px-8 transition-colors duration-500 ${
-        isLight ? "bg-[#FAFAFD]" : "bg-[#07070A]"
+        isLight ? "bg-transparent" : "bg-[#07070A]"
       }`}
       aria-labelledby="channel-heading"
     >
-      {/* ── 1. Subtle Square Grid Pattern ── */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, rgba(80, 110, 170, 0.055) 1px, transparent 1px), linear-gradient(to bottom, rgba(80, 110, 170, 0.055) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-        }}
-      />
+      {/* ── 1. Subtle Square Grid Pattern (Dark Mode Only) ── */}
+      {!isLight && (
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, rgba(80, 110, 170, 0.055) 1px, transparent 1px), linear-gradient(to bottom, rgba(80, 110, 170, 0.055) 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+          }}
+        />
+      )}
 
-      {/* ── 2. Cinematic Ambient Glows ── */}
-      {/* Upper-left soft blue glow */}
-      <div
-        aria-hidden="true"
-        className="absolute -top-24 -left-24 sm:-top-32 sm:-left-32 w-[500px] sm:w-[750px] h-[500px] sm:h-[750px] rounded-full pointer-events-none blur-[90px] sm:blur-[120px] transition-opacity duration-700 -z-10"
-        style={{
-          background: isLight
-            ? "radial-gradient(circle, rgba(229, 238, 255, 0.85) 0%, rgba(229, 238, 255, 0.3) 50%, transparent 70%)"
-            : "radial-gradient(circle, rgba(22, 141, 235, 0.12) 0%, transparent 70%)",
-        }}
-      />
+      {/* ── 2. Cinematic Ambient Glows (Dark Mode Only) ── */}
+      {!isLight && (
+        <>
+          {/* Upper-left soft blue glow */}
+          <div
+            aria-hidden="true"
+            className="absolute -top-24 -left-24 sm:-top-32 sm:-left-32 w-[500px] sm:w-[750px] h-[500px] sm:h-[750px] rounded-full pointer-events-none blur-[90px] sm:blur-[120px] transition-opacity duration-700 -z-10"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(22, 141, 235, 0.12) 0%, transparent 70%)",
+            }}
+          />
 
-      {/* Lower-right soft lavender glow */}
-      <div
-        aria-hidden="true"
-        className="absolute -bottom-24 -right-24 sm:-bottom-32 sm:-right-32 w-[500px] sm:w-[750px] h-[500px] sm:h-[750px] rounded-full pointer-events-none blur-[90px] sm:blur-[120px] transition-opacity duration-700 -z-10"
-        style={{
-          background: isLight
-            ? "radial-gradient(circle, rgba(238, 232, 255, 0.85) 0%, rgba(238, 232, 255, 0.3) 50%, transparent 70%)"
-            : "radial-gradient(circle, rgba(135, 61, 245, 0.12) 0%, transparent 70%)",
-        }}
-      />
+          {/* Lower-right soft lavender glow */}
+          <div
+            aria-hidden="true"
+            className="absolute -bottom-24 -right-24 sm:-bottom-32 sm:-right-32 w-[500px] sm:w-[750px] h-[500px] sm:h-[750px] rounded-full pointer-events-none blur-[90px] sm:blur-[120px] transition-opacity duration-700 -z-10"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(135, 61, 245, 0.12) 0%, transparent 70%)",
+            }}
+          />
+        </>
+      )}
 
       <div className="relative max-w-5xl mx-auto z-10">
         {/* ── 3. Heading Section ── */}

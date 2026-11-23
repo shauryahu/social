@@ -1,0 +1,457 @@
+{
+  "radarRect": {},
+  "restoRect": {},
+  "gap": 0,
+  "radarParent": {
+    "tag": "MAIN",
+    "cls": "overflow-x-hidden",
+    "styles": {
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "borderTop": "0px solid rgb(250, 250, 250)",
+      "borderBottom": "0px solid rgb(250, 250, 250)",
+      "overflow": "hidden auto",
+      "overflowX": "hidden",
+      "overflowY": "auto",
+      "boxShadow": "none",
+      "mask": "none",
+      "maskImg": "none",
+      "zIndex": "auto",
+      "position": "static",
+      "height": "14166.1px",
+      "paddingBottom": "0px",
+      "marginBottom": "0px"
+    }
+  },
+  "radarShadow": {
+    "host": {
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "borderTop": "0px solid rgb(10, 10, 10)",
+      "borderBottom": "0px solid rgb(10, 10, 10)",
+      "overflow": "hidden",
+      "overflowX": "hidden",
+      "overflowY": "hidden",
+      "boxShadow": "none",
+      "mask": "none",
+      "maskImg": "none",
+      "zIndex": "auto",
+      "position": "relative",
+      "height": "939.781px",
+      "paddingBottom": "0px",
+      "marginBottom": "0px"
+    },
+    "wrap": {
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "borderTop": "0px none rgb(250, 250, 250)",
+      "borderBottom": "0px none rgb(250, 250, 250)",
+      "overflow": "visible",
+      "overflowX": "visible",
+      "overflowY": "visible",
+      "boxShadow": "none",
+      "mask": "none",
+      "maskImg": "none",
+      "zIndex": "1",
+      "position": "relative",
+      "height": "939.781px",
+      "paddingBottom": "0px",
+      "marginBottom": "0px"
+    },
+    "stagew": {
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "borderTop": "0px none rgb(250, 250, 250)",
+      "borderBottom": "0px none rgb(250, 250, 250)",
+      "overflow": "visible",
+      "overflowX": "visible",
+      "overflowY": "visible",
+      "boxShadow": "none",
+      "mask": "none",
+      "maskImg": "none",
+      "zIndex": "auto",
+      "position": "static",
+      "height": "580px",
+      "paddingBottom": "0px",
+      "marginBottom": "0px"
+    },
+    "stage": {
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "borderTop": "0px none rgb(250, 250, 250)",
+      "borderBottom": "0px none rgb(250, 250, 250)",
+      "overflow": "visible",
+      "overflowX": "visible",
+      "overflowY": "visible",
+      "boxShadow": "none",
+      "mask": "none",
+      "maskImg": "none",
+      "zIndex": "auto",
+      "position": "relative",
+      "height": "580px",
+      "paddingBottom": "0px",
+      "marginBottom": "0px"
+    },
+    "seamFade": {
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "linear-gradient(rgb(5, 5, 5) 0%, rgba(0, 0, 0, 0) 100%)",
+      "borderTop": "0px none rgb(10, 10, 10)",
+      "borderBottom": "0px none rgb(10, 10, 10)",
+      "overflow": "visible",
+      "overflowX": "visible",
+      "overflowY": "visible",
+      "boxShadow": "none",
+      "mask": "none",
+      "maskImg": "none",
+      "zIndex": "2",
+      "position": "absolute",
+      "height": "160px",
+      "paddingBottom": "0px",
+      "marginBottom": "0px"
+    },
+    "orbs": {
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "borderTop": "0px none rgb(10, 10, 10)",
+      "borderBottom": "0px none rgb(10, 10, 10)",
+      "overflow": "hidden",
+      "overflowX": "hidden",
+      "overflowY": "hidden",
+      "boxShadow": "none",
+      "mask": "linear-gradient(rgb(0, 0, 0) 0%, rgb(0, 0, 0) calc(100% - 180px), rgba(0, 0, 0, 0) 100%)",
+      "maskImg": "linear-gradient(rgb(0, 0, 0) 0%, rgb(0, 0, 0) calc(100% - 180px), rgba(0, 0, 0, 0) 100%)",
+      "zIndex": "0",
+      "position": "absolute",
+      "height": "939.781px",
+      "paddingBottom": "0px",
+      "marginBottom": "0px"
+    },
+    "radarBottom": 4807.796875,
+    "allApps": [
+      {
+        "tag": "DIV",
+        "cls": "pos",
+        "name": null,
+        "top": 4387.69677734375,
+        "bottom": 4387.69677734375,
+        "height": 0,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "app hot",
+        "name": "0",
+        "top": 4376.33447265625,
+        "bottom": 4399.0654296875,
+        "height": 22.73095703125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "tile",
+        "name": "Instagram",
+        "top": 4374.06103515625,
+        "bottom": 4401.3388671875,
+        "height": 27.27783203125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "pos",
+        "name": null,
+        "top": 4552.9970703125,
+        "bottom": 4552.9970703125,
+        "height": 0,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "app",
+        "name": "1",
+        "top": 4541.63427734375,
+        "bottom": 4564.36572265625,
+        "height": 22.7314453125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "tile",
+        "name": "Facebook",
+        "top": 4541.63427734375,
+        "bottom": 4564.36572265625,
+        "height": 22.7314453125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "pos",
+        "name": null,
+        "top": 4387.69677734375,
+        "bottom": 4387.69677734375,
+        "height": 0,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "app",
+        "name": "3",
+        "top": 4376.33447265625,
+        "bottom": 4399.0654296875,
+        "height": 22.73095703125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "tile",
+        "name": "TikTok",
+        "top": 4376.33447265625,
+        "bottom": 4399.0654296875,
+        "height": 22.73095703125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "pos",
+        "name": null,
+        "top": 4257.19677734375,
+        "bottom": 4257.19677734375,
+        "height": 0,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "app",
+        "name": "2",
+        "top": 4245.83447265625,
+        "bottom": 4268.5654296875,
+        "height": 22.73095703125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "tile",
+        "name": "WhatsApp",
+        "top": 4245.83447265625,
+        "bottom": 4268.5654296875,
+        "height": 22.73095703125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "pos",
+        "name": null,
+        "top": 4535.5966796875,
+        "bottom": 4535.5966796875,
+        "height": 0,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "app",
+        "name": "4",
+        "top": 4524.234375,
+        "bottom": 4546.9658203125,
+        "height": 22.7314453125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "tile",
+        "name": "X",
+        "top": 4524.234375,
+        "bottom": 4546.9658203125,
+        "height": 22.7314453125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "pos",
+        "name": null,
+        "top": 4535.5966796875,
+        "bottom": 4535.5966796875,
+        "height": 0,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "app",
+        "name": "9",
+        "top": 4524.234375,
+        "bottom": 4546.9658203125,
+        "height": 22.7314453125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "tile",
+        "name": "YouTube",
+        "top": 4524.234375,
+        "bottom": 4546.9658203125,
+        "height": 22.7314453125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "pos",
+        "name": null,
+        "top": 4258.2421875,
+        "bottom": 4258.2421875,
+        "height": 0,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "app",
+        "name": "5",
+        "top": 4246.87939453125,
+        "bottom": 4269.61083984375,
+        "height": 22.7314453125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "tile",
+        "name": "Telegram",
+        "top": 4246.87939453125,
+        "bottom": 4269.61083984375,
+        "height": 22.7314453125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "pos",
+        "name": null,
+        "top": 4627.3515625,
+        "bottom": 4627.3515625,
+        "height": 0,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "app",
+        "name": "6",
+        "top": 4615.9892578125,
+        "bottom": 4638.720703125,
+        "height": 22.7314453125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "tile",
+        "name": "Discord",
+        "top": 4615.9892578125,
+        "bottom": 4638.720703125,
+        "height": 22.7314453125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "pos",
+        "name": null,
+        "top": 4627.3515625,
+        "bottom": 4627.3515625,
+        "height": 0,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "app",
+        "name": "7",
+        "top": 4615.9892578125,
+        "bottom": 4638.720703125,
+        "height": 22.7314453125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "tile",
+        "name": "Reddit",
+        "top": 4615.9892578125,
+        "bottom": 4638.720703125,
+        "height": 22.7314453125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "pos",
+        "name": null,
+        "top": 4258.2421875,
+        "bottom": 4258.2421875,
+        "height": 0,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "DIV",
+        "cls": "app",
+        "name": "8",
+        "top": 4246.87939453125,
+        "bottom": 4269.61083984375,
+        "height": 22.7314453125,
+        "overflowsRadarBottom": false
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "tile",
+        "name": "OnlyFans",
+        "top": 4246.87939453125,
+        "bottom": 4269.61083984375,
+        "height": 22.7314453125,
+        "overflowsRadarBottom": false
+      }
+    ]
+  },
+  "restoShadow": {
+    "host": {
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "borderTop": "0px solid rgb(10, 10, 10)",
+      "borderBottom": "0px solid rgb(10, 10, 10)",
+      "overflow": "hidden",
+      "overflowX": "hidden",
+      "overflowY": "hidden",
+      "boxShadow": "none",
+      "mask": "none",
+      "maskImg": "none",
+      "zIndex": "auto",
+      "position": "relative",
+      "height": "823.391px",
+      "paddingBottom": "0px",
+      "marginBottom": "0px"
+    },
+    "wrap": {
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "borderTop": "0px none rgb(250, 250, 250)",
+      "borderBottom": "0px none rgb(250, 250, 250)",
+      "overflow": "visible",
+      "overflowX": "visible",
+      "overflowY": "visible",
+      "boxShadow": "none",
+      "mask": "none",
+      "maskImg": "none",
+      "zIndex": "1",
+      "position": "relative",
+      "height": "823.391px",
+      "paddingBottom": "72px",
+      "marginBottom": "0px"
+    },
+    "orbs": {
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImg": "none",
+      "borderTop": "0px none rgb(10, 10, 10)",
+      "borderBottom": "0px none rgb(10, 10, 10)",
+      "overflow": "hidden",
+      "overflowX": "hidden",
+      "overflowY": "hidden",
+      "boxShadow": "none",
+      "mask": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 160px, rgb(0, 0, 0) calc(100% - 160px), rgba(0, 0, 0, 0) 100%)",
+      "maskImg": "linear-gradient(rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 160px, rgb(0, 0, 0) calc(100% - 160px), rgba(0, 0, 0, 0) 100%)",
+      "zIndex": "0",
+      "position": "absolute",
+      "height": "823.391px",
+      "paddingBottom": "0px",
+      "marginBottom": "0px"
+    },
+    "restoTop": 4807.796875
+  }
+}

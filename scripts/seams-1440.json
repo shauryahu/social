@@ -1,0 +1,36 @@
+{
+  "viewportWidth": 1440,
+  "scrollHeight": 15105,
+  "dividers": [
+    {
+      "tag": "DIV",
+      "cls": "section-contain border-divider",
+      "y": 2350,
+      "color": "rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "tag": "DIV",
+      "cls": "section-contain border-divider",
+      "y": 7232,
+      "color": "rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "tag": "DIV",
+      "cls": "section-contain border-divider",
+      "y": 9173,
+      "color": "rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "tag": "DIV",
+      "cls": "section-contain border-divider",
+      "y": 12886,
+      "color": "rgba(255, 255, 255, 0.1)"
+    },
+    {
+      "tag": "DIV",
+      "cls": "section-contain border-divider",
+      "y": 14262,
+      "color": "rgba(255, 255, 255, 0.1)"
+    }
+  ]
+}

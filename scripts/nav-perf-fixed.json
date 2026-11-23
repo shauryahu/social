@@ -1,0 +1,19 @@
+{
+  "totalFrames": 63,
+  "longFramesCount": 63,
+  "longFramesPct": "100.0%",
+  "maxFrameMs": "66.20",
+  "avgFrameMs": "39.46",
+  "sampleLongFrames": [
+    "34.50",
+    "34.90",
+    "30.30",
+    "45.40",
+    "34.30",
+    "32.80",
+    "33.40",
+    "66.20",
+    "29.90",
+    "24.40"
+  ]
+}

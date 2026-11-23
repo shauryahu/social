@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crypto. Converted Simply.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b0c10; --text:#2b2e3a; --soft:#4a4e5d;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;min-height:100%;background:radial-gradient(900px 520px at 12% -5%,rgba(40,44,56,.14),transparent 62%),radial-gradient(900px 640px at 105% 105%,rgba(12,14,20,.22),transparent 60%),linear-gradient(180deg,#ffffff 0%,#f3f4f7 55%,#e8eaef 100%);background-attachment:fixed;color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+main{max-width:860px;margin:0 auto;padding:48px 20px 72px;text-align:center}
+.eyebrow{font-weight:600;font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--text);margin:0 0 22px}
+h1{font-weight:800;font-size:clamp(38px,8.4vw,76px);line-height:1.05;letter-spacing:-.04em;margin:0 0 20px}
+h1 .dim{background:linear-gradient(90deg,#2b2e3a,#555a6b);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{max-width:660px;margin:0 auto 52px;font-size:clamp(16px,2.4vw,21px);line-height:1.45;color:var(--soft)}
+
+.stage{position:relative;max-width:640px;margin:0 auto}
+.orb{position:absolute;border-radius:50%;filter:blur(54px);opacity:.6;pointer-events:none}
+.o1{width:300px;height:300px;left:-90px;top:-50px;background:#7d8493}
+.o2{width:280px;height:280px;right:-80px;top:34%;background:#1c1f29}
+.o3{width:260px;height:260px;left:22%;bottom:-80px;background:#b7bbc7}
+
+.card{
+  --ink:#fff; --text:rgba(255,255,255,.92); --soft:rgba(255,255,255,.76); --line:rgba(255,255,255,.26);
+  position:relative;z-index:1;text-align:left;color:#fff;padding:26px;border-radius:34px;
+  background:linear-gradient(160deg,rgba(40,42,52,.8),rgba(12,13,18,.86));
+  -webkit-backdrop-filter:blur(30px) saturate(180%);backdrop-filter:blur(30px) saturate(180%);
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 30px 60px -30px rgba(10,12,20,.55),inset 0 1px 0 rgba(255,255,255,.3);
+}
+.card::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
+  background:linear-gradient(140deg,rgba(255,255,255,.55),rgba(255,255,255,.02) 34%,rgba(255,255,255,.02) 66%,rgba(255,255,255,.35));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.top h2{margin:0;font-weight:700;font-size:clamp(15px,3.4vw,19px);text-transform:uppercase}
+.live{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:500;color:var(--text);white-space:nowrap}
+.live i{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.6);transition:background .3s,box-shadow .3s}
+.live i.on{background:#34d27b;box-shadow:0 0 0 4px rgba(52,210,123,.25)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:99px;background:rgba(255,255,255,.1);box-shadow:inset 0 1px 3px rgba(0,0,0,.25);margin-top:18px}
+.seg button{appearance:none;border:0;font:600 14.5px Inter,sans-serif;height:40px;border-radius:99px;background:transparent;color:var(--soft);cursor:pointer;transition:background .3s,color .3s,box-shadow .3s}
+.seg button[aria-checked="true"]{background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(226,229,238,.9));color:#14161d;box-shadow:0 4px 14px rgba(0,0,0,.25),inset 0 1px 0 #fff}
+.lbl{display:block;margin:18px 0 9px;font-weight:600;font-size:15px;color:var(--text)}
+.rowlbl{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.rowlbl .lbl{margin:18px 0 9px}
+.flip{appearance:none;cursor:pointer;margin-top:9px;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.14);color:#fff;font-size:16px;line-height:1}
+.coins{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.coin{
+  appearance:none;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  height:clamp(58px,11vw,68px);border-radius:20px;color:var(--text);
+  background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3);transition:background .3s,color .3s,box-shadow .3s,transform .2s;
+}
+.coin:active{transform:scale(.96)}
+.coin .g{height:24px;display:grid;place-items:center;font-size:21px;font-weight:700;line-height:1}
+.coin .g svg{width:20px;height:20px;fill:currentColor}
+.coin .t{font-size:12.5px;font-weight:600}
+.coin[aria-checked="true"]{background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(222,225,235,.92));color:#14161d;border-color:#fff;box-shadow:0 0 26px rgba(255,255,255,.4),inset 0 1px 0 #fff}
+.field{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:22px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);padding:0 20px;box-shadow:inset 0 2px 10px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.1)}
+.field.in{height:60px}
+.field.out{height:76px}
+.field input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#fff;font:600 22px Inter,sans-serif;padding:0;font-variant-numeric:tabular-nums}
+.field .u{font-size:16px;font-weight:500;color:var(--soft)}
+.field.out strong{flex:1;min-width:0;font-weight:700;font-size:clamp(24px,5.6vw,32px);letter-spacing:-.015em;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden}
+.field:focus-within{border-color:rgba(255,255,255,.8);box-shadow:inset 0 2px 10px rgba(0,0,0,.22),0 0 0 3px rgba(255,255,255,.14)}
+.sel{appearance:none;-webkit-appearance:none;font:600 15px Inter,sans-serif;color:#fff;cursor:pointer;border-radius:99px;border:1px solid rgba(255,255,255,.35);padding:9px 32px 9px 16px;
+  background:rgba(255,255,255,.14) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E") no-repeat right 13px center}
+.sel option{color:#111;background:#fff}
+.meta{display:flex;justify-content:space-between;gap:12px;margin-top:20px;padding-top:18px;border-top:1px solid var(--line);font-weight:600;font-size:15px;color:var(--soft)}
+.meta b,.meta .r{color:#fff;font-weight:700}
+.meta .r{white-space:nowrap}
+.cta{
+  appearance:none;font:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;width:100%;margin-top:18px;
+  height:68px;border-radius:99px;border:1px solid #fff;color:#0b0c10;font-weight:700;font-size:clamp(16px,4vw,20px);
+  background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(214,218,232,.92));box-shadow:0 0 30px rgba(255,255,255,.3),inset 0 1px 0 #fff;
+}
+.cta:active{transform:scale(.985)}
+.src{margin:14px 4px 0;font-size:12.5px;color:var(--soft);text-align:center}
+:focus-visible{outline:2px solid #fff;outline-offset:3px}
+@media (max-width:520px){
+  .card{padding:20px 14px;border-radius:28px}
+  .coins{gap:6px}.coin{border-radius:15px}
+  .field{padding:0 14px}
+  .meta{font-size:13.5px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Over-the-counter digital settlement</p>
+  <h1>Crypto. <span class="dim">Converted Simply.</span></h1>
+  <p class="sub">Exchange supported digital assets to INR and approved fiat corridors through SocialAssist’s escrow-protected OTC settlement desk.</p>
+
+  <div class="stage">
+    <i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i>
+    <section class="card" aria-labelledby="est">
+      <div class="top">
+        <h2 id="est">Live OTC Rate Estimator</h2>
+        <div class="live"><i id="dot"></i>Real-Time Desk</div>
+      </div>
+
+      <div class="seg" role="radiogroup" aria-label="Conversion type">
+        <button type="button" role="radio" id="mInr" aria-checked="true">Crypto to INR</button>
+        <button type="button" role="radio" id="mSwap" aria-checked="false">Crypto to Crypto</button>
+      </div>
+
+      <span class="lbl" id="l1">Select Currency:</span>
+      <div class="coins" role="radiogroup" aria-labelledby="l1" id="fromBox"></div>
+
+      <label class="lbl" for="amt">You Transfer:</label>
+      <div class="field in">
+        <input id="amt" type="text" inputmode="decimal" autocomplete="off" value="1000">
+        <span class="u" id="unit">USDT</span>
+      </div>
+
+      <div class="rowlbl">
+        <span class="lbl" id="outLbl">Estimated Bank Credit (INR):</span>
+        <button class="flip" id="flip" type="button" aria-label="Reverse the swap direction" hidden>⇅</button>
+      </div>
+      <div class="field out">
+        <strong id="out">₹ 0</strong>
+        <span class="u" id="outU">Instant IMPS/RTGS</span>
+        <select class="sel" id="toSel" aria-label="Receive currency" hidden></select>
+      </div>
+
+      <div class="meta">
+        <span id="rateL">Indicative: <b id="rate"></b></span>
+        <span class="r" id="rateR">0% Slippage</span>
+      </div>
+
+      <button class="cta" type="button"><span id="ctaT">Lock Rate on Telegram Escrow</span> <span aria-hidden="true">→</span></button>
+      <p class="src" id="src">Loading rates…</p>
+    </section>
+  </div>
+</main>
+
+<script>
+(function(){
+var reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+var ETH = '<svg viewBox="0 0 24 24"><path d="M12 1.5 5.2 12.3 12 16.3l6.8-4L12 1.5Zm0 16.8-6.8-4L12 22.5l6.8-8.2-6.8 4Z"/></svg>';
+var BNB = '<svg viewBox="0 0 24 24"><path d="M12 2.5l2.6 2.6L12 7.7 9.4 5.1ZM5.1 9.4 7.7 12l-2.6 2.6L2.5 12ZM18.9 9.4l2.6 2.6-2.6 2.6-2.6-2.6ZM12 16.3l2.6 2.6L12 21.5l-2.6-2.6ZM12 9.4l2.6 2.6-2.6 2.6L9.4 12Z"/></svg>';
+var SOL = '<svg viewBox="0 0 24 24"><path d="M6 5.5h14l-2.5 3.5H3.5ZM3.5 10.2h14L20 13.7H6ZM6 15h14l-2.5 3.5H3.5Z"/></svg>';
+
+// g = glyph; d = decimals shown for received amounts; def = default amount
+var COINS = [
+  {s:'USDT', d:2, def:'1000', g:'₹'},
+  {s:'BTC',  d:6, def:'0.01', g:'₿'},
+  {s:'ETH',  d:5, def:'0.5',  g:ETH},
+  {s:'BNB',  d:4, def:'2',    g:BNB},
+  {s:'SOL',  d:4, def:'10',   g:SOL},
+  {s:'XRP',  d:3, def:'500',  g:'✕'},
+  {s:'DOGE', d:2, def:'5000', g:'Ð'},
+  {s:'TRX',  d:2, def:'3000', g:'T'},
+  {s:'LTC',  d:4, def:'5',    g:'Ł'},
+  {s:'GRAM', d:3, def:'500',  g:'G'}
+];
+// USD prices (USDT quote). Snapshot values; replaced by the live Binance feed when reachable.
+var usd = {USDT:1, BTC:64420, ETH:1805, BNB:590, SOL:74.5, XRP:0.974, DOGE:0.0593, TRX:0.33, LTC:44.38, GRAM:1.05};
+var INR_PER_USDT = 96;      // your desk rate (INR per 1 USDT)
+var FEE = 0.02;             // 2% crypto-to-crypto fee
+
+var mode = 'inr', from = 'USDT', to = 'BTC';
+var $ = function(id){ return document.getElementById(id); };
+var amt = $('amt'), out = $('out'), toSel = $('toSel');
+
+function coin(s){ return COINS.filter(function(c){ return c.s === s; })[0]; }
+function nf(v, d, loc){ return v.toLocaleString(loc || 'en-US', {minimumFractionDigits:d, maximumFractionDigits:d}); }
+
+/* ---------- smooth counter (critically damped glide toward the target) ---------- */
+var disp = 0, target = 0, dec = 0, pre = '₹ ', loc = 'en-IN', raf = 0, last = 0;
+function paint(){ out.textContent = pre + nf(disp, dec, loc); }
+function setTarget(v, d, p, l){
+  var fmtChanged = (d !== dec || p !== pre);
+  target = v; dec = d; pre = p; loc = l;
+  if (fmtChanged) disp = 0;
+  if (reduce){ disp = v; paint(); return; }
+  if (!raf){ last = performance.now(); raf = requestAnimationFrame(tick); }
+}
+function tick(t){
+  var dt = Math.min(0.05, (t - last) / 1000); last = t;
+  disp += (target - disp) * (1 - Math.exp(-dt / 0.13));
+  if (Math.abs(target - disp) < Math.pow(10, -dec) / 2){ disp = target; raf = 0; paint(); return; }
+  paint(); raf = requestAnimationFrame(tick);
+}
+
+/* ---------- calculation ---------- */
+function calc(){
+  var v = parseFloat(amt.value) || 0;
+  if (mode === 'inr'){
+    var r = usd[from] * INR_PER_USDT;
+    setTarget(v * r, 0, '₹ ', 'en-IN');
+    $('rate').textContent = '1 ' + from + ' = ₹' + nf(r, 2, 'en-IN');
+  } else {
+    var x = usd[from] / usd[to];
+    setTarget(v * x * (1 - FEE), coin(to).d, '', 'en-US');
+    $('rate').textContent = '1 ' + from + ' = ' + Number(x.toPrecision(6)).toLocaleString('en-US', {maximumFractionDigits:8}) + ' ' + to;
+  }
+}
+
+/* ---------- UI ---------- */
+function tiles(){
+  var box = $('fromBox'); box.innerHTML = '';
+  COINS.forEach(function(c){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'coin'; b.setAttribute('role','radio');
+    b.setAttribute('aria-checked', c.s === from ? 'true' : 'false');
+    var g = (c.s === 'USDT' && mode === 'swap') ? '₮' : c.g;
+    b.innerHTML = '<span class="g" aria-hidden="true">' + g + '</span><span class="t">' + c.s + '</span>';
+    b.onclick = function(){ pickFrom(c.s); };
+    box.appendChild(b);
+  });
+}
+function build(){
+  var swap = mode === 'swap';
+  $('mInr').setAttribute('aria-checked', !swap);
+  $('mSwap').setAttribute('aria-checked', swap);
+  $('l1').textContent = swap ? 'You send:' : 'Select Currency:';
+  $('outLbl').textContent = swap ? 'You Receive (after 2% fee):' : 'Estimated Bank Credit (INR):';
+  $('outU').hidden = swap; toSel.hidden = !swap; $('flip').hidden = !swap;
+  toSel.value = to;
+  $('unit').textContent = from;
+  $('rateL').firstChild.textContent = swap ? 'Binance rate: ' : 'Indicative: ';
+  $('rateR').textContent = swap ? '2% swap fee' : '0% Slippage';
+  $('ctaT').textContent = swap ? 'Lock Swap on Telegram Escrow' : 'Lock Rate on Telegram Escrow';
+  tiles(); calc();
+}
+function pickFrom(s){
+  var old = from; from = s;
+  if (mode === 'swap' && to === s) to = old;
+  amt.value = coin(s).def; build();
+}
+COINS.forEach(function(c){ var o = document.createElement('option'); o.value = o.textContent = c.s; toSel.appendChild(o); });
+toSel.onchange = function(){
+  var old = to; to = toSel.value;
+  if (from === to){ from = old; amt.value = coin(from).def; }
+  build();
+};
+$('mInr').onclick = function(){ mode = 'inr'; build(); };
+$('mSwap').onclick = function(){ mode = 'swap'; if (to === from) to = from === 'BTC' ? 'ETH' : 'BTC'; build(); };
+$('flip').onclick = function(){ var t = from; from = to; to = t; amt.value = coin(from).def; build(); };
+amt.addEventListener('input', function(){
+  var s = amt.value.replace(/[^0-9.]/g, ''), i = s.indexOf('.');
+  if (i > -1) s = s.slice(0, i + 1) + s.slice(i + 1).replace(/\./g, '');
+  amt.value = s.slice(0, 14); calc();
+});
+
+/* ---------- Binance live prices (needs a host that can reach api.binance.com) ---------- */
+function status(on){
+  $('dot').className = on ? 'on' : '';
+  $('src').textContent = on ? 'Crypto prices streaming live from Binance spot markets.' : 'Showing market prices as of Nov 18, 2026. Live Binance feed is not reachable from this page.';
+}
+var SOURCES = ['/.netlify/functions/rates', 'https://api.binance.com/api/v3/ticker/price', 'https://data-api.binance.vision/api/v3/ticker/price'];
+var srcIdx = 0;
+function get(url){
+  var ctl = new AbortController(), t = setTimeout(function(){ ctl.abort(); }, 5000);
+  return fetch(url, {signal: ctl.signal, cache: 'no-store'}).then(function(r){ if (!r.ok) throw 0; return r.json(); })
+    .then(function(a){ clearTimeout(t); return a; }, function(e){ clearTimeout(t); throw e; });
+}
+function apply(a){
+  var n = 0;
+  if (!Array.isArray(a)) return 0;
+  a.forEach(function(x){
+    if (!x || !x.symbol || x.symbol.slice(-4) !== 'USDT') return;
+    var s = x.symbol.slice(0, -4), p = parseFloat(x.price);
+    if (s !== 'USDT' && usd[s] !== undefined && p > 0){ usd[s] = p; n++; }
+  });
+  return n;
+}
+function live(){
+  var tries = 0;
+  (function next(){
+    if (tries >= SOURCES.length){ status(false); setTimeout(live, 20000); return; }
+    var i = (srcIdx + tries++) % SOURCES.length;
+    get(SOURCES[i]).then(function(a){
+      if (!apply(a)) throw 0;
+      srcIdx = i; status(true); calc(); setTimeout(live, 5000);
+    }).catch(next);
+  })();
+}
+
+build(); disp = target; paint(); status(false); live();
+})();
+</script>
+</body>
+</html>

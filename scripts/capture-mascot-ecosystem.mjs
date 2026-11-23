@@ -4,7 +4,7 @@ import path from "node:path";
 import os from "node:os";
 
 const CHROME_PATH = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
-const USER_DATA = path.join(os.tmpdir(), "socialassist-mascot-chrome-" + Date.now());
+const USER_DATA = path.join(os.tmpdir(), "socialassist-orbit-chrome-" + Date.now());
 const PREVIEWS_DIR = path.join(process.cwd(), "public", "previews");
 const BRAIN_DIR = "C:\\Users\\USER\\.gemini\\antigravity\\brain\\da496d37-3ff2-4b7f-9011-fb4d0e692a91";
 
@@ -16,7 +16,7 @@ const chromeProc = spawn(
   CHROME_PATH,
   [
     "--headless=new",
-    "--remote-debugging-port=9236",
+    "--remote-debugging-port=9252",
     `--user-data-dir=${USER_DATA}`,
     "--window-size=1440,1100",
     "--hide-scrollbars",
@@ -35,7 +35,7 @@ function sleep(ms) {
 async function getDebuggerUrl() {
   for (let i = 0; i < 20; i++) {
     try {
-      const res = await fetch("http://127.0.0.1:9236/json/version");
+      const res = await fetch("http://127.0.0.1:9252/json/version");
       if (res.ok) {
         const data = await res.json();
         return data.webSocketDebuggerUrl;
@@ -113,43 +113,16 @@ async function main() {
         }
       })()`,
     });
-    await sleep(2000);
+    await sleep(2500);
 
     // 1. Capture Desktop View
     console.log("Capturing desktop view...");
     const shot01 = await sendSession("Page.captureScreenshot", { format: "png" });
-    fs.writeFileSync(path.join(PREVIEWS_DIR, "mascot_ecosystem_desktop.png"), Buffer.from(shot01.data, "base64"));
-    fs.writeFileSync(path.join(BRAIN_DIR, "mascot_ecosystem_desktop.png"), Buffer.from(shot01.data, "base64"));
-    console.log("Saved mascot_ecosystem_desktop.png!");
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "orbiting_circles_desktop.png"), Buffer.from(shot01.data, "base64"));
+    fs.writeFileSync(path.join(BRAIN_DIR, "orbiting_circles_desktop.png"), Buffer.from(shot01.data, "base64"));
+    console.log("Saved orbiting_circles_desktop.png!");
 
-    // 2. Dispatch Mouse Move & Hover on one of the platforms (e.g. Instagram)
-    console.log("Simulating cursor hover on Instagram platform node...");
-    const boxInfo = await sendSession("Runtime.evaluate", {
-      expression: `(() => {
-        const el = document.querySelector("#automation [aria-label='Instagram']");
-        if (!el) return null;
-        const rect = el.getBoundingClientRect();
-        return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-      })()`,
-      returnByValue: true,
-    });
-
-    if (boxInfo.result && boxInfo.result.value) {
-      const { x, y } = boxInfo.result.value;
-      await sendSession("Input.dispatchMouseEvent", {
-        type: "mouseMoved",
-        x: x,
-        y: y,
-      });
-      await sleep(1000);
-
-      const shot02 = await sendSession("Page.captureScreenshot", { format: "png" });
-      fs.writeFileSync(path.join(PREVIEWS_DIR, "mascot_ecosystem_hover.png"), Buffer.from(shot02.data, "base64"));
-      fs.writeFileSync(path.join(BRAIN_DIR, "mascot_ecosystem_hover.png"), Buffer.from(shot02.data, "base64"));
-      console.log("Saved mascot_ecosystem_hover.png!");
-    }
-
-    // 3. Switch to Mobile View (iPhone 14 Pro 390x844)
+    // 2. Switch to Mobile View (iPhone 14 Pro 390x844)
     console.log("Switching to Mobile Viewport...");
     await sendSession("Emulation.setDeviceMetricsOverride", {
       width: 390,
@@ -170,10 +143,10 @@ async function main() {
     });
     await sleep(1500);
 
-    const shot03 = await sendSession("Page.captureScreenshot", { format: "png" });
-    fs.writeFileSync(path.join(PREVIEWS_DIR, "mascot_ecosystem_mobile.png"), Buffer.from(shot03.data, "base64"));
-    fs.writeFileSync(path.join(BRAIN_DIR, "mascot_ecosystem_mobile.png"), Buffer.from(shot03.data, "base64"));
-    console.log("Saved mascot_ecosystem_mobile.png!");
+    const shot02 = await sendSession("Page.captureScreenshot", { format: "png" });
+    fs.writeFileSync(path.join(PREVIEWS_DIR, "orbiting_circles_mobile.png"), Buffer.from(shot02.data, "base64"));
+    fs.writeFileSync(path.join(BRAIN_DIR, "orbiting_circles_mobile.png"), Buffer.from(shot02.data, "base64"));
+    console.log("Saved orbiting_circles_mobile.png!");
 
     ws.close();
   } catch (err) {
